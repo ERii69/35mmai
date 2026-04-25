@@ -854,7 +854,7 @@ export const allTools = [
     price: "from $9/mo (Free tier)",
     budgetFit: "indie",
     link: "opus.pro",
-    affiliateLink: "https://www.opus.pro?via=9f898c",
+    affiliateLink: "https://www.opus.pro/?via=9f898c",
     roles: ["Editor", "Production Coordinator", "Producer / Line Producer"],
     shortDescription: "Repurpose premiere Q&As and podcasts into vertical clips without manual scrubbing every beat",
     howToUse: [
