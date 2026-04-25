@@ -83,9 +83,9 @@ const cleanHowToStep = (step: string): string => {
   return step.replace(/^Step\s*\d+\s*:\s*/i, "").trim();
 };
 
-/** Rose outline pill — matches workflow “Add step suggestions to My Kit” */
-const addToKitOutlineBtnClass =
-  "inline-flex items-center justify-center rounded-full border border-[#333] bg-transparent px-3 py-2 text-xs font-medium text-[#e11d48] hover:border-[#e11d48] hover:bg-[#e11d48]/5 transition-colors md:text-sm";
+/** Green outline Add to Kit — original workflow / directory styling */
+const addToKitGreenBtnClass =
+  "inline-flex items-center justify-center rounded-xl border border-emerald-700/50 bg-emerald-950/30 px-3 py-2 text-xs font-medium text-emerald-400 hover:border-emerald-500 transition-colors md:text-sm";
 
 function directorySearchQueryForWorkflowStage(stageTitle: string): string {
   if (stageTitle.includes("Pre-Production")) return "Pre-Prod";
@@ -1184,7 +1184,7 @@ useEffect(() => {
                 </button>
                 <button 
                   onClick={() => addToMyKit(spotlightToolForRole)}
-                  className={`min-h-[44px] w-full whitespace-nowrap px-5 py-2.5 md:min-h-0 md:w-auto ${addToKitOutlineBtnClass}`}
+                  className={`min-h-[44px] w-full whitespace-nowrap px-5 py-2.5 md:min-h-0 md:w-auto ${addToKitGreenBtnClass}`}
                 >
                   Add to Kit
                 </button>
@@ -1235,7 +1235,7 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => addToMyKit(tool)}
-                  className={`flex-1 min-h-[44px] px-3 py-2 text-sm ${addToKitOutlineBtnClass}`}
+                  className={`flex-1 min-h-[44px] px-3 py-2 text-sm ${addToKitGreenBtnClass}`}
                 >
                   Add to Kit
                 </button>
@@ -1291,7 +1291,7 @@ useEffect(() => {
                       <button 
                         onClick={() => addToMyKit(tool)}
                         type="button"
-                        className={`whitespace-nowrap ${addToKitOutlineBtnClass}`}
+                        className={`whitespace-nowrap ${addToKitGreenBtnClass}`}
                       >
                         Add to Kit
                       </button>
@@ -1435,7 +1435,7 @@ useEffect(() => {
                 {/* Red Button in Spotlight - Kept as requested */}
                 <button
                   onClick={() => addToMyKit(spotlightToolForRole)}
-                  className={`min-h-[44px] w-full whitespace-nowrap px-5 py-2.5 md:min-h-0 md:w-auto ${addToKitOutlineBtnClass}`}
+                  className={`min-h-[44px] w-full whitespace-nowrap px-5 py-2.5 md:min-h-0 md:w-auto ${addToKitGreenBtnClass}`}
                 >
                   Add to Kit
                 </button>
@@ -1513,7 +1513,7 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => addToMyKit(tool)}
-                  className={`flex-1 min-h-[44px] px-3 py-2 text-sm ${addToKitOutlineBtnClass}`}
+                  className={`flex-1 min-h-[44px] px-3 py-2 text-sm ${addToKitGreenBtnClass}`}
                 >
                   Add to Kit
                 </button>
@@ -1584,7 +1584,7 @@ useEffect(() => {
                       <button 
                         type="button"
                         onClick={() => addToMyKit(tool)}
-                        className={`whitespace-nowrap ${addToKitOutlineBtnClass}`}
+                        className={`whitespace-nowrap ${addToKitGreenBtnClass}`}
                       >
                         Add to Kit
                       </button>
@@ -1841,7 +1841,7 @@ useEffect(() => {
                         onClick={() =>
                           bulkAddWorkflowToolsToKit(item.tools as number[])
                         }
-                        className={`shrink-0 self-start ${addToKitOutlineBtnClass}`}
+                        className={`shrink-0 self-start ${addToKitGreenBtnClass}`}
                       >
                         Add step suggestions to My Kit
                       </button>
@@ -1930,7 +1930,7 @@ useEffect(() => {
                               <button
                                 type="button"
                                 onClick={() => addToMyKit(tool)}
-                                className={`w-full shrink-0 md:w-auto md:min-w-[9rem] ${addToKitOutlineBtnClass} px-4 py-2.5 text-sm md:text-sm`}
+                                className={`w-full shrink-0 md:w-auto md:min-w-[9rem] ${addToKitGreenBtnClass} px-4 py-2.5 text-sm md:text-sm`}
                               >
                                 Add to Kit
                               </button>
@@ -2778,7 +2778,7 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => addToMyKit(selectedTool)}
-                  className={`min-h-[44px] flex-1 px-4 py-2 sm:flex-none ${addToKitOutlineBtnClass}`}
+                  className={`min-h-[44px] flex-1 px-4 py-2 sm:flex-none ${addToKitGreenBtnClass}`}
                 >
                   Add to Kit
                 </button>
