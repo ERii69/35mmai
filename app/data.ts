@@ -6,6 +6,8 @@ export type Tool = {
   price: string;
   budgetFit: string;
   link: string;
+  /** Optional tracked partner URL; falls back to `link` when unset. */
+  affiliateLink?: string;
   roles: string[];
   shortDescription?: string;
   howToUse?: string[];
@@ -852,6 +854,7 @@ export const allTools = [
     price: "from $9/mo (Free tier)",
     budgetFit: "indie",
     link: "opus.pro",
+    affiliateLink: "https://www.opus.pro?via=9f898c",
     roles: ["Editor", "Production Coordinator", "Producer / Line Producer"],
     shortDescription: "Repurpose premiere Q&As and podcasts into vertical clips without manual scrubbing every beat",
     howToUse: [
