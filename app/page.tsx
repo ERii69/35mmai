@@ -83,6 +83,46 @@ const cleanHowToStep = (step: string): string => {
   return step.replace(/^Step\s*\d+\s*:\s*/i, "").trim();
 };
 
+function toAbsoluteToolUrl(raw?: string): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^[\w.-]+\.[a-z]{2,}(\/.*)?$/i.test(trimmed)) return `https://${trimmed}`;
+  return null;
+}
+
+function getCanonicalToolForLink(
+  tool: Partial<Tool> & { catalogRank?: number }
+): Tool | null {
+  if (typeof tool.catalogRank === "number" && Number.isFinite(tool.catalogRank)) {
+    return getToolByRank(tool.catalogRank) ?? null;
+  }
+  if (typeof tool.name === "string" && tool.name.trim()) {
+    return allTools.find((candidate) => candidate.name === tool.name) ?? null;
+  }
+  return null;
+}
+
+function getToolHref(tool: Partial<Tool> & { catalogRank?: number }): string {
+  const canonicalTool = getCanonicalToolForLink(tool);
+  return (
+    toAbsoluteToolUrl(tool.affiliateLink) ??
+    toAbsoluteToolUrl(canonicalTool?.affiliateLink) ??
+    toAbsoluteToolUrl(tool.link) ??
+    toAbsoluteToolUrl(canonicalTool?.link) ??
+    "#"
+  );
+}
+
+function hasAffiliateLink(tool: Partial<Tool> & { catalogRank?: number }): boolean {
+  const canonicalTool = getCanonicalToolForLink(tool);
+  return Boolean(
+    toAbsoluteToolUrl(tool.affiliateLink) ??
+      toAbsoluteToolUrl(canonicalTool?.affiliateLink)
+  );
+}
+
 /**
  * Same look as “Add all matches from this phase to My Kit” (emerald outline).
  * `!` utilities avoid inherited link/button colors turning these red on some layouts.
@@ -1209,15 +1249,22 @@ useEffect(() => {
                   {tool.category}
                 </span>
               </div>
-              <a
-                href={`https://${tool.link}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${tool.name} website (opens in new tab)`}
-                className="block text-lg font-semibold text-white hover:text-[#e11d48]"
-              >
-                {tool.name}
-              </a>
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href={getToolHref(tool)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${tool.name} website (opens in new tab)`}
+                  className="block text-lg font-semibold text-white hover:text-[#e11d48]"
+                >
+                  {tool.name}
+                </a>
+                {hasAffiliateLink(tool) && (
+                  <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                    Partner link
+                  </span>
+                )}
+              </div>
               <div className="mt-2 text-sm font-medium text-emerald-400">{tool.price}</div>
               <p className="mt-2 text-sm leading-relaxed text-[#d1d5db] line-clamp-2">{getMobileSummary(tool)}</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1270,15 +1317,22 @@ useEffect(() => {
               filteredTools.map((tool: any) => (
                 <tr key={tool.rank} className="border-b border-[#222] hover:bg-[#1a1a1a] transition-colors">
                   <td className="px-6 py-6 font-medium">
-                    <a 
-                      href={`https://${tool.link}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      aria-label={`${tool.name} website (opens in new tab)`}
-                      className="text-[#e11d48] hover:underline hover:text-red-400 transition-colors"
-                    >
-                      {tool.name}
-                    </a>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <a 
+                        href={getToolHref(tool)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        aria-label={`${tool.name} website (opens in new tab)`}
+                        className="text-[#e11d48] hover:underline hover:text-red-400 transition-colors"
+                      >
+                        {tool.name}
+                      </a>
+                      {hasAffiliateLink(tool) && (
+                        <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                          Partner
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-6 text-[#888]">{tool.category}</td>
                   <td className="px-6 py-6 text-[#d1d5db]">{getUseCaseText(tool, 140)}</td>
@@ -1487,15 +1541,22 @@ useEffect(() => {
                   {tool.category}
                 </span>
               </div>
-              <a
-                href={`https://${tool.link}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${tool.name} website (opens in new tab)`}
-                className="block text-lg font-semibold text-white hover:text-[#e11d48]"
-              >
-                {tool.name}
-              </a>
+              <div className="flex flex-wrap items-center gap-2">
+                <a
+                  href={getToolHref(tool)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${tool.name} website (opens in new tab)`}
+                  className="block text-lg font-semibold text-white hover:text-[#e11d48]"
+                >
+                  {tool.name}
+                </a>
+                {hasAffiliateLink(tool) && (
+                  <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                    Partner link
+                  </span>
+                )}
+              </div>
               <div className="mt-2 text-sm font-medium text-emerald-400">{tool.price}</div>
               <p className="mt-2 text-sm leading-relaxed text-[#d1d5db] line-clamp-2">{getMobileSummary(tool)}</p>
               <div className="mt-3 flex flex-wrap gap-2">
@@ -1550,15 +1611,22 @@ useEffect(() => {
               filteredTools.map((tool: any) => (
                 <tr key={tool.rank} className="border-b border-[#333] hover:bg-[#1a1a1a] transition-colors group">
                   <td className="py-5 px-8 font-medium">
-                    <a 
-                      href={`https://${tool.link}`} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      aria-label={`${tool.name} website (opens in new tab)`}
-                      className="text-[#e11d48] hover:underline hover:text-red-400 transition-colors"
-                    >
-                      {tool.name}
-                    </a>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <a 
+                        href={getToolHref(tool)} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        aria-label={`${tool.name} website (opens in new tab)`}
+                        className="text-[#e11d48] hover:underline hover:text-red-400 transition-colors"
+                      >
+                        {tool.name}
+                      </a>
+                      {hasAffiliateLink(tool) && (
+                        <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                          Partner
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="py-5 px-4">
                     <span className="px-3 py-1 bg-[#1a1a1a] text-xs rounded-full">{tool.category}</span>
@@ -1914,15 +1982,22 @@ useEffect(() => {
                                 </span>
                               </div>
 
-                              <a
-                                href={`https://${tool.link}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                aria-label={`${tool.name} website (opens in new tab)`}
-                                className="text-lg md:text-xl font-medium hover:text-[#e11d48] transition-colors block"
-                              >
-                                {tool.name}
-                              </a>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <a
+                                  href={getToolHref(tool)}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  aria-label={`${tool.name} website (opens in new tab)`}
+                                  className="text-lg md:text-xl font-medium hover:text-[#e11d48] transition-colors block"
+                                >
+                                  {tool.name}
+                                </a>
+                                {hasAffiliateLink(tool) && (
+                                  <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                                    Partner link
+                                  </span>
+                                )}
+                              </div>
 
                               <p className="text-[#d1d5db] text-sm leading-relaxed mt-2">
                                 {getUseCaseText(tool, 160)}
@@ -2401,15 +2476,22 @@ useEffect(() => {
               className="bg-[#111] border border-[#333] rounded-3xl p-6 flex flex-col md:flex-row gap-6 group"
             >
               <div className="flex-1">
-                <a 
-                  href={`https://${tool.link}`} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  aria-label={`${tool.name} website (opens in new tab)`}
-                  className="text-xl font-semibold hover:text-[#e11d48] transition-colors block"
-                >
-                  {tool.name}
-                </a>
+                <div className="flex flex-wrap items-center gap-2">
+                  <a 
+                    href={getToolHref(tool)} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    aria-label={`${tool.name} website (opens in new tab)`}
+                    className="text-xl font-semibold hover:text-[#e11d48] transition-colors block"
+                  >
+                    {tool.name}
+                  </a>
+                  {hasAffiliateLink(tool) && (
+                    <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                      Partner link
+                    </span>
+                  )}
+                </div>
                 <div className="text-sm text-[#888] mt-1">{tool.category}</div>
                 <p className="text-[#d1d5db] text-sm mt-3 leading-relaxed">{getUseCaseText(tool, 180)}</p>
               </div>
@@ -2474,7 +2556,7 @@ useEffect(() => {
   <div className="max-w-5xl mx-auto px-6">
     <p>© 2026 35mmAI • Built for independent filmmakers</p>
     <p className="mt-2 text-xs">
-      Not affiliated with any mentioned tools. All links are for reference only.
+      FTC disclosure: Some outbound links are affiliate links. If you click and purchase through those links, we may earn a commission at no additional cost to you. Editorial selections are independent.
     </p>
     <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
       <Link
@@ -2786,13 +2868,15 @@ useEffect(() => {
                   Add to Kit
                 </button>
                 <a
-                  href={`https://${selectedTool.link}`}
+                  href={getToolHref(selectedTool)}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={`Open ${selectedTool.name} website (opens in new tab)`}
                   className="block min-h-[44px] rounded-xl border border-[#e11d48]/40 bg-black px-4 py-2 text-center text-sm font-medium text-[#e11d48] transition-colors hover:bg-[#1a1a1a] hover:text-[#fb7185] sm:flex-1 sm:py-3 sm:text-base"
                 >
-                  Open Tool Website →
+                  {hasAffiliateLink(selectedTool)
+                    ? "Open Partner Website →"
+                    : "Open Tool Website →"}
                 </a>
               </div>
             </div>
