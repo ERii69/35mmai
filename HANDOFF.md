@@ -22,7 +22,7 @@ Use this file when opening a new chat so context is not “from zero.”
 ## Day-to-day catalog updates
 
 1. Edit **`app/data.ts`** (`allTools`, ranks, `workflowStages`, budget presets as needed).
-2. Bump **`DIRECTORY_LAST_UPDATED_DISPLAY`** when the public “Last updated” line should change.
+2. “Last updated” now renders automatically from the current date in the UI; no manual date bump needed.
 3. Run **`npm run ci`** locally before push if you want lint + build gate.
 4. **`git commit`** → **`git push`** to **`main`**. No need to leave Terminal open after push; Vercel builds on GitHub.
 

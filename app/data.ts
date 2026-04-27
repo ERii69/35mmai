@@ -1330,9 +1330,6 @@ export function rehydrateKitEntry(entry: unknown): unknown {
   };
 }
 
-/** Shown on About and listings; bump when the tool catalog meaningfully changes. */
-export const DIRECTORY_LAST_UPDATED_DISPLAY = "April 24, 2026";
-
 export const SITE_CONTACT_EMAIL = "otherprojectsx@gmail.com" as const;
 
 /** Linked from Budget Templates — must be shared so “Anyone with the link” can view for export URLs to work without sign-in. */

@@ -14,6 +14,7 @@ import {
 } from "react";
 
 import { AboutPageContent } from "@/components/about/AboutPageContent";
+import { HowItWorksContent } from "@/components/how-it-works/HowItWorksContent";
 import { StepFromQuery } from "@/components/about/StepFromQuery";
 import { ProComingSoonContent } from "@/components/pro/ProComingSoonContent";
 import { BudgetSheetLinks } from "@/components/budget/BudgetSheetLinks";
@@ -22,7 +23,6 @@ import {
   BUDGET_DEFAULT_LOW_ROWS,
   BUDGET_DEFAULT_MICRO_ROWS,
   budgetLinesFromPreset,
-  DIRECTORY_LAST_UPDATED_DISPLAY,
   getToolByRank,
   rehydrateKitEntry,
   rolesList,
@@ -130,6 +130,16 @@ function hasAffiliateLink(tool: Partial<Tool> & { catalogRank?: number }): boole
 const addToKitSameAsBulkPhaseBtnClass =
   "inline-flex items-center justify-center rounded-xl border !border-emerald-700/50 bg-emerald-950/30 px-4 py-2.5 text-sm font-medium !text-emerald-400 hover:border-emerald-500 hover:!border-emerald-500 hover:bg-emerald-950/40 transition-colors";
 
+const ONBOARDING_DISMISSED_KEY = "onboardingDismissedV1";
+
+function getTodayDisplayLabel(): string {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date());
+}
+
 function directorySearchQueryForWorkflowStage(stageTitle: string): string {
   if (stageTitle.includes("Pre-Production")) return "Pre-Prod";
   if (stageTitle === "Production") return "Production";
@@ -184,12 +194,31 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTool, setSelectedTool] = useState<any>(null);
   const [toast, setToast] = useState<{ message: string; tone: "ok" | "info" } | null>(null);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [lastUpdatedLabel, setLastUpdatedLabel] = useState("Today");
 
   useEffect(() => {
     if (!toast) return;
     const t = window.setTimeout(() => setToast(null), 3200);
     return () => window.clearTimeout(t);
   }, [toast]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const seen = localStorage.getItem(ONBOARDING_DISMISSED_KEY) === "1";
+    if (!seen) setShowOnboarding(true);
+  }, []);
+
+  useEffect(() => {
+    setLastUpdatedLabel(getTodayDisplayLabel());
+  }, []);
+
+  const dismissOnboarding = () => {
+    setShowOnboarding(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(ONBOARDING_DISMISSED_KEY, "1");
+    }
+  };
   // Workflow Builder States — hydrate from localStorage to avoid save-on-mount clobbering
   const [currentWorkflowStage, setCurrentWorkflowStage] = useState(() => {
     if (typeof window === "undefined") return 0;
@@ -804,6 +833,14 @@ useEffect(() => {
     </Button>
     <Button 
       variant="ghost" 
+      onClick={() => setStep(step === 10 ? 0 : 10)}
+      aria-current={step === 10 ? "page" : undefined}
+      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+    >
+      How it works
+    </Button>
+    <Button 
+      variant="ghost" 
       onClick={() => setStep(9)}
       aria-current={step === 9 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
@@ -903,7 +940,7 @@ useEffect(() => {
         )}
         {/* Main Content Area — flex column + min-h-0 so My Kit (empty) can flex between header and footer */}
         <div
-          className={`flex min-h-0 flex-1 flex-col px-4 sm:px-6 ${step === 0 ? "py-2 md:py-8" : "py-8"} ${[2, 3, 5, 7, 9].includes(step) ? "pb-28 md:pb-8" : ""}`}
+          className={`flex min-h-0 flex-1 flex-col px-4 sm:px-6 ${step === 0 ? "py-2 md:py-8" : "py-8"} ${[2, 3, 5, 7, 9, 10].includes(step) ? "pb-28 md:pb-8" : ""}`}
         >
 
 {/* === STEP 0: LANDING PAGE - FINAL FIXED VERSION === */}
@@ -921,6 +958,18 @@ useEffect(() => {
         <p className="text-sm md:text-xl text-[#d1d5db]">
           AI tools that help indie filmmakers save time and cut costs from script to screen.
         </p>
+        <div className="mt-4 flex items-center justify-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              dismissOnboarding();
+              setStep(10);
+            }}
+            className="min-h-[44px] rounded-xl border border-[#444] bg-[#111] px-4 py-2 text-sm font-medium text-[#d1d5db] transition-colors hover:border-[#e11d48]/70 hover:text-white"
+          >
+            How it works
+          </button>
+        </div>
       </div>
 
       {/* Budget Cards */}
@@ -971,7 +1020,7 @@ useEffect(() => {
           Browse all <span className="font-semibold text-white">{allTools.length}</span> filmmaking AI tools
         </p>
         <p className="text-sm text-[#888]">
-          Last updated: {DIRECTORY_LAST_UPDATED_DISPLAY}
+          Last updated: {lastUpdatedLabel}
         </p>
       </div>
 
@@ -1370,6 +1419,7 @@ useEffect(() => {
     </div>
   </div>
 )}
+{step === 10 && <HowItWorksContent variant="embedded" onNavigate={setStep} />}
 {/* === STEP 1: CHOOSE YOUR ROLE === */}
 {step === 1 && (
   <div className="min-h-screen bg-[#0f0f0f] text-[#f5f5f5] py-12 px-6 relative overflow-hidden">
@@ -2556,9 +2606,18 @@ useEffect(() => {
   <div className="max-w-5xl mx-auto px-6">
     <p>© 2026 35mmAI • Built for independent filmmakers</p>
     <p className="mt-2 text-xs">
-      FTC disclosure: Some outbound links are affiliate links. If you click and purchase through those links, we may earn a commission at no additional cost to you. Editorial selections are independent.
+      FTC: Some links are affiliate links. We may earn a commission at no extra cost to you. Picks stay editorially independent.
     </p>
     <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
+      <Link
+        href="/how-it-works"
+        className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
+      >
+        How it works
+      </Link>
+      <span className="text-[#444]" aria-hidden>
+        ·
+      </span>
       <Link
         href="/about"
         className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
@@ -2622,6 +2681,14 @@ useEffect(() => {
           All Tools
         </button>
 
+        <button
+          type="button"
+          onClick={() => setStep(10)}
+          className="block w-full rounded-2xl px-6 py-4 text-left text-lg font-medium text-white transition-all hover:bg-[#1a1a1a] hover:text-[#e11d48] active:scale-[0.98]"
+        >
+          How it works
+        </button>
+
         <button 
           onClick={() => setStep(4)}
           className="block w-full rounded-2xl px-6 py-4 text-left text-lg font-medium text-white transition-all hover:bg-[#1a1a1a] hover:text-[#e11d48] active:scale-[0.98]"
@@ -2663,6 +2730,52 @@ useEffect(() => {
   </div>
 )}
 
+      {showOnboarding && (
+        <div
+          className="fixed inset-0 z-[65] flex items-center justify-center bg-black/75 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="onboarding-title"
+        >
+          <div className="w-full max-w-lg rounded-3xl border border-[#333] bg-[#111] p-6 shadow-2xl sm:p-7">
+            <div className="mb-3 inline-flex rounded-full border border-emerald-500/40 bg-emerald-950/30 px-3 py-1 text-xs font-medium text-emerald-300">
+              Roll camera with 35mmAI
+            </div>
+            <h2 id="onboarding-title" className="text-2xl font-semibold text-white">
+              Build your first stack in one minute
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-[#b3b3b3]">
+              Choose the budget lane, filter for your role, check tool details, and save a tight
+              shortlist in My Kit. Open the full guide if you want the filmmaker workflow plus QA pass.
+            </p>
+            <ul className="mt-4 space-y-2 text-sm text-[#d4d4d4]">
+              <li>1) Pick your production lane</li>
+              <li>2) Filter by role and stage</li>
+              <li>3) Keep only the strongest 3-5 tools</li>
+            </ul>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={dismissOnboarding}
+                className="min-h-[44px] flex-1 rounded-xl bg-[#e11d48] px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
+              >
+                Start planner
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  dismissOnboarding();
+                  setStep(10);
+                }}
+                className="min-h-[44px] flex-1 rounded-xl border border-[#444] bg-[#161616] px-4 py-2 text-sm font-medium text-[#e5e5e5] hover:border-[#e11d48]/70"
+              >
+                View full guide
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {toast && (
         <div
           role="status"
@@ -2677,7 +2790,7 @@ useEffect(() => {
         </div>
       )}
 
-      {[2, 3, 5, 7, 9].includes(step) && !selectedTool && (
+      {[2, 3, 5, 7, 9, 10].includes(step) && !selectedTool && (
         <div className="fixed inset-x-0 bottom-0 z-[45] border-t border-[#333] bg-[#0f0f0f]/95 px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-sm md:hidden">
           <div className="mx-auto flex max-w-lg gap-2">
             {step === 2 && (
@@ -2717,6 +2830,24 @@ useEffect(() => {
               </>
             )}
             {step === 3 && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setStep(0)}
+                  className="flex-1 min-h-[44px] rounded-xl border border-[#444] bg-[#111] text-sm font-medium text-white transition-colors hover:border-[#555] hover:bg-[#1a1a1a]"
+                >
+                  Home
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStep(9)}
+                  className="flex-1 min-h-[44px] rounded-xl border border-[#e11d48]/40 bg-[#111] text-sm font-medium text-[#f5f5f5] transition-colors hover:border-[#e11d48]/80 hover:bg-[#1a1a1a]"
+                >
+                  All Tools
+                </button>
+              </>
+            )}
+            {step === 10 && (
               <>
                 <button
                   type="button"

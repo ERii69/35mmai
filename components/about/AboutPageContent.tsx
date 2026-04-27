@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import {
   allTools,
-  DIRECTORY_LAST_UPDATED_DISPLAY,
   SITE_CONTACT_EMAIL,
 } from "@/app/data";
 
@@ -46,6 +45,16 @@ export function AboutPageContent({
   onNavigate: (step: number) => void;
 }) {
   const [activeSectionId, setActiveSectionId] = useState("about-intro");
+  const [lastUpdatedLabel, setLastUpdatedLabel] = useState("Today");
+
+  useEffect(() => {
+    const label = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).format(new Date());
+    setLastUpdatedLabel(label);
+  }, []);
 
   const scrollMt =
     variant === "standalone"
@@ -116,7 +125,7 @@ export function AboutPageContent({
           <p className="mx-auto mt-3 max-w-2xl text-sm text-[#737373]">
             <strong className="font-medium text-[#a3a3a3]">{toolCount} tools</strong>
             {" · "}
-            Last updated {DIRECTORY_LAST_UPDATED_DISPLAY}
+            Last updated {lastUpdatedLabel}
           </p>
           <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-[#2a2a2a] bg-[#111]/60 px-4 py-3 text-left text-sm leading-relaxed text-[#a3a3a3] md:text-center">
             35mmAI is <span className="text-[#e5e5e5]">independent</span> and not paid by the
@@ -131,6 +140,14 @@ export function AboutPageContent({
             >
               Browse all tools
               <ArrowRight className="size-4" aria-hidden />
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onNavigate(10)}
+              className="h-11 min-h-[44px] border-[#444] text-[#e5e5e5] hover:bg-[#1a1a1a] md:px-6"
+            >
+              How it works
             </Button>
             <Button
               type="button"
@@ -193,7 +210,7 @@ export function AboutPageContent({
                   Last updated
                 </p>
                 <p className="mt-1 text-lg font-semibold text-[#e5e5e5]">
-                  {DIRECTORY_LAST_UPDATED_DISPLAY}
+                  {lastUpdatedLabel}
                 </p>
               </div>
             </div>
