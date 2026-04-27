@@ -854,6 +854,14 @@ useEffect(() => {
     >
       All Tools
     </Button>
+    <Button
+      variant="ghost"
+      onClick={() => setStep(step === 4 ? 0 : 4)}
+      aria-current={step === 4 ? "page" : undefined}
+      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+    >
+      Workflows
+    </Button>
     <Button 
       variant="ghost" 
       onClick={() => setStep(step === 5 ? 0 : 5)}
