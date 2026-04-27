@@ -625,7 +625,7 @@ export const allTools = [
     helps: "AI character and costume design",
     price: "Subscription",
     budgetFit: "both",
-    link: "style2d.ai",
+    link: "style3d.ai",
     roles: ["Costume Designer", "Production Designer"],
     shortDescription: "AI tool for generating character and costume designs",
     howToUse: [
@@ -701,7 +701,7 @@ export const allTools = [
     helps: "AI production scheduling and crew management",
     price: "Subscription",
     budgetFit: "both",
-    link: "yumdu.com",
+    link: "yamdu.com",
     roles: ["Producer / Line Producer", "Production Coordinator"],
     shortDescription: "AI-powered production scheduling and crew coordination",
     howToUse: [
@@ -720,7 +720,7 @@ export const allTools = [
     helps: "AI branding and marketing asset generation",
     price: "Subscription",
     budgetFit: "both",
-    link: "onbrand.ai",
+    link: "onbrandplm.com/ai-design",
     roles: ["Production Designer"],
     shortDescription: "AI tool for generating marketing and branding assets",
     howToUse: [
