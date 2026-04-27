@@ -845,7 +845,7 @@ useEffect(() => {
       aria-current={step === 9 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
-      🛠️ All Tools
+      All Tools
     </Button>
     <Button 
       variant="ghost" 
@@ -853,7 +853,7 @@ useEffect(() => {
       aria-current={step === 4 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
-      📋 Workflows
+      Workflows
     </Button>
     <Button 
       variant="ghost" 
@@ -861,7 +861,7 @@ useEffect(() => {
       aria-current={step === 5 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
-      💰 Budget Templates
+      Budget Templates
     </Button>
     <Button 
       variant="ghost" 
@@ -869,7 +869,7 @@ useEffect(() => {
       aria-current={step === 7 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
-      🧰 My Kit
+      My Kit
     </Button>
     <Button 
       variant="ghost" 
