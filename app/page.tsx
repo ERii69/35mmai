@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Info, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import {
   useState,
   useEffect,
@@ -481,6 +481,13 @@ useEffect(() => {
   }
 }, [step, myKit]);
 
+useEffect(() => {
+  if (typeof window === "undefined") return;
+  if (step === 4) {
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+}, [step]);
+
 // Load My Kit and last step from localStorage when the app starts
 useEffect(() => {
   // Load My Kit
@@ -849,14 +856,6 @@ useEffect(() => {
     </Button>
     <Button 
       variant="ghost" 
-      onClick={() => setStep(step === 4 ? 0 : 4)}
-      aria-current={step === 4 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
-    >
-      Workflows
-    </Button>
-    <Button 
-      variant="ghost" 
       onClick={() => setStep(step === 5 ? 0 : 5)}
       aria-current={step === 5 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
@@ -885,7 +884,7 @@ useEffect(() => {
       aria-current={step === 3 ? "page" : undefined}
       className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
-      <Info className="h-4 w-4" /> About
+      About
     </Button>
   </nav>
 
@@ -1749,27 +1748,6 @@ useEffect(() => {
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.03)_0%,transparent_70%)] pointer-events-none" />
 
     <div ref={workflowKeyboardRootRef} className="max-w-5xl mx-auto relative z-10">
-      <nav
-        className="mb-6 hidden justify-center text-sm text-[#888] md:flex"
-        aria-label="Breadcrumb"
-      >
-        <ol className="flex flex-wrap items-center gap-2">
-          <li>
-            <button
-              type="button"
-              onClick={() => setStep(0)}
-              className="hover:text-[#e11d48] transition-colors"
-            >
-              Home
-            </button>
-          </li>
-          <li aria-hidden className="text-[#444]">
-            /
-          </li>
-          <li className="text-[#d1d5db]">Workflows</li>
-        </ol>
-      </nav>
-
       <div className="text-center mb-8 md:mb-10">
         <h1 className="text-3xl md:text-6xl font-bold mb-4 tracking-tight">
           Workflow Builder
