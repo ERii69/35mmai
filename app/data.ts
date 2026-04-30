@@ -874,6 +874,7 @@ export const allTools = [
     price: "from $15/mo (Free tier)",
     budgetFit: "both",
     link: "invideo.io",
+    affiliateLink: "https://invideo.sjv.io/c/7233581/883681/12258",
     roles: ["Producer / Line Producer", "Editor", "Director"],
     shortDescription: "Ship a credible Kickstarter or festival trailer fast when you lack an in-house motion designer",
     howToUse: [
