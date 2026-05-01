@@ -932,6 +932,7 @@ export const allTools = [
     price: "from $14/mo (Free tier)",
     budgetFit: "indie",
     link: "mubert.com",
+    affiliateLink: "https://mubert.com/render/pricing?via=eva-riinitze",
     roles: ["Sound Designer", "Editor", "Director"],
     shortDescription: "Infinite-ish stems tuned by mood and BPM so editors can cut without fighting a fixed master",
     howToUse: [
