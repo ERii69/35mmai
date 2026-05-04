@@ -5,6 +5,9 @@ Generate docs/35mmAI-media-kit.pdf for partner programs (e.g. Impact).
 Creates supporting PNGs under docs/media-kit-assets/ (brand hero + site-style preview).
 Optional: downloads favicon from https://www.35mmai.com for the logo mark.
 
+Do not publish this PDF on 35mmai.com: keep it under docs/ for private partner outreach only
+(never copy into public/ or link from the Next.js app unless product asks for it explicitly).
+
 Install deps (project-local venv recommended):
   python3 -m venv .venv-media-kit
   . .venv-media-kit/bin/activate
