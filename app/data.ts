@@ -404,20 +404,20 @@ export const allTools = [
     rank: 20,
     name: "Adobe Firefly",
     category: "Pre-Prod",
-    helps: "Generative AI for image and video creation integrated with Adobe tools",
+    helps: "Fast visual ideation for filmmakers across pre-production and post: concept frames, style exploration, and background elements that flow into Adobe workflows",
     price: "Subscription",
     budgetFit: "both",
     link: "adobe.com/firefly",
     roles: ["Production Designer", "Editor"],
-    shortDescription: "Generative AI integrated directly into Adobe Photoshop and Premiere",
+    shortDescription: "Generate concept visuals and production-ready creative variants quickly, then hand off cleanly into Photoshop and Premiere workflows",
     howToUse: [
-      "Step 1: Open Photoshop or Premiere with Firefly enabled",
-      "Step 2: Use Generative Fill or Text to Image",
-      "Step 3: Describe what you want to create or modify",
-      "Step 4: Refine the generated content",
-      "Step 5: Integrate into your project"
+      "Step 1: Define the scene goal (mood, location, lens feel) before generating",
+      "Step 2: Create multiple concept frames with Text to Image to explore direction",
+      "Step 3: Use Generative Fill to extend sets, swap background elements, or test art direction",
+      "Step 4: Select the strongest variant and refine for continuity with your shot list",
+      "Step 5: Hand off approved assets into Photoshop and Premiere for edit-ready comps"
     ],
-    examplePrompt: "Generate a cyberpunk city background for this character plate"
+    examplePrompt: "Neo-noir alley at night, 35mm lens feel, wet pavement and sodium-vapor glow; generate 4 visual variants, then extend background signage and crowd depth for a Premiere-ready concept comp"
   },
   {
     rank: 21,

@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "ci": "npm run lint && npm run build",
-    "affiliates:check": "node scripts/check-affiliate-links.js"
+    "affiliates:check": "node scripts/check-affiliate-links.mjs"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
