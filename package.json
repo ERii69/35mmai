@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "ci": "npm run lint && npm run build",
-    "affiliates:check": "node scripts/check-affiliate-links.mjs"
+    "affiliates:check": "node scripts/check-affiliate-links.mjs",
+    "media-kit:pdf": "python3 scripts/generate-media-kit-pdf.py"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
