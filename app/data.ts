@@ -1096,6 +1096,186 @@ export const allTools = [
     ],
     examplePrompt: "Reserve 12x12 solids and a PeeWee for Unit B next Tuesday and alert if the package conflicts with the commercial prep hold"
   },
+  {
+    rank: 56,
+    name: "Envato Elements",
+    category: "Post-Prod",
+    helps: "Subscription library of stock video, music, SFX, graphics, and templates for fast rough cuts, pitch decks, and social deliverables",
+    price: "from $16.50/mo",
+    budgetFit: "both",
+    link: "elements.envato.com",
+    affiliateLink: "",
+    roles: ["Editor", "Sound Designer", "Director"],
+    shortDescription: "One subscription for stock assets so editorial can move while waiting on final shoots and composer handoff",
+    howToUse: [
+      "Step 1: Build a project collection by scene type and mood",
+      "Step 2: Pull temporary music and SFX for rough cut pacing",
+      "Step 3: Use title and transition templates for preview exports",
+      "Step 4: Replace placeholders with licensed final selections before delivery",
+      "Step 5: Archive license receipts with project paperwork"
+    ],
+    examplePrompt: "Find tense newsroom ambience, subtle glitch transition pack, and minimalist lower thirds for a political thriller teaser"
+  },
+  {
+    rank: 57,
+    name: "Wondershare Filmora",
+    category: "Post-Prod",
+    helps: "Accessible video editor with templates, captions, and AI-assisted cleanup for fast social cuts and first-pass trailer edits",
+    price: "from $49.99/yr",
+    budgetFit: "indie",
+    link: "filmora.wondershare.com",
+    affiliateLink: "",
+    roles: ["Editor", "Director", "Producer / Line Producer"],
+    shortDescription: "Useful when a small team needs publishable promo edits without a full NLE-heavy workflow",
+    howToUse: [
+      "Step 1: Start with a vertical, square, or widescreen preset",
+      "Step 2: Drop interview or BTS footage into a simple timeline",
+      "Step 3: Auto-generate captions and clean filler words",
+      "Step 4: Apply consistent color and title templates for brand continuity",
+      "Step 5: Export platform-specific versions for socials and ads"
+    ],
+    examplePrompt: "Cut a 30-second festival teaser from BTS clips, add burned-in captions, and export 9:16 plus 16:9 versions"
+  },
+  {
+    rank: 58,
+    name: "Kapwing",
+    category: "Post-Prod",
+    helps: "Browser-based editor for quick captioning, resizing, and collaborative review on trailer snippets and announcement posts",
+    price: "from $16/mo (Free tier)",
+    budgetFit: "both",
+    link: "kapwing.com",
+    affiliateLink: "",
+    roles: ["Editor", "Producer / Line Producer", "Director"],
+    shortDescription: "Great for rapid social repackaging without moving every change through the full finishing timeline",
+    howToUse: [
+      "Step 1: Upload a cut or paste a hosted clip link",
+      "Step 2: Auto-caption and fix names, film terms, and timing",
+      "Step 3: Duplicate timeline into 16:9, 1:1, and 9:16 layouts",
+      "Step 4: Share review link for producer notes",
+      "Step 5: Export social-ready masters with safe margins"
+    ],
+    examplePrompt: "Turn a 90-second director interview into a 20-second vertical quote clip with bold captions and logo end card"
+  },
+  {
+    rank: 59,
+    name: "VEED",
+    category: "Post-Prod",
+    helps: "Online editing and subtitle workflow for creator-style marketing videos, explainers, and quick launch announcements",
+    price: "from $18/mo (Free tier)",
+    budgetFit: "both",
+    link: "veed.io",
+    affiliateLink: "",
+    roles: ["Editor", "Producer / Line Producer", "Director"],
+    shortDescription: "Fast subtitle and format conversion tool when marketing needs same-day variants",
+    howToUse: [
+      "Step 1: Upload cut and choose target channel preset",
+      "Step 2: Generate subtitles and correct film-specific vocabulary",
+      "Step 3: Add branded intro/outro and CTA card",
+      "Step 4: Resize to vertical and square without re-editing from scratch",
+      "Step 5: Export compressed versions for each platform"
+    ],
+    examplePrompt: "Create subtitled 15-second and 30-second launch clips from the same trailer and add website CTA at end"
+  },
+  {
+    rank: 60,
+    name: "Artlist",
+    category: "Post-Prod",
+    helps: "Licensed music and SFX catalog for trailer temping, branded content, and documentary underscore with clear usage terms",
+    price: "from $9.99/mo",
+    budgetFit: "both",
+    link: "artlist.io",
+    affiliateLink: "",
+    roles: ["Sound Designer", "Editor", "Director"],
+    shortDescription: "Reliable licensing path when you need strong temp tracks that can stay in final cut",
+    howToUse: [
+      "Step 1: Filter by mood, BPM, and instrument for scene intent",
+      "Step 2: Test multiple cues against dialogue-heavy and montage sections",
+      "Step 3: Download stems where available for cleaner mix control",
+      "Step 4: Track selected cue IDs in your music report",
+      "Step 5: Confirm final license scope before release"
+    ],
+    examplePrompt: "Find a slow-build cinematic cue for a reveal scene with strings and sub pulse that peaks at 1:20"
+  },
+  {
+    rank: 61,
+    name: "Pictory",
+    category: "Post-Prod",
+    helps: "Text and long-form-to-short-form video repackaging for behind-the-scenes explainers and social snippets",
+    price: "from $25/mo",
+    budgetFit: "indie",
+    link: "pictory.ai",
+    affiliateLink: "",
+    roles: ["Editor", "Producer / Line Producer", "Director"],
+    shortDescription: "Quickly converts interviews or podcasts into short promo clips when time is limited",
+    howToUse: [
+      "Step 1: Import script, article, or long-form video",
+      "Step 2: Let AI suggest key moments and visual pairings",
+      "Step 3: Swap weak stock picks with stronger branded visuals",
+      "Step 4: Add subtitles and trim for 15–45 second social formats",
+      "Step 5: Export multiple captioned variants for testing"
+    ],
+    examplePrompt: "Turn a 12-minute podcast segment about indie budgeting into three 30-second subtitled clips"
+  },
+  {
+    rank: 62,
+    name: "Canva",
+    category: "Pre-Prod",
+    helps: "Fast design tool for pitch decks, lookbooks, one-sheets, and social key art when dedicated design bandwidth is limited",
+    price: "from $14.99/mo (Free tier)",
+    budgetFit: "both",
+    link: "canva.com",
+    affiliateLink: "",
+    roles: ["Producer / Line Producer", "Director", "Production Designer"],
+    shortDescription: "Useful for professional-looking presentations and promo graphics without waiting on a separate design pipeline",
+    howToUse: [
+      "Step 1: Start from a film pitch deck or poster template",
+      "Step 2: Add stills, palette swatches, and typography references",
+      "Step 3: Build matching social cards for casting and launch posts",
+      "Step 4: Export PDF deck plus PNG assets for distribution",
+      "Step 5: Share editable link for collaborator updates"
+    ],
+    examplePrompt: "Create a 10-slide pitch deck visual style with moody noir palette, location references, and cast mood board page"
+  },
+  {
+    rank: 63,
+    name: "Shutterstock",
+    category: "Post-Prod",
+    helps: "Stock footage, stills, and editorial assets for placeholders, transitions, and missing inserts during edit crunch",
+    price: "from $29/mo",
+    budgetFit: "both",
+    link: "shutterstock.com",
+    affiliateLink: "",
+    roles: ["Editor", "Producer / Line Producer", "Director"],
+    shortDescription: "Large library for patching coverage gaps or creating polished temporary cuts during reshoot uncertainty",
+    howToUse: [
+      "Step 1: Search by shot type, location, and movement",
+      "Step 2: Pull watermarked comps to validate pacing in edit",
+      "Step 3: License finals only after creative lock",
+      "Step 4: Keep clip IDs and receipts tied to project folders",
+      "Step 5: Replace temporary assets before final conform if needed"
+    ],
+    examplePrompt: "Find aerial dusk city transitions and neutral office b-roll to bridge scene jumps in a corporate thriller cut"
+  },
+  {
+    rank: 64,
+    name: "Motion Array",
+    category: "Post-Prod",
+    helps: "Template and asset marketplace for Premiere/After Effects style graphics, transitions, and sound design packs",
+    price: "from $24.99/mo",
+    budgetFit: "both",
+    link: "motionarray.com",
+    affiliateLink: "",
+    roles: ["Editor", "Sound Designer", "Director"],
+    shortDescription: "Accelerates finishing by using proven template kits for titles, transitions, and social cutdowns",
+    howToUse: [
+      "Step 1: Pick template packs matching genre and tone",
+      "Step 2: Import project files into your NLE or motion app",
+      "Step 3: Replace placeholders with film branding and shots",
+      "Step 4: Sync transition timing with score beats",
+      "Step 5: Export reusable presets for future episodes or campaigns"
+    ],
+    examplePrompt: "Build a gritty opener package with kinetic titles, lens dirt overlays, and whoosh SFX for a crime mini-series promo"
+  },
 ];
 
 /** Stable join key between `allTools` and workflow / budget presets (unique per tool). */

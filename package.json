@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "ci": "npm run lint && npm run build"
+    "ci": "npm run lint && npm run build",
+    "affiliates:check": "node scripts/check-affiliate-links.js"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
