@@ -869,7 +869,7 @@ useEffect(() => {
 <header className="fixed inset-x-0 top-0 z-40 border-b border-[#333] bg-[#0f0f0f]/95 pt-[env(safe-area-inset-top)] backdrop-blur-sm">
   <div className="flex items-center justify-between gap-3 px-4 py-2 sm:px-6 md:py-2.5">
 
-  {/* Left: Logo + BETA (single row — shorter on mobile) */}
+  {/* Left: Logo */}
   <div className="flex min-w-0 items-center gap-2 md:gap-2.5">
     <button
       type="button"
@@ -879,9 +879,6 @@ useEffect(() => {
     >
       <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
     </button>
-    <span className="shrink-0 rounded-full border border-amber-400/50 bg-amber-500 px-2 py-0.5 text-[10px] font-bold leading-none tracking-widest text-black md:px-2.5 md:py-1 md:text-xs">
-      BETA
-    </span>
   </div>
 
   {/* Centered Navigation */}

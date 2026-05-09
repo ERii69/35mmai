@@ -19,9 +19,6 @@ export default function HowItWorksPage() {
             >
               <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
             </Link>
-            <span className="shrink-0 rounded-full border border-amber-400/50 bg-amber-500 px-2 py-0.5 text-[10px] font-bold leading-none tracking-widest text-black md:text-xs">
-              BETA
-            </span>
           </div>
           <Link
             href="/"
