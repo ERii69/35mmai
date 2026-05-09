@@ -1,3 +1,6 @@
+/** How the entry fits the catalog (AI apps vs hardware vs retailers). */
+export type CatalogKind = "ai" | "software" | "gear" | "hardware";
+
 export type Tool = {
   rank: number;
   name: string;
@@ -8,6 +11,8 @@ export type Tool = {
   link: string;
   /** Optional tracked partner URL; falls back to `link` when unset. */
   affiliateLink?: string;
+  /** Override when kind is not inferred from category / catalog rank lists. */
+  catalogKind?: CatalogKind;
   roles: string[];
   shortDescription?: string;
   howToUse?: string[];
@@ -404,20 +409,22 @@ export const allTools = [
     rank: 20,
     name: "Adobe Firefly",
     category: "Pre-Prod",
-    helps: "Fast visual ideation for filmmakers across pre-production and post: concept frames, style exploration, and background elements that flow into Adobe workflows",
+    helps: "Adobe's generative AI for images, vectors, and in-app fills—available on the web and inside Creative Cloud apps where Firefly features are turned on",
     price: "Subscription",
     budgetFit: "both",
     link: "adobe.com/firefly",
     roles: ["Production Designer", "Editor"],
-    shortDescription: "Generate concept visuals and production-ready creative variants quickly, then hand off cleanly into Photoshop and Premiere workflows",
+    shortDescription:
+      "Adobe's generative AI layer for concept frames, text-to-image, and Generative Fill-style work that feeds Photoshop, Illustrator, and Premiere—not the Creative Cloud app bundle itself",
     howToUse: [
-      "Step 1: Define the scene goal (mood, location, lens feel) before generating",
-      "Step 2: Create multiple concept frames with Text to Image to explore direction",
-      "Step 3: Use Generative Fill to extend sets, swap background elements, or test art direction",
-      "Step 4: Select the strongest variant and refine for continuity with your shot list",
-      "Step 5: Hand off approved assets into Photoshop and Premiere for edit-ready comps"
+      "Step 1: Sign in with your Adobe ID and open Firefly on the web or from a supported Creative Cloud app",
+      "Step 2: Pick Text to Image or Generative Fill depending on whether you need new frames or edits",
+      "Step 3: Align outputs with your aspect ratio, brand palette, and continuity notes from the shot list",
+      "Step 4: Export or send assets into Photoshop, Illustrator, or Premiere for finishing",
+      "Step 5: Archive approved variants with version names your editorial team can trace",
     ],
-    examplePrompt: "Neo-noir alley at night, 35mm lens feel, wet pavement and sodium-vapor glow; generate 4 visual variants, then extend background signage and crowd depth for a Premiere-ready concept comp"
+    examplePrompt:
+      "Neo-noir alley at night, 35mm lens feel, wet pavement and sodium-vapor glow; generate 4 visual variants, then extend background signage and crowd depth for a Premiere-ready concept comp",
   },
   {
     rank: 21,
@@ -599,16 +606,18 @@ export const allTools = [
     rank: 30,
     name: "Feiyu SCORP 2",
     category: "Production",
-    helps: "AI-powered gimbal stabilization with cinematic modes",
+    helps: "Motorized camera gimbal for stabilized handheld shots; companion app adds cinematic presets and subject tracking—physical rig first, smart features second",
     price: "Hardware + app",
     budgetFit: "both",
-    link: "feiyu-tech.com",
+    link: "www.feiyu-tech.com",
+    catalogKind: "hardware" as CatalogKind,
     roles: [
       "Gaffer (Lighting)",
       "DOP (Director of Photography)",
       "Key Grip",
     ],
-    shortDescription: "Smart gimbal with AI cinematic shooting modes",
+    shortDescription:
+      "Handheld stabilization rig for production—optional app-based cinematic and tracking assists",
     howToUse: [
       "Step 1: Set up the Feiyu SCORP 2 gimbal",
       "Step 2: Connect to the Feiyu ON app",
@@ -1120,14 +1129,15 @@ export const allTools = [
     rank: 57,
     name: "Wondershare Filmora",
     category: "Post-Prod",
-    helps: "Accessible video editor with templates, captions, and AI-assisted cleanup for fast social cuts and first-pass trailer edits",
+    helps: "Full editing suite with timeline tools plus AI-assisted captions, filler cleanup, and templates for promo and trailer cuts—not only a generic utility app",
     price: "from $49.99/yr",
     budgetFit: "indie",
     link: "filmora.wondershare.com",
     affiliateLink:
       "https://www.jdoqocy.com/click-7947848-13530874?sid=35mmmai-home",
     roles: ["Editor", "Director", "Producer / Line Producer"],
-    shortDescription: "Useful when a small team needs publishable promo edits without a full NLE-heavy workflow",
+    shortDescription:
+      "AI-assisted editing suite for publishable promo cuts and trailers when you want more than a bare-bones editor",
     howToUse: [
       "Step 1: Start with a vertical, square, or widescreen preset",
       "Step 2: Drop interview or BTS footage into a simple timeline",
@@ -1277,7 +1287,162 @@ export const allTools = [
     ],
     examplePrompt: "Build a gritty opener package with kinetic titles, lens dirt overlays, and whoosh SFX for a crime mini-series promo"
   },
+  {
+    rank: 65,
+    name: "B&H Photo Video",
+    category: "Gear",
+    helps: "Major retailer for cinema cameras, lenses, lighting, audio, grip, computers, and editing/post hardware — pair with the gear planner when pricing purchases vs rentals",
+    price: "Cart pricing (varies)",
+    budgetFit: "both",
+    link: "www.bhphotovideo.com",
+    affiliateLink: "",
+    roles: [
+      "Producer / Line Producer",
+      "DOP (Director of Photography)",
+      "Key Grip",
+      "Editor",
+    ],
+    shortDescription:
+      "Primary retailer path when your budget shifts from rental quotes to buying bodies, glass, lights, or edit workstations",
+    howToUse: [
+      "Step 1: Build your kit list in 35mmAI, then search B&H for each line item’s buy price",
+      "Step 2: Compare manufacturer bundles vs à la carte glass and media",
+      "Step 3: Add tripods, bags, and spare batteries while cart value is still in one shipment",
+      "Step 4: Park tax-exempt or reseller paperwork if your production company qualifies",
+      "Step 5: Save invoices next to rental paperwork for insurance and resale records",
+    ],
+    examplePrompt:
+      "Price a Sony FX6 package with two budget primes, Nanlite key light, and CFexpress cards for a 4-week doc shoot vs renting locally",
+  },
+  {
+    rank: 66,
+    name: "Adorama",
+    category: "Gear",
+    helps: "Photo, video, pro audio, and computing retailer — compare bundles, kits, and open-box against your gear-planner buy lines",
+    price: "Cart pricing (varies)",
+    budgetFit: "both",
+    link: "www.adorama.com",
+    affiliateLink: "",
+    roles: [
+      "Producer / Line Producer",
+      "DOP (Director of Photography)",
+      "Editor",
+    ],
+    shortDescription:
+      "Cross-check prices and bundles when your gear planner flags buy scenarios for cameras, lenses, or studio gear",
+    howToUse: [
+      "Step 1: Export your shortlist from prep and search Adorama for matching SKUs",
+      "Step 2: Compare open-box or kit discounts against MAP bundles",
+      "Step 3: Stack education or loyalty offers if your account qualifies",
+      "Step 4: Align delivery dates with prep week before camera tests",
+      "Step 5: File receipts with the line producer for cost-report actuals",
+    ],
+    examplePrompt:
+      "Find a mid-tier mirrorless cinema kit plus on-camera mic and SD media under a $6k purchase cap for a student feature",
+  },
+  {
+    rank: 67,
+    name: "CyberLink PowerDirector",
+    category: "Post-Prod",
+    helps: "Windows-focused NLE with AI-assisted editing, motion titles, and effects — built for fast turnaround and vertical/social exports on PC",
+    price: "from ~$69.99/yr (PowerDirector 365; regional offers vary)",
+    budgetFit: "indie",
+    link: "www.cyberlink.com/products/powerdirector",
+    affiliateLink: "",
+    roles: ["Editor", "Director", "Producer / Line Producer"],
+    shortDescription:
+      "AI-powered timeline editing when your post pipeline is Windows-heavy and you want templates plus fast social exports",
+    howToUse: [
+      "Step 1: Set project to your delivery aspect ratios (16:9, 9:16, 1:1)",
+      "Step 2: Use AI-assisted tools for rough assembly and reframing where available",
+      "Step 3: Layer titles and motion graphics from built-in libraries",
+      "Step 4: Export platform presets for festival promo and ads",
+      "Step 5: Archive project packages for pickup editors",
+    ],
+    examplePrompt:
+      "Cut a 45-second Windows-only promo from mixed H.264 dailies with bold captions for Meta ads",
+  },
+  {
+    rank: 68,
+    name: "Adobe Creative Cloud",
+    category: "Post-Prod",
+    helps: "The Adobe software subscription: Premiere Pro, After Effects, Audition, Photoshop, Lightroom, and related apps—traditional creative tools for edit, motion, sound, and imaging (distinct from Adobe Firefly's generative AI services)",
+    price:
+      "from $22.99/mo (single app); All Apps from ~$59.99/mo (plans vary by region)",
+    budgetFit: "both",
+    link: "www.adobe.com/creativecloud",
+    affiliateLink: "",
+    catalogKind: "software" as CatalogKind,
+    roles: ["Editor", "Sound Designer", "Director", "Producer / Line Producer"],
+    shortDescription:
+      "Adobe's Creative Cloud subscription for Premiere, After Effects, Audition, Photoshop, and the rest of the pro app suite—classic post-production software, not an AI-only generator",
+    howToUse: [
+      "Step 1: Choose a plan covering Premiere, After Effects, and Audition as needed",
+      "Step 2: Standardize project settings to your delivery spec (frame rate, color space)",
+      "Step 3: Use Productions or shared projects for editor + AE artist split",
+      "Step 4: Round-trip Audition for noisy location repair where applicable",
+      "Step 5: Export mastering codecs per distributor checklist",
+    ],
+    examplePrompt:
+      "Set up a Premiere Productions workspace for a 90-minute feature with separate reels for editor and color",
+  },
+  {
+    rank: 69,
+    name: "Movavi Video Suite",
+    category: "Post-Prod",
+    helps: "Prosumer editing, screen recording, and media conversion in one ecosystem — suited to fast promo cuts and lightweight finishing when budget is tight",
+    price: "from ~$29.95/mo subscription (annual/perpetual offers vary)",
+    budgetFit: "indie",
+    link: "www.movavi.com/video-suite",
+    affiliateLink: "",
+    roles: ["Editor", "Producer / Line Producer", "Director"],
+    shortDescription:
+      "Low-friction editing and conversion stack for teasers, screen captures, and quick masters when schedule beats polish",
+    howToUse: [
+      "Step 1: Import mixed phone and camera codecs into one timeline",
+      "Step 2: Trim interview and B-roll for festival announcement cuts",
+      "Step 3: Capture screen recordings for crowdfunding or tutorial extras",
+      "Step 4: Export compressed review files for producer notes",
+      "Step 5: Keep license keys in the production vault for reinstalls",
+    ],
+    examplePrompt:
+      "Assemble a 2-minute Kickstarter pitch from phone B-roll plus voiceover recorded in the same app chain",
+  },
+  {
+    rank: 70,
+    name: "VideoProc",
+    category: "Post-Prod",
+    helps: "GPU-accelerated video processing: convert, compress, record, and quick-edit — ideal for proxies, screeners, and delivery variants from a laptop",
+    price: "from ~$25.95 one-time license (promotional pricing varies)",
+    budgetFit: "indie",
+    link: "www.videoproc.com",
+    affiliateLink: "",
+    roles: ["Editor", "Production Coordinator", "Producer / Line Producer"],
+    shortDescription:
+      "Transcode, compress, and tweak clips when dailies codecs or delivery specs do not match your NLE timeline",
+    howToUse: [
+      "Step 1: Batch transcode HEVC or LOG clips to edit-friendly proxies",
+      "Step 2: Trim and merge clips for investor-only screeners",
+      "Step 3: Compress masters for festival upload caps",
+      "Step 4: Rip supplementary codecs for archive drives",
+      "Step 5: Document settings next to DCP or platform specs",
+    ],
+    examplePrompt:
+      "Convert a folder of 4K H.265 interview files to ProRes proxy for an offline Premiere reel",
+  },
 ];
+
+/**
+ * Catalog kind for UI badges:
+ * - `gear`: retailers (category "Gear")
+ * - `ai`: default — most catalog entries are AI-first or AI-heavy editors, generators, libraries, and hybrid apps
+ * - `software`: optional override (`catalogKind: "software"`) for rare, primarily traditional listings only
+ */
+export function getCatalogKind(tool: Tool): CatalogKind {
+  if (tool.catalogKind) return tool.catalogKind;
+  if (tool.category === "Gear") return "gear";
+  return "ai";
+}
 
 /** Stable join key between `allTools` and workflow / budget presets (unique per tool). */
 export function getToolByRank(rank: number): Tool | undefined {

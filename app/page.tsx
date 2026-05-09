@@ -23,10 +23,12 @@ import {
   BUDGET_DEFAULT_LOW_ROWS,
   BUDGET_DEFAULT_MICRO_ROWS,
   budgetLinesFromPreset,
+  getCatalogKind,
   getToolByRank,
   rehydrateKitEntry,
   rolesList,
   workflowStages,
+  type CatalogKind,
   type Tool,
 } from "./data";
 
@@ -83,6 +85,45 @@ const cleanHowToStep = (step: string): string => {
   return step.replace(/^Step\s*\d+\s*:\s*/i, "").trim();
 };
 
+function catalogKindLabel(kind: CatalogKind): string {
+  if (kind === "ai") return "AI-first";
+  if (kind === "software") return "Creative software";
+  if (kind === "hardware") return "Hardware";
+  return "Gear & retail";
+}
+
+function catalogKindSummary(kind: CatalogKind): string {
+  if (kind === "ai") {
+    return "Generative or AI-heavy workflow tools (video, audio, images, VFX assistants).";
+  }
+  if (kind === "software") {
+    return "We use this label only for rare, mostly traditional listings marked explicitly in the catalog.";
+  }
+  if (kind === "hardware") {
+    return "Physical production equipment (gimbals, rigs, etc.). Smart or tracking modes are optional device features—not an AI-first software product.";
+  }
+  return "Retailers for buying cameras, lenses, lighting, and post hardware—plan purchases next to rentals.";
+}
+
+function CatalogKindBadge({ tool }: { tool: Tool }) {
+  const kind = getCatalogKind(tool);
+  const cls =
+    kind === "ai"
+      ? "border-emerald-500/40 bg-emerald-950/40 text-emerald-200"
+      : kind === "software"
+        ? "border-sky-500/35 bg-sky-950/35 text-sky-100"
+        : kind === "hardware"
+          ? "border-violet-500/45 bg-violet-950/45 text-violet-100"
+          : "border-amber-500/40 bg-amber-950/40 text-amber-100";
+  return (
+    <span
+      className={`inline-flex shrink-0 items-center rounded-full border px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide leading-none ${cls}`}
+    >
+      {catalogKindLabel(kind)}
+    </span>
+  );
+}
+
 function toAbsoluteToolUrl(raw?: string): string | null {
   if (!raw) return null;
   const trimmed = raw.trim();
@@ -128,7 +169,7 @@ function hasAffiliateLink(tool: Partial<Tool> & { catalogRank?: number }): boole
  * `!` utilities avoid inherited link/button colors turning these red on some layouts.
  */
 const addToKitSameAsBulkPhaseBtnClass =
-  "inline-flex items-center justify-center rounded-xl border !border-emerald-700/50 bg-emerald-950/30 px-4 py-2.5 text-sm font-medium !text-emerald-400 hover:border-emerald-500 hover:!border-emerald-500 hover:bg-emerald-950/40 transition-colors";
+  "inline-flex items-center justify-center rounded-xl border !border-emerald-700/50 bg-emerald-950/30 px-4 py-2.5 text-base font-medium !text-emerald-400 hover:border-emerald-500 hover:!border-emerald-500 hover:bg-emerald-950/40 transition-colors";
 
 const ONBOARDING_DISMISSED_KEY = "onboardingDismissedV1";
 
@@ -231,6 +272,10 @@ export default function Home() {
   const [workflowStageMenuOpen, setWorkflowStageMenuOpen] = useState(false);
   const [myKit, setMyKit] = useState<any[]>([]);
   const [currency, setCurrency] = useState("USD");
+  /** Filter tools by catalog kind (legend on All Tools). */
+  const [catalogKindFilter, setCatalogKindFilter] = useState<CatalogKind | null>(
+    null
+  );
 
   const CURRENCY_OPTIONS = [
   { value: "USD", label: "USD ($)" },
@@ -290,11 +335,22 @@ export default function Home() {
 
         const matchesRole = !selectedRole || roleSet.has(selectedRole);
 
-        return matchesSearch && matchesBudget && matchesRole;
+        const matchesKind =
+          !catalogKindFilter ||
+          getCatalogKind(tool) === catalogKindFilter;
+
+        return matchesSearch && matchesBudget && matchesRole && matchesKind;
       })
       .map(({ tool }) => tool)
       .sort((a, b) => a.rank - b.rank);
-  }, [indexedTools, isToolListingStep, searchLower, selectedBudget, selectedRole]);
+  }, [
+    indexedTools,
+    isToolListingStep,
+    searchLower,
+    selectedBudget,
+    selectedRole,
+    catalogKindFilter,
+  ]);
 
   const spotlightToolForRole = useMemo(() => {
     if (!selectedRole) return null;
@@ -963,7 +1019,7 @@ useEffect(() => {
           Cut costs.<br className="md:hidden" /> Elevate your film.
         </h1>
         <p className="text-sm md:text-xl text-[#d1d5db]">
-          AI tools that help indie filmmakers save time and cut costs from script to screen.
+          Plan gear and post with mostly AI-first tools and retailer picks built for indie budgets from script to screen.
         </p>
         <div className="mt-4 flex items-center justify-center gap-3">
           <button
@@ -1024,15 +1080,86 @@ useEffect(() => {
       <div className="text-center mb-12">
         <h1 className="text-3xl md:text-5xl font-bold mb-3">All Tools</h1>
         <p className="text-[#d1d5db] text-base md:text-xl mb-2">
-          Browse all <span className="font-semibold text-white">{allTools.length}</span> filmmaking AI tools
+          Browse all <span className="font-semibold text-white">{allTools.length}</span>{" "}
+          picks for your production, <span className="text-white">not only AI</span>
         </p>
+        <div className="mx-auto mb-4 grid max-w-4xl grid-cols-1 gap-2 rounded-2xl border border-[#2a2a2a] bg-[#111]/90 p-3 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3 lg:p-4">
+          <button
+            type="button"
+            aria-pressed={catalogKindFilter === "ai"}
+            onClick={() =>
+              setCatalogKindFilter((prev) => (prev === "ai" ? null : "ai"))
+            }
+            className={`flex min-h-[52px] w-full items-center justify-center rounded-xl border px-4 py-3 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48]/60 sm:justify-start sm:text-left ${
+              catalogKindFilter === "ai"
+                ? "border-emerald-500/55 bg-emerald-950/30 ring-2 ring-emerald-500/35"
+                : "border-transparent hover:border-[#333] hover:bg-[#151515]"
+            }`}
+          >
+            <span className="text-lg font-semibold leading-tight text-emerald-300 sm:text-xl">
+              AI-first
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={catalogKindFilter === "hardware"}
+            onClick={() =>
+              setCatalogKindFilter((prev) =>
+                prev === "hardware" ? null : "hardware"
+              )
+            }
+            className={`flex min-h-[52px] w-full items-center justify-center rounded-xl border px-4 py-3 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48]/60 sm:justify-start sm:text-left ${
+              catalogKindFilter === "hardware"
+                ? "border-violet-500/55 bg-violet-950/30 ring-2 ring-violet-500/35"
+                : "border-transparent hover:border-[#333] hover:bg-[#151515]"
+            }`}
+          >
+            <span className="text-lg font-semibold leading-tight text-violet-300 sm:text-xl">
+              Hardware
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={catalogKindFilter === "software"}
+            onClick={() =>
+              setCatalogKindFilter((prev) =>
+                prev === "software" ? null : "software"
+              )
+            }
+            className={`flex min-h-[52px] w-full items-center justify-center rounded-xl border px-4 py-3 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48]/60 sm:justify-start sm:text-left ${
+              catalogKindFilter === "software"
+                ? "border-sky-500/55 bg-sky-950/25 ring-2 ring-sky-500/35"
+                : "border-transparent hover:border-[#333] hover:bg-[#151515]"
+            }`}
+          >
+            <span className="text-lg font-semibold leading-tight text-sky-200 sm:text-xl">
+              Creative software
+            </span>
+          </button>
+          <button
+            type="button"
+            aria-pressed={catalogKindFilter === "gear"}
+            onClick={() =>
+              setCatalogKindFilter((prev) => (prev === "gear" ? null : "gear"))
+            }
+            className={`flex min-h-[52px] w-full items-center justify-center rounded-xl border px-4 py-3 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48]/60 sm:justify-start sm:text-left ${
+              catalogKindFilter === "gear"
+                ? "border-amber-500/55 bg-amber-950/25 ring-2 ring-amber-500/35"
+                : "border-transparent hover:border-[#333] hover:bg-[#151515]"
+            }`}
+          >
+            <span className="text-lg font-semibold leading-tight text-amber-200 sm:text-xl">
+              Gear &amp; retail
+            </span>
+          </button>
+        </div>
         <p className="text-sm text-[#888]">
           Last updated: {lastUpdatedLabel}
         </p>
       </div>
 
       {/* Filters + Search */}
-      <div className="sticky top-[calc(4.25rem+env(safe-area-inset-top))] z-30 -mx-2 mb-6 rounded-2xl border border-[#2a2a2a] bg-[#0f0f0f]/95 px-2 py-3 backdrop-blur-sm md:static md:mx-0 md:mb-8 md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none md:top-auto">
+      <div className="sticky top-[calc(4.25rem+env(safe-area-inset-top))] z-30 -mx-2 mb-6 rounded-2xl bg-[#0f0f0f]/95 px-2 py-3 backdrop-blur-sm md:static md:mx-0 md:mb-8 md:bg-transparent md:p-0 md:backdrop-blur-none md:top-auto">
       <div className="flex flex-col md:flex-row gap-4 mb-4 md:mb-6 max-w-md mx-auto">
         <div ref={roleFilterRootRef} className="relative flex-1">
           <button
@@ -1199,67 +1326,6 @@ useEffect(() => {
       </p>
       </div>
 
-      {(selectedRole || selectedBudget || searchTerm.trim()) && (
-        <div className="max-w-2xl mx-auto mb-8 flex flex-wrap items-center justify-center gap-2 px-1">
-          {selectedRole && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#333] bg-[#111] px-3 py-1.5 text-xs text-[#d1d5db]">
-              Role: <span className="font-medium text-white">{selectedRole}</span>
-              <button
-                type="button"
-                aria-label="Remove role filter"
-                onClick={() => setSelectedRole(null)}
-                className="text-[#888] hover:text-[#e11d48]"
-              >
-                ×
-              </button>
-            </span>
-          )}
-          {selectedBudget && (
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#333] bg-[#111] px-3 py-1.5 text-xs text-[#d1d5db]">
-              Budget:{" "}
-              <span className="font-medium text-white">
-                {selectedBudget === "indie" ? "Indie / Low" : "Aspirational"}
-              </span>
-              <button
-                type="button"
-                aria-label="Remove budget filter"
-                onClick={() => setSelectedBudget(null)}
-                className="text-[#888] hover:text-[#e11d48]"
-              >
-                ×
-              </button>
-            </span>
-          )}
-          {searchTerm.trim() && (
-            <span className="inline-flex max-w-[min(100%,18rem)] items-center gap-2 rounded-full border border-[#333] bg-[#111] px-3 py-1.5 text-xs text-[#d1d5db]">
-              Search:{" "}
-              <span className="truncate font-medium text-white">{searchTerm.trim()}</span>
-              <button
-                type="button"
-                aria-label="Clear search"
-                onClick={() => setSearchTerm("")}
-                className="text-[#888] hover:text-[#e11d48]"
-              >
-                ×
-              </button>
-            </span>
-          )}
-          <button
-            type="button"
-            onClick={() => {
-              setSelectedRole(null);
-              setSelectedBudget(null);
-              setSearchTerm("");
-              setRoleMenuOpen(false);
-              setBudgetMenuOpen(false);
-            }}
-            className="rounded-full border border-[#e11d48]/40 bg-black px-3 py-1.5 text-xs font-medium text-[#e11d48] hover:bg-[#1a1a1a]"
-          >
-            Clear all
-          </button>
-        </div>
-      )}
-
       {/* Spotlight - Fixed + Matching Step 2 Style */}
       {selectedRole && spotlightToolForRole && (
           <div className="mb-10 md:mb-12 bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-[#e11d48]/30 rounded-3xl p-5 sm:p-8">
@@ -1271,6 +1337,10 @@ useEffect(() => {
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="flex-1">
                 <h3 className="text-2xl md:text-3xl font-semibold mb-3">{spotlightToolForRole.name}</h3>
+                <div className="mb-4 flex flex-wrap items-center gap-2">
+                  <CatalogKindBadge tool={spotlightToolForRole} />
+                  <span className="text-xs text-[#737373]">{spotlightToolForRole.category}</span>
+                </div>
                 <p className="text-[#d1d5db] mb-6">{getUseCaseText(spotlightToolForRole, 180)}</p>
               </div>
 
@@ -1297,13 +1367,16 @@ useEffect(() => {
         {filteredTools.length > 0 ? (
           filteredTools.map((tool: any) => (
             <div key={tool.rank} className="rounded-3xl border border-[#333] bg-[#111] p-4">
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex items-center justify-between gap-2">
                 <span className="rounded-full border border-[#333] bg-[#1a1a1a] px-2.5 py-1 text-[11px] font-medium text-[#d1d5db]">
                   #{tool.rank}
                 </span>
-                <span className="rounded-full bg-[#1a1a1a] px-2.5 py-1 text-[11px] text-[#aaa]">
-                  {tool.category}
-                </span>
+                <div className="flex flex-shrink-0 flex-wrap items-center justify-end gap-1.5">
+                  <CatalogKindBadge tool={tool} />
+                  <span className="rounded-full bg-[#1a1a1a] px-2.5 py-1 text-[11px] text-[#aaa]">
+                    {tool.category}
+                  </span>
+                </div>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <a
@@ -1341,7 +1414,7 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => addToMyKit(tool)}
-                  className={`flex-1 min-h-[44px] px-3 py-2 text-sm ${addToKitSameAsBulkPhaseBtnClass}`}
+                  className={`flex-1 min-h-[44px] px-3 py-2 ${addToKitSameAsBulkPhaseBtnClass}`}
                 >
                   Add to Kit
                 </button>
@@ -1358,20 +1431,26 @@ useEffect(() => {
       {/* Desktop Table */}
       <div className="hidden md:block bg-[#111] border border-[#333] rounded-3xl overflow-hidden">
         <div className="overflow-x-auto">
-        <table className="w-full min-w-[840px]">
+        <table className="w-full min-w-[960px] border-separate border-spacing-0">
           <thead className="border-b border-[#333]">
             <tr>
               <th className="px-6 py-5 text-left font-medium text-[#888]">Tool</th>
-              <th className="px-6 py-5 text-left font-medium text-[#888]">Category</th>
+              <th className="px-6 py-5 text-left font-medium text-[#888]">Kind</th>
+              <th className="px-6 py-5 text-left font-medium text-[#888]">Stage</th>
               <th className="px-6 py-5 text-left font-medium text-[#888]">Use Case</th>
               <th className="px-6 py-5 text-left font-medium text-[#888]">Price</th>
-              <th className="w-48 text-right"></th>
+              <th className="sticky right-0 z-30 min-w-[13rem] bg-[#111] px-4 py-5 text-right text-sm font-medium text-[#888]">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredTools.length > 0 ? (
               filteredTools.map((tool: any) => (
-                <tr key={tool.rank} className="border-b border-[#222] hover:bg-[#1a1a1a] transition-colors">
+                <tr
+                  key={tool.rank}
+                  className="group border-b border-[#222] transition-colors hover:bg-[#1a1a1a]"
+                >
                   <td className="px-6 py-6 font-medium">
                     <div className="flex flex-wrap items-center gap-2">
                       <a 
@@ -1390,21 +1469,29 @@ useEffect(() => {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-6 text-[#888]">{tool.category}</td>
-                  <td className="px-6 py-6 text-[#d1d5db]">{getUseCaseText(tool, 140)}</td>
-                  <td className="px-6 py-6 text-[#888]">{tool.price}</td>
-                  <td className="px-6 py-6 text-right">
-                    <div className="flex gap-4 justify-end">
+                  <td className="px-6 py-6 align-middle">
+                    <div className="flex items-center">
+                      <CatalogKindBadge tool={tool} />
+                    </div>
+                  </td>
+                  <td className="px-6 py-6 align-middle text-[#888]">{tool.category}</td>
+                  <td className="px-6 py-6 align-middle text-[#d1d5db]">
+                    {getUseCaseText(tool, 140)}
+                  </td>
+                  <td className="px-6 py-6 align-middle text-[#888]">{tool.price}</td>
+                  <td className="sticky right-0 z-20 min-w-[13rem] bg-[#111] px-4 py-6 text-right align-middle transition-colors group-hover:bg-[#1a1a1a]">
+                    <div className="flex flex-col items-end gap-2 sm:flex-row sm:justify-end sm:gap-4">
                       <button 
                         onClick={() => setSelectedTool(tool)}
-                        className="text-[#e11d48] hover:underline text-sm font-medium"
+                        type="button"
+                        className="shrink-0 text-[#e11d48] hover:underline text-sm font-medium"
                       >
                         Tool Details
                       </button>
                       <button 
                         onClick={() => addToMyKit(tool)}
                         type="button"
-                        className={`whitespace-nowrap ${addToKitSameAsBulkPhaseBtnClass}`}
+                        className={`shrink-0 whitespace-nowrap px-4 py-2.5 ${addToKitSameAsBulkPhaseBtnClass}`}
                       >
                         Add to Kit
                       </button>
@@ -1414,7 +1501,7 @@ useEffect(() => {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-20 text-center text-[#888]">
+                <td colSpan={6} className="px-6 py-20 text-center text-[#888]">
                   No tools match your current filters.
                 </td>
               </tr>
@@ -1437,7 +1524,7 @@ useEffect(() => {
       <div className="text-center mb-12">
         <h1 className="text-5xl md:text-6xl font-bold mb-4 tracking-tight">Choose Your Role</h1>
         <p className="text-[#d1d5db] text-xl">
-          We'll show you the most relevant AI tools for your position
+          We&apos;ll surface the most relevant picks for your role—mostly AI-first tools and gear retailers
         </p>
         
         {/* Bigger Selected Path */}
@@ -1519,7 +1606,9 @@ useEffect(() => {
           <h2 className="text-2xl md:text-4xl font-bold mb-2">
             Tools for <span className="text-[#e11d48]">{selectedRole}</span>
           </h2>
-          <p className="text-[#888] mb-10">AI tools matched to your role</p>
+          <p className="text-[#888] mb-10">
+            Catalog matched to your role (mostly AI-first; gear &amp; retail where listed)
+          </p>
         </>
       )}
 
@@ -1534,6 +1623,10 @@ useEffect(() => {
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="flex-1">
                 <h3 className="text-3xl font-semibold mb-3">{spotlightToolForRole.name}</h3>
+                <div className="mb-4 flex flex-wrap items-center gap-2">
+                  <CatalogKindBadge tool={spotlightToolForRole} />
+                  <span className="text-xs text-[#737373]">{spotlightToolForRole.category}</span>
+                </div>
                 <p className="text-[#d1d5db] mb-6">{getUseCaseText(spotlightToolForRole, 180)}</p>
 
                 <div className="flex flex-wrap gap-2 mb-6">
@@ -1590,13 +1683,16 @@ useEffect(() => {
         {filteredTools.length > 0 ? (
           filteredTools.map((tool: any) => (
             <div key={tool.rank} className="rounded-3xl border border-[#333] bg-[#111] p-4">
-              <div className="mb-3 flex items-center justify-between">
+              <div className="mb-3 flex items-center justify-between gap-2">
                 <span className="rounded-full border border-[#333] bg-[#1a1a1a] px-2.5 py-1 text-[11px] font-medium text-[#d1d5db]">
                   #{tool.rank}
                 </span>
-                <span className="rounded-full bg-[#1a1a1a] px-2.5 py-1 text-[11px] text-[#aaa]">
-                  {tool.category}
-                </span>
+                <div className="flex flex-shrink-0 flex-wrap items-center justify-end gap-1.5">
+                  <CatalogKindBadge tool={tool} />
+                  <span className="rounded-full bg-[#1a1a1a] px-2.5 py-1 text-[11px] text-[#aaa]">
+                    {tool.category}
+                  </span>
+                </div>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <a
@@ -1634,7 +1730,7 @@ useEffect(() => {
                 <button
                   type="button"
                   onClick={() => addToMyKit(tool)}
-                  className={`flex-1 min-h-[44px] px-3 py-2 text-sm ${addToKitSameAsBulkPhaseBtnClass}`}
+                  className={`flex-1 min-h-[44px] px-3 py-2 ${addToKitSameAsBulkPhaseBtnClass}`}
                 >
                   Add to Kit
                 </button>
@@ -1652,22 +1748,28 @@ useEffect(() => {
       {/* Desktop Table */}
       <div className="hidden md:block bg-[#111] border border-[#333] rounded-3xl overflow-hidden">
         <div className="overflow-x-auto">
-        <table className="w-full min-w-[980px]">
+        <table className="w-full min-w-[1120px] border-separate border-spacing-0">
           <thead>
             <tr className="border-b border-[#333]">
               <th className="text-left py-5 px-8 font-medium text-[#888]">Tool</th>
-              <th className="text-left py-5 px-4 font-medium text-[#888]">Category</th>
+              <th className="text-left py-5 px-4 font-medium text-[#888]">Kind</th>
+              <th className="text-left py-5 px-4 font-medium text-[#888]">Stage</th>
               <th className="text-left py-5 px-4 font-medium text-[#888]">Use Case</th>
               <th className="text-left py-5 px-4 font-medium text-[#888]">Price</th>
               <th className="text-left py-5 px-4 font-medium text-[#888]">Top Roles</th>
-              <th className="w-40"></th>
+              <th className="sticky right-0 z-30 min-w-[13rem] bg-[#111] py-5 px-4 text-right text-sm font-medium text-[#888]">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredTools.length > 0 ? (
               filteredTools.map((tool: any) => (
-                <tr key={tool.rank} className="border-b border-[#333] hover:bg-[#1a1a1a] transition-colors group">
-                  <td className="py-5 px-8 font-medium">
+                <tr
+                  key={tool.rank}
+                  className="group border-b border-[#333] transition-colors hover:bg-[#1a1a1a]"
+                >
+                  <td className="py-5 px-8 font-medium align-middle">
                     <div className="flex flex-wrap items-center gap-2">
                       <a 
                         href={getToolHref(tool)} 
@@ -1685,12 +1787,17 @@ useEffect(() => {
                       )}
                     </div>
                   </td>
-                  <td className="py-5 px-4">
-                    <span className="px-3 py-1 bg-[#1a1a1a] text-xs rounded-full">{tool.category}</span>
+                  <td className="py-5 px-4 align-middle">
+                    <div className="flex items-center">
+                      <CatalogKindBadge tool={tool} />
+                    </div>
                   </td>
-                  <td className="py-5 px-4 text-[#d1d5db] text-sm">{getUseCaseText(tool, 150)}</td>
-                  <td className="py-5 px-4 text-[#e11d48]">{tool.price}</td>
-                  <td className="py-5 px-4">
+                  <td className="py-5 px-4 align-middle">
+                    <span className="inline-flex px-3 py-1 bg-[#1a1a1a] text-xs rounded-full">{tool.category}</span>
+                  </td>
+                  <td className="py-5 px-4 align-middle text-[#d1d5db] text-sm">{getUseCaseText(tool, 150)}</td>
+                  <td className="py-5 px-4 align-middle text-[#e11d48]">{tool.price}</td>
+                  <td className="py-5 px-4 align-middle">
                     <div className="flex flex-wrap gap-1">
                       {tool.roles.slice(0, 2).map((role: string, i: number) => (
                         <span key={i} className="text-xs bg-[#222] px-2.5 py-0.5 rounded-full">
@@ -1699,11 +1806,12 @@ useEffect(() => {
                       ))}
                     </div>
                   </td>
-                  <td className="py-5 px-8 text-right">
-                    <div className="flex gap-4 justify-end">
+                  <td className="sticky right-0 z-20 min-w-[13rem] bg-[#111] py-5 px-4 text-right align-middle transition-colors group-hover:bg-[#1a1a1a]">
+                    <div className="flex flex-col items-end gap-2 sm:flex-row sm:justify-end sm:gap-4">
                       <button 
+                        type="button"
                         onClick={() => setSelectedTool(tool)}
-                        className="text-[#e11d48] hover:underline text-sm font-medium"
+                        className="shrink-0 text-[#e11d48] hover:underline text-sm font-medium"
                       >
                         Tool Details
                       </button>
@@ -1712,7 +1820,7 @@ useEffect(() => {
                       <button 
                         type="button"
                         onClick={() => addToMyKit(tool)}
-                        className={`whitespace-nowrap ${addToKitSameAsBulkPhaseBtnClass}`}
+                        className={`shrink-0 whitespace-nowrap px-4 py-2.5 ${addToKitSameAsBulkPhaseBtnClass}`}
                       >
                         Add to Kit
                       </button>
@@ -1722,7 +1830,7 @@ useEffect(() => {
               ))
             ) : (
               <tr>
-                <td colSpan={6} className="py-20 text-center text-[#888]">
+                <td colSpan={7} className="py-20 text-center text-[#888]">
                   No tools found for "{searchTerm}".<br />
                   Try a broader keyword like storyboard, VFX, voice, or budget.
                 </td>
@@ -1761,8 +1869,7 @@ useEffect(() => {
           Workflow Builder
         </h1>
         <p className="text-[#d1d5db] max-w-2xl mx-auto">
-          Complete indie filmmaking workflow with practical steps and AI tool
-          recommendations
+          Practical phases with tool suggestions—mostly AI-first picks plus gear planning where relevant
         </p>
       </div>
 
@@ -2010,6 +2117,7 @@ useEffect(() => {
                                 <span className="px-3 py-1 bg-[#e11d48]/10 text-[#e11d48] text-xs font-medium rounded-full">
                                   Suggested
                                 </span>
+                                <CatalogKindBadge tool={tool} />
                                 <span className="px-2 py-0.5 rounded-md border border-[#333] text-[10px] font-medium uppercase tracking-wide text-[#a3a3a3]">
                                   {tool.category}
                                 </span>
@@ -2149,7 +2257,7 @@ useEffect(() => {
       <div className="mb-12 text-center">
         <h1 className="mb-3 text-3xl font-bold md:text-5xl">Budget Templates</h1>
         <p className="text-base text-[#d1d5db] md:text-xl">
-          Interactive planner with live AI savings calculator
+          Interactive planner with live monthly estimates
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-xs text-[#737373] md:text-sm">
           Each column links to a full Google Sheet — use{" "}
@@ -2227,7 +2335,9 @@ useEffect(() => {
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">Micro budget</p>
               <h3 className="text-xl font-bold text-white md:text-2xl">Solo / short film</h3>
-              <p className="mt-1 text-sm text-[#888]">Under ~$5,000 • AI tool line items</p>
+              <p className="mt-1 text-sm text-[#888]">
+                Under ~$5,000 • Tool line items (AI, software &amp; gear)
+              </p>
             </div>
           </div>
 
@@ -2302,7 +2412,7 @@ useEffect(() => {
           {/* Totals */}
           <div className="mt-10 pt-6 border-t border-[#333] space-y-4">
             <div className="flex justify-between text-lg">
-              <span>Total with AI</span>
+              <span>Estimated total (tools)</span>
               <span className="font-medium text-emerald-400">
                 {currencySymbol}{Math.round(microTotal)}
               </span>
@@ -2347,7 +2457,9 @@ useEffect(() => {
             <div className="min-w-0 flex-1">
               <p className="text-xs font-semibold uppercase tracking-wider text-amber-300">Low / aspirational</p>
               <h3 className="text-xl font-bold text-white md:text-2xl">Indie feature</h3>
-              <p className="mt-1 text-sm text-[#888]">~$5K – $30K • AI tool line items</p>
+              <p className="mt-1 text-sm text-[#888]">
+                ~$5K – $30K • Tool line items (AI, software &amp; gear)
+              </p>
             </div>
           </div>
 
@@ -2422,7 +2534,7 @@ useEffect(() => {
           {/* Totals for Low Budget */}
           <div className="mt-10 pt-6 border-t border-[#333] space-y-4">
             <div className="flex justify-between text-lg">
-              <span>Total with AI</span>
+              <span>Estimated total (tools)</span>
               <span className="font-medium text-yellow-400">
                 {currencySymbol}{Math.round(lowTotal)}
               </span>
@@ -2528,7 +2640,10 @@ useEffect(() => {
                     </span>
                   )}
                 </div>
-                <div className="text-sm text-[#888] mt-1">{tool.category}</div>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <CatalogKindBadge tool={tool} />
+                  <span className="text-sm text-[#888]">{tool.category}</span>
+                </div>
                 <p className="text-[#d1d5db] text-sm mt-3 leading-relaxed">{getUseCaseText(tool, 180)}</p>
               </div>
 
@@ -2921,9 +3036,15 @@ useEffect(() => {
               <p className="mb-4 text-base leading-relaxed text-[#d1d5db] sm:mb-6 sm:text-lg">
                 {getUseCaseText(selectedTool, 260)}
               </p>
+              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <CatalogKindBadge tool={selectedTool} />
+                <p className="text-sm text-[#737373]">
+                  {catalogKindSummary(getCatalogKind(selectedTool))}
+                </p>
+              </div>
               <div className="mb-8 grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <div className="rounded-xl border border-[#333] bg-[#1a1a1a] px-3 py-2">
-                  <p className="text-[11px] uppercase tracking-wide text-[#888]">Category</p>
+                  <p className="text-[11px] uppercase tracking-wide text-[#888]">Workflow stage</p>
                   <p className="mt-1 text-sm text-white">{selectedTool.category}</p>
                 </div>
                 <div className="rounded-xl border border-[#333] bg-[#1a1a1a] px-3 py-2">
@@ -2940,40 +3061,40 @@ useEffect(() => {
                 </div>
               </div>
               {selectedTool.howToUse && selectedTool.howToUse.length > 0 && (
-          <div className="mb-10">
-            <h4 className="mb-4 font-medium text-[#e11d48]">Quick setup steps</h4>
-            <div className="space-y-6">
-              {selectedTool.howToUse.map((step: string, index: number) => (
-                <div key={index} className="flex gap-4">
-                  <div className="w-6 h-6 rounded-full bg-[#1a1a1a] text-[#e11d48] flex items-center justify-center text-sm font-medium flex-shrink-0">
-                    {index + 1}
+                <div className="mb-10">
+                  <h4 className="mb-4 font-medium text-[#e11d48]">Quick setup steps</h4>
+                  <div className="space-y-6">
+                    {selectedTool.howToUse.map((step: string, index: number) => (
+                      <div key={index} className="flex gap-4">
+                        <div className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-[#1a1a1a] text-sm font-medium text-[#e11d48]">
+                          {index + 1}
+                        </div>
+                        <p className="text-[#d1d5db]">{cleanHowToStep(step)}</p>
+                      </div>
+                    ))}
                   </div>
-                  <p className="text-[#d1d5db]">{cleanHowToStep(step)}</p>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
-      {selectedTool.examplePrompt && (
-  <div className="mb-8 rounded-2xl border border-[#333] bg-[#1a1a1a] p-4 sm:p-6">
-    <div className="flex justify-between items-center mb-3">
-      <h4 className="text-[#e11d48] font-medium">Prompt starter</h4>
-      <button
-        type="button"
-        onClick={() => {
-          navigator.clipboard.writeText(selectedTool.examplePrompt);
-          setToast({ message: "Prompt copied", tone: "ok" });
-        }}
-        className="text-xs px-4 py-2 bg-[#222] hover:bg-[#e11d48] hover:text-white rounded-full transition-colors"
-      >
-        Copy
-      </button>
-    </div>
-    <p className="text-[#d1d5db] text-sm leading-relaxed italic bg-[#111] p-4 rounded-xl border-l-4 border-[#e11d48]">
-      “{selectedTool.examplePrompt}”
-    </p>
-  </div>
-)}
+              )}
+              {selectedTool.examplePrompt && (
+                <div className="mb-8 rounded-2xl border border-[#333] bg-[#1a1a1a] p-4 sm:p-6">
+                  <div className="mb-3 flex items-center justify-between">
+                    <h4 className="font-medium text-[#e11d48]">Prompt example</h4>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(selectedTool.examplePrompt);
+                        setToast({ message: "Prompt copied", tone: "ok" });
+                      }}
+                      className="rounded-full bg-[#222] px-4 py-2 text-xs transition-colors hover:bg-[#e11d48] hover:text-white"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                  <p className="rounded-xl border-l-4 border-[#e11d48] bg-[#111] p-4 text-sm italic leading-relaxed text-[#d1d5db]">
+                    “{selectedTool.examplePrompt}”
+                  </p>
+                </div>
+              )}
             </div>
             <div className="border-t border-[#333] px-4 py-3 sm:px-8 sm:py-5">
               <div className="flex flex-col gap-2 sm:flex-row">
