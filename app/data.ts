@@ -1124,7 +1124,8 @@ export const allTools = [
     price: "from $49.99/yr",
     budgetFit: "indie",
     link: "filmora.wondershare.com",
-    affiliateLink: "",
+    affiliateLink:
+      "https://www.jdoqocy.com/click-7947848-13530874?sid=35mmmai-home",
     roles: ["Editor", "Director", "Producer / Line Producer"],
     shortDescription: "Useful when a small team needs publishable promo edits without a full NLE-heavy workflow",
     howToUse: [
