@@ -165,3 +165,5 @@ Slices **1A–1B** block nothing downstream. **1C** is the core value; **1D–1F
 ---
 
 *Implementation: use `generate-tasks.md` from this PRD — not from `0001`.*
+
+**Task list:** `tasks/tasks-0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`
