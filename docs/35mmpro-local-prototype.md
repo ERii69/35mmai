@@ -41,12 +41,26 @@ Nothing in these scripts talks to Vercel or production; they only run Next.js lo
 | **`main`** | Matches live site; only catalog fixes, bugfixes, and changes you intend to deploy. |
 | **`35mmpro-prototype`** (or similar) | All 35mmPRO membership, dashboard, billing, and PRO-only features until you intentionally release. |
 
+**Policy (current):** Keep **`35mmpro-prototype` local-only** — do **not** `git push` it to GitHub until you are comfortable with preview deploys / remote exposure. Live updates stay on **`main`** as usual.
+
 **Rules:**
 
-1. Do **not** merge `35mmpro-prototype` into `main`** until you deliberately ship PRO.
-2. Do **not** push `35mmpro-prototype` to GitHub if you want **zero** cloud exposure — keep PRO commits local only (no backup on remote).  
-   If you **do** push the branch, GitHub/Vercel may create **preview** deployments (not your custom domain, but still on the internet). To avoid previews: in **Vercel → Project → Git → Ignored Build Step** or disable preview deployments for non‑`main` branches; or use a **second clone** of the repo with **no `remote`** for paranoid local-only work.
-3. Cherry-picks: When live needs a hotfix, work on `main` (or a short-lived `fix/*` branch off `main`), **not** only on the PRO branch — avoids dragging PRO into production.
+1. Do **not** merge `35mmpro-prototype` into **`main`** until you deliberately ship PRO.
+2. Do **not** push **`35mmpro-prototype`** to **`origin`** while staying local-only. Pushing that branch can trigger **Vercel preview builds** and copies code off your machine — fine later, not while you want zero cloud footprint.
+3. **Hotfixes for live:** Work on **`main`** (or `fix/*` off `main`). Do not rely only on the PRO branch for production fixes — avoids merging unfinished PRO with live.
+
+### Backup without pushing PRO
+
+Local-only means **no GitHub backup** for that branch unless you push. Mitigations:
+
+- **Time Machine** or another full-disk backup of the project folder.
+- Occasional **`git bundle`** (creates a single file you can stash on a drive or encrypted archive):
+
+  ```bash
+  git bundle create ~/Desktop/35mmai-pro-prototype-backup.bundle 35mmpro-prototype
+  ```
+
+  Restore later with `git clone ~/Desktop/35mmai-pro-prototype-backup.bundle` or `git bundle verify` / `git pull` from the bundle as documented in `git help bundle`.
 
 ### Optional: second folder, no remote
 
@@ -61,4 +75,4 @@ The live site’s Vercel env vars apply **only** to deployments — your LAN `np
 ## Summary
 
 - **`npm run dev:pro`** → PRO prototype on **:3001**, reachable on your LAN.
-- **`main`** + push → live; keep PRO on **`35mmpro-prototype`** (or local-only clone) until you choose to ship.
+- **`main`** + push → live; PRO stays on **`35mmpro-prototype`**, **not pushed**, until you choose otherwise.
