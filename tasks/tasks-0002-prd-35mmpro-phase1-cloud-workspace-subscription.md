@@ -40,11 +40,11 @@
 
 ## Tasks
 
-- [ ] **1.0** Foundation & environment
-  - [ ] 1.1 Confirm auth vendor (**Supabase** vs **Clerk**) and database host; document choice in `HANDOFF.md` or `docs/35mmpro-next-steps-api-free.md`.
-  - [ ] 1.2 Add required npm dependencies and lockfile update (`npm ci` still passes).
-  - [ ] 1.3 Extend **`.env.example`** with all public/private variable **names** (Stripe test keys, webhook secret, price id placeholders, auth keys — no real values).
-  - [ ] 1.4 Document local Stripe webhook testing (**Stripe CLI** `listen --forward-to …`) in `HANDOFF.md` or `docs/35mmpro-next-steps-api-free.md`.
+- [x] **1.0** Foundation & environment
+  - [x] 1.1 Confirm auth vendor (**Supabase** vs **Clerk**) and database host; document choice in `HANDOFF.md` or `docs/35mmpro-next-steps-api-free.md`.
+  - [x] 1.2 Add required npm dependencies and lockfile update (`npm ci` still passes).
+  - [x] 1.3 Extend **`.env.example`** with all public/private variable **names** (Stripe test keys, webhook secret, price id placeholders, auth keys — no real values).
+  - [x] 1.4 Document local Stripe webhook testing (**Stripe CLI** `listen --forward-to …`) in `HANDOFF.md` or `docs/35mmpro-next-steps-api-free.md`.
 
 - [ ] **2.0** Authentication — sign up, sign in, sign out
   - [ ] 2.1 Implement auth provider setup (client + server helpers per vendor docs for App Router).

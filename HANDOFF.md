@@ -26,10 +26,30 @@ Use this file when opening a new chat so context is not “from zero.”
 - **Domain:** Custom domain on **GoDaddy DNS**; apex **`A` @** → Vercel IP (no trailing dot in GoDaddy); **`www`** → Vercel **`*.vercel-dns-*.com`** CNAME from Vercel Domains UI. Do not edit locked **`NS` / `SOA`** `@` rows — add **`A` @** separately.
 - **Default Vercel URL:** `35mmai.vercel.app` (plus production custom domain when configured).
 
+## 35mmPRO stack (task 1.0 — locked)
+
+- **Auth + database:** **Supabase** (Auth, Postgres, Row Level Security). Fits API-free PRO and fixed infra cost at small scale.
+- **Payments:** **Stripe** (Checkout + Customer Portal + webhooks), **USD** monthly price from `STRIPE_PRICE_ID_PRO_MONTHLY`.
+- **Env template:** **`.env.example`** — copy to **`.env.local`**; see variable names there. **`.env.example`** is committed (`!.env.example` in `.gitignore`).
+
+### Stripe webhooks (local)
+
+1. Install [Stripe CLI](https://stripe.com/docs/stripe-cli).
+2. Login: `stripe login`
+3. Forward events to the Next webhook route (adjust host/port to match `npm run dev` or `npm run dev:pro`):
+
+   ```bash
+   stripe listen --forward-to localhost:3001/api/webhooks/stripe
+   ```
+
+4. Copy the **webhook signing secret** (`whsec_…`) the CLI prints into **`STRIPE_WEBHOOK_SECRET`** in `.env.local`.  
+   *(The route `/api/webhooks/stripe` is created in a later task; until then the forward target will 404 — that is expected.)*
+
 ## Environment
 
 - **`PRO_WAITLIST_WEBHOOK_URL`** (optional): set in **Vercel → Project → Settings → Environment Variables** for Production if the Pro waitlist should POST to a webhook. See `app/actions/waitlist.ts`.
-- Local secrets: **`.env*`** is gitignored. Example keys only in **`.env.example`** (file may be ignored by `.env*` — add `!.env.example` to `.gitignore` if you want it committed).
+- **35mmPRO:** use **`.env.local`** with keys from **`.env.example`** (Supabase + Stripe).
+- Local secrets: **`.env*`** is gitignored except **`.env.example`**.
 
 ## Day-to-day catalog updates
 

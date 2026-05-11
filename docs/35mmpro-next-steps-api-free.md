@@ -5,17 +5,15 @@
 
 ---
 
-## Step 0 — Lock stack (half day)
+## Step 0 — Lock stack (**done** — task 1.0)
 
-Pick and document:
+| Decision | Choice |
+| -------- | ------ |
+| Auth + database | **Supabase** (Auth + Postgres + RLS) — see **`HANDOFF.md`** §35mmPRO stack |
+| Payments | **Stripe** (test keys + **Stripe CLI** for local webhooks — commands in **`HANDOFF.md`**) |
+| Env | **`.env.example`** → copy to **`.env.local`**; never commit secrets |
 
-| Decision | Options |
-| -------- | ------- |
-| Auth + database | **Supabase** (Auth + Postgres + RLS) vs **Clerk** + Supabase/Neon Postgres |
-| Stripe | Test keys + **Stripe CLI** for webhooks locally |
-| Env | `.env.local` only; never commit secrets |
-
-No code required until chosen; note the choice in the first implementation PR or `HANDOFF.md`.
+Dependencies added: `@supabase/supabase-js`, `@supabase/ssr`, `stripe`.
 
 ---
 
