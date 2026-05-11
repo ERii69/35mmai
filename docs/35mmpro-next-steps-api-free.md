@@ -19,11 +19,10 @@ No code required until chosen; note the choice in the first implementation PR or
 
 ---
 
-## Step 1 — Generate implementation tasks
+## Step 1 — Implementation tasks (generated)
 
-1. Open **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** (current Phase 1 PRD).
-2. Use your **`generate-tasks.md`** workflow: parent tasks → confirm → sub-tasks → `tasks/tasks-0002-prd-….md`.
-3. Work **slice order** from the PRD: **1A → 1B → 1C → 1D → 1E → 1F**.
+1. PRD: **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`**.
+2. Task list: **`tasks/tasks-0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** — parent + sub-tasks; work in **suggested order** at file bottom (1A → 1B → … → 1F).
 
 ---
 

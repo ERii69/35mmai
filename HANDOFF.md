@@ -14,6 +14,7 @@ Use this file when opening a new chat so context is not “from zero.”
 - **Phase 0 (product lock):** **`docs/phase-0-35mmpro-product-lock.md`** — API-free PRO, marketing line, v1 pillars.
 - **Phase 1 PRD (implement):** **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** — auth, Stripe USD subscription, cloud kit/workflow/budget, projects, templates, exports; **no** inference APIs or credits.
 - **Next steps checklist:** **`docs/35mmpro-next-steps-api-free.md`**.
+- **Implementation task list:** **`tasks/tasks-0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** (from PRD 0002; work sub-tasks in order).
 - **Archived PRD (credits + pipeline prep):** **`tasks/0001-prd-35mmpro-phase1-membership-credits.md`** — superseded; keep if APIs return later.
 - **Run on LAN:** `npm run dev:pro` (listens on **0.0.0.0:3001**). Open `http://<your-LAN-IP>:3001` from other devices. Full checklist: **`docs/35mmpro-local-prototype.md`**.
 - **`main`** push → **production** on Vercel. Catalog-only updates for live stay on `main`; they do not require the PRO branch.
