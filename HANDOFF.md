@@ -12,6 +12,7 @@ Use this file when opening a new chat so context is not “from zero.”
 - **Goal:** Develop 35mmPRO on your machine / office Wi‑Fi **without** deploying it. PRO work should live on a **long-lived branch** (e.g. `35mmpro-prototype`), not merged to `main` until you intentionally ship PRO.
 - **Policy:** Keep **`35mmpro-prototype` local-only** (do not `git push` that branch) until you are comfortable with remote previews / exposure; use disk backup or `git bundle` if you want safety without pushing.
 - **Phase 0 (product lock):** **`docs/phase-0-35mmpro-product-lock.md`** — audience, v1 promise, non-goals, credits vs subscription note.
+- **Phase 1 PRD:** **`tasks/0001-prd-35mmpro-phase1-membership-credits.md`** — auth, Stripe USD, credits ledger, dashboard shell (pipeline execution deferred).
 - **Run on LAN:** `npm run dev:pro` (listens on **0.0.0.0:3001**). Open `http://<your-LAN-IP>:3001` from other devices. Full checklist: **`docs/35mmpro-local-prototype.md`**.
 - **`main`** push → **production** on Vercel. Catalog-only updates for live stay on `main`; they do not require the PRO branch.
 

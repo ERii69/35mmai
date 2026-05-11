@@ -69,11 +69,15 @@ You were unsure whether **subscription + monthly credits** is worth it. Short co
 
 ---
 
-## Open decisions (carry into Phase 1 PRD)
+## Resolved (updated after Phase 0 Q&A)
 
-1. **Exact pipeline** for “one run” (e.g. mood stills + short motion sample + VO clip — pick **one** narrow flow).
-2. **Monthly included credits** vs **top-ups only** — default recommendation above: **included allowance + top-ups**.
-3. **Export formats** for v1 (PDF kit/budget summary — must-have vs later).
+- **Pipeline (product intent):** **Still mood board + 5s clip** (implementation follows Phase 1 foundation — see Phase 1 PRD).
+- **Credits:** **Monthly included credits + top-ups.**
+
+## Open decisions (later PRDs)
+
+1. **Export formats** for v1 (PDF kit/budget summary — must-have vs later).
+2. Numeric **credit amounts**, **top-up SKUs**, Stripe **Price** ids.
 
 ---
 
