@@ -7,6 +7,12 @@ Use this file when opening a new chat so context is not “from zero.”
 - **Next.js 16** (App Router), **React 19**, **TypeScript**, **Tailwind**, UI pieces under `components/`.
 - Main experience lives in **`app/page.tsx`**. Catalog and presets live in **`app/data.ts`** (single source of truth for tools, ranks, workflow stages, budget defaults, `rehydrateKitEntry`, `getToolByRank`, etc.).
 
+## 35mmPRO local prototype (LAN, not live)
+
+- **Goal:** Develop 35mmPRO on your machine / office Wi‑Fi **without** deploying it. PRO work should live on a **long-lived branch** (e.g. `35mmpro-prototype`), not merged to `main` until you intentionally ship PRO.
+- **Run on LAN:** `npm run dev:pro` (listens on **0.0.0.0:3001**). Open `http://<your-LAN-IP>:3001` from other devices. Full checklist: **`docs/35mmpro-local-prototype.md`**.
+- **`main`** push → **production** on Vercel. Catalog-only updates for live stay on `main`; they do not require the PRO branch.
+
 ## Live stack
 
 - **Repo:** GitHub `ERii69/35mmai` (or current remote).
