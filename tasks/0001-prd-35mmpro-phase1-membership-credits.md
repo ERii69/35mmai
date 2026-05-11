@@ -1,5 +1,9 @@
 # PRD: 35mmPRO Phase 1 — Membership, billing, credits foundation & Pro dashboard shell
 
+> **SUPERSEDED (product direction change):** v1 PRO is **API-free** — subscription + cloud workspace only. Use **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** for implementation. **Keep this file** as reference if you later add **credits + inference pipelines** (e.g. mood board + 5s clip).
+
+---
+
 **Document:** `0001-prd-35mmpro-phase1-membership-credits.md`  
 **Related:** `docs/phase-0-35mmpro-product-lock.md`, `docs/35mmpro-local-prototype.md`  
 **Inputs assumed (from product discussion):** Solo–small-team filmmakers and students; Stripe **USD only**; **monthly included credits + optional top-ups**; first AI pipeline in product will be **still mood board + 5 second clip** (implementation targeted after Phase 1 foundation).  

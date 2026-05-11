@@ -1,86 +1,74 @@
 # Phase 0 — 35mmPRO product lock
 
-**Status:** Locked for planning (revise when you ship or learn).  
-**Audience notes:** Solo indie directors, small production companies, students.
+**Status:** Active direction — **API-free PRO** (no inference APIs in v1). Supersedes earlier “credits + pipeline” scope until/unless you add wholesale AI later.  
+**Audience:** Solo indie directors, small production companies, students.
+
+---
+
+## Marketing line (locked)
+
+> **35mmPRO isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.**
 
 ---
 
 ## Job to be done
 
-When someone is **exploring a new film idea**, they need to **discover which AI tools fit their workflow** so they can **keep the budget low without changing how they actually make films** (same phases, same craft — smarter tool choices).
+When someone is **working on a new film idea**, they need **clarity on tools and spend** so the **budget stays low** and the **filmmaking process** (phases, roles, kit) **stays intact** — not replaced by random apps.
 
 ---
 
 ## One-sentence v1 promise (PRO)
 
-**35mmPRO gives you a filmmaker-grounded workspace—saved kit, workflow, and budget context in the cloud—plus enough paid “runs” on one curated AI pipeline so you can try real outputs without hunting ten APIs or blowing the budget.**
-
-*(Refine marketing copy later; this is the scope anchor.)*
+**35mmPRO is a cloud-backed production workspace: projects, kit, workflow phases, and budget — with exports and templates — so filmmakers stay organized across devices without wholesale AI costs.**
 
 ---
 
-## What v1 includes (agreed direction)
+## What v1 includes (current direction)
 
 | Pillar | Meaning |
 | ------ | ------- |
-| **A — Cloud workspace** | Account-backed **My Kit + workflow + budget context** (cross-device, not only `localStorage`). Aligns with “low budget, same process.” |
-| **One concrete pipeline (“run”)** | **Single** end-to-end capability with **credits** (metered wholesale API cost). Not a model zoo; one golden path to validate PRO. |
-| **Credits** | Users spend credits per run; you map credits → wholesale cost + margin. |
+| **Cloud persistence** | Account-backed **My Kit**, **workflow state**, and **budget context** synced to the server (not only `localStorage`). |
+| **Projects** | Multiple productions (e.g. named projects), each with its own kit / workflow / budget snapshot. |
+| **Exports** | Professional outputs (e.g. **PDF** one-pager / pack, **CSV** for kit or budget lines) for producers and collaborators. |
+| **Templates** | Starting points aligned with **budget presets** and **workflow stages** already modeled in the free product (`app/data.ts` patterns). |
+| **Workflow & budget depth** | Same mental model as the free app — **phases**, **roles**, **ranks** — deeper save, compare, and export behavior for subscribers. |
+| **Simple subscription** | **One PRO tier**, **Stripe**, **USD only** — **no credits ledger**, no inference APIs, **fixed infra** cost at small scale. |
 
 ---
 
-## Subscription vs monthly credits (how it helps you *and* them)
+## Explicitly deferred (not v1)
 
-You were unsure whether **subscription + monthly credits** is worth it. Short comparison:
-
-| Model | User benefit | Your benefit |
-| ----- | ------------ | ------------ |
-| **Sub only (no included credits)** | Predictable monthly fee; may still pay per run or hit limits. | Simple billing; risk if API runs are expensive (support + margin pressure). |
-| **Sub + monthly credit allowance** | “I pay once and get **N runs worth** per month” — easy to understand; fits students/indies. | Predictable revenue; credits cap your exposure; upsell top-ups when they love the pipeline. |
-| **Sub unlocks app + buy credits only** | Pay only for runs they need. | Revenue scales with usage; harder to price “fair” minimum sub. |
-
-**Recommendation for v1:** **Paid tier includes a modest monthly credit allowance** (e.g. enough for **X runs** of the one pipeline) **plus** optional **credit top-ups**. That matches **one pipeline + credits** without forcing a second tier on day one. You can still offer **one paid tier** (single price) that bundles access + credits.
-
-**Starter vs Pro (two tiers):** Defer until **after** one tier proves retention. Phase 0 keeps **one paid tier** unless you strongly want price segmentation immediately.
+- **Wholesale inference APIs** (image/video/LLM generation), **credit packs**, **top-ups**, **metered runs**.
+- **Still mood board + 5s clip** (and any similar pipeline) — **future phase** if you add APIs and pricing later.
+- Native **phone apps**, **full storyboard graph**, **multi-seat org billing**, **multi-tier** Starter/Pro.
 
 ---
 
-## Non-goals for v1 (explicit)
+## Pricing & billing
 
-- **No native phone apps** (responsive web is enough).
-- **No full storyboard graph editor** (React Flow–style).
-- **No 10-model / multi-provider zoo** — **one** curated pipeline first.
-- *(From earlier plan)* Team seats / org billing — **out of v1** unless you revisit.
-
----
-
-## Pricing & billing (Phase 0 assumptions)
-
-- **Stripe**, **USD only** at first.
-- **One paid tier** to start; optional second tier later.
-- Detailed prices → Phase 1 commercial PRD, not Phase 0.
+- **Stripe**, **USD**, **single subscription product** (monthly to start; annual optional later).
+- No per-generation cost to you beyond fixed hosting + auth + DB.
 
 ---
 
 ## Engineering / ops (confirmed)
 
-- PRO development stays on branch **`35mmpro-prototype`**, **local-only** (no `git push` of that branch) **until you decide otherwise** — see `docs/35mmpro-local-prototype.md`.
-- Live site continues to ship from **`main`** only.
+- PRO development on **`35mmpro-prototype`**, **local-only** until you choose otherwise — **`docs/35mmpro-local-prototype.md`**.
+- **Live** ships from **`main`** only.
 
 ---
 
-## Resolved (updated after Phase 0 Q&A)
+## PRD index
 
-- **Pipeline (product intent):** **Still mood board + 5s clip** (implementation follows Phase 1 foundation — see Phase 1 PRD).
-- **Credits:** **Monthly included credits + top-ups.**
-
-## Open decisions (later PRDs)
-
-1. **Export formats** for v1 (PDF kit/budget summary — must-have vs later).
-2. Numeric **credit amounts**, **top-up SKUs**, Stripe **Price** ids.
+| Doc | Scope |
+| --- | ----- |
+| **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** | **Current** Phase 1 — auth, Stripe subscription, entitlement, dashboard; cloud data + projects + exports + templates (see PRD phases). |
+| **`tasks/0001-prd-35mmpro-phase1-membership-credits.md`** | **Superseded** — credits + pipeline prep; keep for reference if you add APIs later. |
 
 ---
 
-## Phase 1 pointer (next)
+## Open decisions (carry into implementation PRDs)
 
-Phase 1 = **identity + Stripe subscription + entitlement + shell Pro dashboard**, wired so **credits + pipeline** can plug in without redoing auth/billing.
+1. **Auth + DB** vendor (e.g. Supabase vs Clerk + Postgres).
+2. **Export v1 set** — PDF only vs PDF + CSV; “director one-pager” fields.
+3. **Migration path** — import existing `localStorage` kit/workflow into first project on upgrade.
