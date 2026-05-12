@@ -7,7 +7,13 @@ export async function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if (!url || !key) {
-    throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
+    const missing = [
+      !url?.trim() && "NEXT_PUBLIC_SUPABASE_URL",
+      !key?.trim() && "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    ].filter(Boolean);
+    throw new Error(
+      `Missing or empty Supabase env: ${missing.join(", ")}. Add them to .env.local in the project root (publishable key → NEXT_PUBLIC_SUPABASE_ANON_KEY), then restart \`npm run dev\`.`
+    );
   }
 
   return createServerClient(url, key, {
