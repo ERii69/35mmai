@@ -17,12 +17,32 @@ export default function ProPage() {
               <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
             </Link>
           </div>
-          <Link
-            href="/"
-            className="text-sm font-medium text-[#d1d5db] underline-offset-4 hover:text-[#e11d48] hover:underline"
-          >
-            Home
-          </Link>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/login"
+              className="text-sm font-medium text-[#d1d5db] underline-offset-4 hover:text-[#e11d48] hover:underline"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/sign-up"
+              className="text-sm font-medium text-[#d1d5db] underline-offset-4 hover:text-[#e11d48] hover:underline"
+            >
+              Sign up
+            </Link>
+            <Link
+              href="/account"
+              className="text-sm font-medium text-[#d1d5db] underline-offset-4 hover:text-[#e11d48] hover:underline"
+            >
+              Account
+            </Link>
+            <Link
+              href="/"
+              className="text-sm font-medium text-[#d1d5db] underline-offset-4 hover:text-[#e11d48] hover:underline"
+            >
+              Home
+            </Link>
+          </div>
         </div>
       </header>
       <ProComingSoonContent variant="standalone" />

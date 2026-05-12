@@ -13,6 +13,15 @@
 - `package.json` — Add dependencies (e.g. `@supabase/supabase-js`, `@supabase/ssr`, `stripe`, or `@clerk/nextjs`).
 - `.env.example` — Document required env vars (no secrets): auth URLs/keys placeholders, `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, price IDs, database URL if external.
 - `middleware.ts` *(create at repo root if missing)* — Session refresh; protect `/pro/app` routes.
+- `lib/supabase/client.ts` — Browser Supabase client (`createBrowserClient`).
+- `lib/supabase/server.ts` — Server Supabase client (`createServerClient` + `cookies()`).
+- `lib/supabase/middleware.ts` — `updateSession` for cookie refresh.
+- `app/login/` — Sign-in page (+ layout with `Suspense` for `useSearchParams`).
+- `app/sign-up/` — Sign-up page.
+- `app/account/page.tsx` — Account shell (email + sign out).
+- `app/auth/callback/route.ts` — OAuth / email-confirm code exchange.
+- `app/auth/auth-code-error/page.tsx` — Failed auth redirect UX.
+- `app/actions/auth.ts` — `signOut` server action.
 - `app/pro/page.tsx` — Marketing / pricing / CTA vs current waitlist-only flow (align with PRD §4.4).
 - `app/pro/layout.tsx` — Metadata; optional nested layout for marketing vs app.
 - `app/pro/app/` *(new route group or folder)* — Authenticated Pro workspace (`layout.tsx`, `page.tsx`, child routes as needed).
@@ -46,11 +55,11 @@
   - [x] 1.3 Extend **`.env.example`** with all public/private variable **names** (Stripe test keys, webhook secret, price id placeholders, auth keys — no real values).
   - [x] 1.4 Document local Stripe webhook testing (**Stripe CLI** `listen --forward-to …`) in `HANDOFF.md` or `docs/35mmpro-next-steps-api-free.md`.
 
-- [ ] **2.0** Authentication — sign up, sign in, sign out
-  - [ ] 2.1 Implement auth provider setup (client + server helpers per vendor docs for App Router).
-  - [ ] 2.2 Add routes or modals for **sign up** and **sign in** (email or OAuth per choice); **sign out** control in header or account menu.
-  - [ ] 2.3 Ensure session is available in **Server Components** and **Server Actions** (cookie/session refresh pattern).
-  - [ ] 2.4 Add minimal **account** or profile surface (email display, sign out) if not part of Pro layout yet.
+- [x] **2.0** Authentication — sign up, sign in, sign out
+  - [x] 2.1 Implement auth provider setup (client + server helpers per vendor docs for App Router).
+  - [x] 2.2 Add routes or modals for **sign up** and **sign in** (email or OAuth per choice); **sign out** control in header or account menu.
+  - [x] 2.3 Ensure session is available in **Server Components** and **Server Actions** (cookie/session refresh pattern).
+  - [x] 2.4 Add minimal **account** or profile surface (email display, sign out) if not part of Pro layout yet.
 
 - [ ] **3.0** Stripe — Checkout (USD monthly) & Customer Portal
   - [ ] 3.1 Create **Stripe Product** and **recurring Price** (USD monthly) in Dashboard; store Price ID in env.

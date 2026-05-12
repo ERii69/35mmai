@@ -36,10 +36,10 @@ Use this file when opening a new chat so context is not “from zero.”
 
 1. Install [Stripe CLI](https://stripe.com/docs/stripe-cli).
 2. Login: `stripe login`
-3. Forward events to the Next webhook route (adjust host/port to match `npm run dev` or `npm run dev:pro`):
+3. Forward events to the Next webhook route (adjust host/port to match `npm run dev` (**3000**) or `npm run dev:pro` (**3001**)):
 
    ```bash
-   stripe listen --forward-to localhost:3001/api/webhooks/stripe
+   stripe listen --forward-to localhost:3000/api/webhooks/stripe
    ```
 
 4. Copy the **webhook signing secret** (`whsec_…`) the CLI prints into **`STRIPE_WEBHOOK_SECRET`** in `.env.local`.  
@@ -49,6 +49,8 @@ Use this file when opening a new chat so context is not “from zero.”
 
 - **`PRO_WAITLIST_WEBHOOK_URL`** (optional): set in **Vercel → Project → Settings → Environment Variables** for Production if the Pro waitlist should POST to a webhook. See `app/actions/waitlist.ts`.
 - **35mmPRO:** use **`.env.local`** with keys from **`.env.example`** (Supabase + Stripe).
+- **Supabase Auth (local):** In Dashboard → **Authentication → URL configuration**, set **Site URL** to your app (e.g. `http://localhost:3000`). Under **Redirect URLs**, add `http://localhost:3000/auth/callback` (and production URL when you deploy). Enable **Email** provider under **Sign In / Providers**. For faster local testing, you can disable **Confirm email** under **Sign Up / Email** (re-enable before production).
+- **Routes:** `/login`, `/sign-up`, `/auth/callback` (OAuth / magic-link exchange), `/auth/auth-code-error`, `/account` (requires session). Supabase clients: `lib/supabase/client.ts` (browser), `lib/supabase/server.ts` (Server Components / Actions), `middleware.ts` + `lib/supabase/middleware.ts` (session refresh).
 - Local secrets: **`.env*`** is gitignored except **`.env.example`**.
 
 ## Day-to-day catalog updates
