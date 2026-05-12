@@ -12,6 +12,7 @@ Use this file when opening a new chat so context is not “from zero.”
 - **Goal:** Develop 35mmPRO on your machine / office Wi‑Fi **without** deploying it. PRO work should live on a **long-lived branch** (e.g. `35mmpro-prototype`), not merged to `main` until you intentionally ship PRO.
 - **Policy:** Keep **`35mmpro-prototype` local-only** (do not `git push` that branch) until you are comfortable with remote previews / exposure; use disk backup or `git bundle` if you want safety without pushing.
 - **Phase 0 (product lock):** **`docs/phase-0-35mmpro-product-lock.md`** — API-free PRO, marketing line, v1 pillars.
+- **API-free north star (readable summary):** **`docs/35mmpro-api-free-summary.md`** — positioning, tiers, pricing, PRD index, rough build status.
 - **Phase 1 PRD (implement):** **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** — auth, Stripe USD subscription, cloud kit/workflow/budget, projects, templates, exports; **no** inference APIs or credits.
 - **Next steps checklist:** **`docs/35mmpro-next-steps-api-free.md`**.
 - **Implementation task list:** **`tasks/tasks-0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** (from PRD 0002; work sub-tasks in order).
