@@ -43,17 +43,20 @@ Use this file when opening a new chat so context is not “from zero.”
    stripe listen --forward-to localhost:3000/api/webhooks/stripe
    ```
 
-4. Copy the **webhook signing secret** (`whsec_…`) the CLI prints into **`STRIPE_WEBHOOK_SECRET`** in `.env.local`.  
-   *(The route `/api/webhooks/stripe` is created in a later task; until then the forward target will 404 — that is expected.)*
+4. Copy the **webhook signing secret** (`whsec_…`) the CLI prints into **`STRIPE_WEBHOOK_SECRET`** in **`.env.local`**, then restart **`npm run dev`**.
+
+5. **Production:** In Stripe Dashboard → **Developers → Webhooks**, add endpoint **`https://<your-domain>/api/webhooks/stripe`**, select events: **`checkout.session.completed`**, **`customer.subscription.updated`**, **`customer.subscription.deleted`**, and paste the **signing secret** into Vercel env **`STRIPE_WEBHOOK_SECRET`** (use the Dashboard secret for that endpoint, not the CLI one).
+
+**Webhook handler needs `SUPABASE_SERVICE_ROLE_KEY`** in `.env.local` / Vercel so it can upsert `profiles` and insert into `stripe_events_processed` (bypasses RLS).
 
 ## Environment
 
 - **`PRO_WAITLIST_WEBHOOK_URL`** (optional): set in **Vercel → Project → Settings → Environment Variables** for Production if the Pro waitlist should POST to a webhook. See `app/actions/waitlist.ts`.
 - **35mmPRO:** use **`.env.local`** with keys from **`.env.example`** (Supabase + Stripe).
 - **Supabase Auth (local):** In Dashboard → **Authentication → URL configuration**, set **Site URL** to your app (e.g. `http://localhost:3000`). Under **Redirect URLs**, add `http://localhost:3000/auth/callback` (and production URL when you deploy). Enable **Email** provider under **Sign In / Providers**. For faster local testing, you can disable **Confirm email** under **Sign Up / Email** (re-enable before production).
-- **Supabase `profiles` (billing):** Run **`supabase/migrations/20260212000001_profiles.sql`** in **SQL Editor** once (creates `public.profiles` + RLS). Required before **Subscribe to 35mmPRO** / profile sync; without it, checkout return will error when saving Stripe ids.
-- **Routes:** `/login`, `/sign-up`, `/auth/callback` (OAuth / magic-link exchange), `/auth/auth-code-error`, `/account` (requires session). Supabase clients: `lib/supabase/client.ts` (browser), `lib/supabase/server.ts` (Server Components / Actions), `middleware.ts` + `lib/supabase/middleware.ts` (session refresh).
-- **Stripe (35mmPRO):** After `.env.local` has `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_ID_PRO_MONTHLY`, and **Customer portal** enabled in Stripe Dashboard, the app **`/account`** page shows **Subscribe to 35mmPRO** and **Manage billing** (when a Stripe customer exists). Webhooks (**task 4**) will harden sync; until then, returning from Checkout runs **`finalizeCheckoutSession`** once.
+- **Supabase `profiles` + webhooks:** Run **`supabase/migrations/20260212000001_profiles.sql`**, then **`supabase/migrations/20260212000002_stripe_webhooks.sql`**, in **SQL Editor** (idempotency table + extra profile columns). **`SUPABASE_SERVICE_ROLE_KEY`** is required for **`POST /api/webhooks/stripe`** and for **`finalizeCheckoutSession`** after Checkout return.
+- **Routes:** `/login`, `/sign-up`, `/auth/callback`, `/auth/auth-code-error`, `/account`, **`POST /api/webhooks/stripe`**. Supabase: `lib/supabase/client.ts`, `lib/supabase/server.ts`, **`lib/supabase/admin.ts`** (service role only), `middleware.ts` + `lib/supabase/middleware.ts`.
+- **Stripe (35mmPRO):** Checkout + Customer Portal on **`/account`**; **`lib/entitlements.ts`** → `isProEntitled()` for future **`/pro/app`** gate (`active` / `trialing` only). Webhooks keep **`profiles`** in sync with Stripe; subscribe to **`checkout.session.completed`**, **`customer.subscription.updated`**, **`customer.subscription.deleted`** in Dashboard (or forward all via CLI for dev).
 - Local secrets: **`.env*`** is gitignored except **`.env.example`**.
 
 ## Day-to-day catalog updates

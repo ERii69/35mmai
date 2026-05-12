@@ -48,7 +48,9 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("stripe_customer_id, stripe_subscription_id, subscription_status")
+    .select(
+      "stripe_customer_id, stripe_subscription_id, subscription_status, subscription_current_period_end"
+    )
     .eq("id", user.id)
     .maybeSingle();
 
@@ -57,6 +59,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         stripe_customer_id: string | null;
         stripe_subscription_id: string | null;
         subscription_status: string | null;
+        subscription_current_period_end: string | null;
       }
     | null;
 
@@ -115,6 +118,14 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             {row?.subscription_status ? (
               <p className="mt-2 text-xs text-zinc-400">
                 Stripe status: <span className="font-mono text-zinc-300">{row.subscription_status}</span>
+              </p>
+            ) : null}
+            {row?.subscription_current_period_end ? (
+              <p className="mt-1 text-xs text-zinc-400">
+                Current period ends:{" "}
+                <span className="font-mono text-zinc-300">
+                  {new Date(row.subscription_current_period_end).toLocaleString()}
+                </span>
               </p>
             ) : null}
 

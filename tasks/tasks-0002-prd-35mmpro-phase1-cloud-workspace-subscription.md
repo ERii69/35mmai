@@ -25,7 +25,12 @@
 - `app/pro/page.tsx` — Marketing / pricing / CTA vs current waitlist-only flow (align with PRD §4.4).
 - `app/pro/layout.tsx` — Metadata; optional nested layout for marketing vs app.
 - `app/pro/app/` *(new route group or folder)* — Authenticated Pro workspace (`layout.tsx`, `page.tsx`, child routes as needed).
-- `app/api/webhooks/stripe/route.ts` — Stripe webhook POST handler, signature verification, idempotency.
+- `app/api/webhooks/stripe/route.ts` — Stripe webhook POST, signature verify, idempotency, delegates to `lib/stripe/process-webhook-event.ts`.
+- `lib/stripe/process-webhook-event.ts` — `checkout.session.completed`, `customer.subscription.updated` / `deleted`.
+- `lib/stripe/profile-upsert.ts` — Service-role upsert into `profiles`.
+- `lib/supabase/admin.ts` — Service-role Supabase client (webhooks + `finalizeCheckoutSession`).
+- `lib/entitlements.ts` — `isProEntitled()` for future `/pro/app` gate.
+- `supabase/migrations/20260212000002_stripe_webhooks.sql` — `stripe_events_processed` + profile columns.
 - `lib/stripe.ts` — Stripe SDK singleton, app URL, PRO monthly price id helpers.
 - `lib/stripe/finalize-checkout.ts` — Persist customer + subscription after Checkout return (bridge before webhooks).
 - `app/actions/stripe.ts` — `startProCheckout`, `openCustomerPortal` server actions.
@@ -70,14 +75,14 @@
   - [x] 3.3 Implement **Customer Portal** session creation for signed-in user with valid `stripe_customer_id`.
   - [x] 3.4 Add UI: **Subscribe** (starts Checkout) for signed-in non-subscribers; **Manage billing** for subscribers.
 
-- [ ] **4.0** Stripe webhooks & subscription persistence
-  - [ ] 4.1 Create DB table(s) for **subscriptions** (user id, stripe_customer_id, stripe_subscription_id, status, current_period_end, price_id, updated_at).
-  - [ ] 4.2 Create **`stripe_events_processed`** (or equivalent) table: `event_id` unique, `processed_at` — for idempotency.
-  - [ ] 4.3 Implement **`POST` `/api/webhooks/stripe`**: verify signature; on unknown event types, return 200 after logging (optional); on known types, upsert subscription row.
-  - [ ] 4.4 Handle **`checkout.session.completed`** (link session to user, set customer id, subscription id, initial status).
-  - [ ] 4.5 Handle **`customer.subscription.updated`** and **`customer.subscription.deleted`** (or `…` end states) to mirror status and period end.
-  - [ ] 4.6 Ensure **replay** of same `event.id` does not duplicate writes (transaction or insert-on-conflict-do-nothing on event id).
-  - [ ] 4.7 Implement **`isProEntitled(userId)`** (or session variant) reading DB: allowlist statuses e.g. `active`, `trialing` only.
+- [x] **4.0** Stripe webhooks & subscription persistence
+  - [x] 4.1 **Extended `public.profiles`** with `subscription_current_period_end`, `stripe_price_id` (single-row subscription snapshot; no separate `subscriptions` table for v1).
+  - [x] 4.2 Create **`stripe_events_processed`** (or equivalent) table: `event_id` unique, `processed_at` — for idempotency.
+  - [x] 4.3 Implement **`POST` `/api/webhooks/stripe`**: verify signature; on unknown event types, return 200 after logging (optional); on known types, upsert subscription row.
+  - [x] 4.4 Handle **`checkout.session.completed`** (link session to user, set customer id, subscription id, initial status).
+  - [x] 4.5 Handle **`customer.subscription.updated`** and **`customer.subscription.deleted`** (or `…` end states) to mirror status and period end.
+  - [x] 4.6 Ensure **replay** of same `event.id` does not duplicate writes (transaction or insert-on-conflict-do-nothing on event id).
+  - [x] 4.7 Implement **`isProEntitled(userId)`** (or session variant) reading DB: allowlist statuses e.g. `active`, `trialing` only.
 
 - [ ] **5.0** Pro shell, routing & marketing split (slice **1B**)
   - [ ] 5.1 Add **`/pro/app`** (or agreed path) layout: authenticated + **subscription gate** — redirect non-subscribers to `/pro` or dedicated “subscribe” view with CTA.

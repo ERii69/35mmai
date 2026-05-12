@@ -47,6 +47,9 @@ export async function startProCheckout() {
     mode: "subscription",
     client_reference_id: user.id,
     metadata: { supabase_user_id: user.id },
+    subscription_data: {
+      metadata: { supabase_user_id: user.id },
+    },
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${base}/account?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${base}/account?checkout=cancel`,
