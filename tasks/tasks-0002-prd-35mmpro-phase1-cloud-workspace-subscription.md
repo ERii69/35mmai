@@ -26,7 +26,10 @@
 - `app/pro/layout.tsx` — Metadata; optional nested layout for marketing vs app.
 - `app/pro/app/` *(new route group or folder)* — Authenticated Pro workspace (`layout.tsx`, `page.tsx`, child routes as needed).
 - `app/api/webhooks/stripe/route.ts` — Stripe webhook POST handler, signature verification, idempotency.
-- `lib/stripe.ts` or `lib/stripe/client.ts` — Stripe SDK singleton, helpers for Checkout and Portal.
+- `lib/stripe.ts` — Stripe SDK singleton, app URL, PRO monthly price id helpers.
+- `lib/stripe/finalize-checkout.ts` — Persist customer + subscription after Checkout return (bridge before webhooks).
+- `app/actions/stripe.ts` — `startProCheckout`, `openCustomerPortal` server actions.
+- `supabase/migrations/20260212000001_profiles.sql` — `profiles` table + RLS for Stripe ids.
 - `lib/auth.ts` / `lib/supabase/server.ts` / `lib/supabase/client.ts` — Auth helpers (exact paths depend on Supabase vs Clerk).
 - `lib/entitlements.ts` — `isProEntitled(userId)` (or session-based) reading DB subscription row.
 - `supabase/migrations/*.sql` *(if Supabase)* — `profiles`, `subscriptions`, `stripe_events_processed`, `projects`, `project_state` (or equivalent); RLS policies.
@@ -61,11 +64,11 @@
   - [x] 2.3 Ensure session is available in **Server Components** and **Server Actions** (cookie/session refresh pattern).
   - [x] 2.4 Add minimal **account** or profile surface (email display, sign out) if not part of Pro layout yet.
 
-- [ ] **3.0** Stripe — Checkout (USD monthly) & Customer Portal
-  - [ ] 3.1 Create **Stripe Product** and **recurring Price** (USD monthly) in Dashboard; store Price ID in env.
-  - [ ] 3.2 Implement **Checkout Session** creation (server-side): mode `subscription`, `customer` or `customer_email`, `success_url` / `cancel_url` pointing back to app (e.g. `/pro/app?checkout=success`).
-  - [ ] 3.3 Implement **Customer Portal** session creation for signed-in user with valid `stripe_customer_id`.
-  - [ ] 3.4 Add UI: **Subscribe** (starts Checkout) for signed-in non-subscribers; **Manage billing** for subscribers.
+- [x] **3.0** Stripe — Checkout (USD monthly) & Customer Portal
+  - [x] 3.1 Create **Stripe Product** and **recurring Price** (USD monthly) in Dashboard; store Price ID in env.
+  - [x] 3.2 Implement **Checkout Session** creation (server-side): mode `subscription`, `customer` or `customer_email`, `success_url` / `cancel_url` pointing back to app (e.g. `/pro/app?checkout=success`).
+  - [x] 3.3 Implement **Customer Portal** session creation for signed-in user with valid `stripe_customer_id`.
+  - [x] 3.4 Add UI: **Subscribe** (starts Checkout) for signed-in non-subscribers; **Manage billing** for subscribers.
 
 - [ ] **4.0** Stripe webhooks & subscription persistence
   - [ ] 4.1 Create DB table(s) for **subscriptions** (user id, stripe_customer_id, stripe_subscription_id, status, current_period_end, price_id, updated_at).

@@ -50,7 +50,9 @@ Use this file when opening a new chat so context is not “from zero.”
 - **`PRO_WAITLIST_WEBHOOK_URL`** (optional): set in **Vercel → Project → Settings → Environment Variables** for Production if the Pro waitlist should POST to a webhook. See `app/actions/waitlist.ts`.
 - **35mmPRO:** use **`.env.local`** with keys from **`.env.example`** (Supabase + Stripe).
 - **Supabase Auth (local):** In Dashboard → **Authentication → URL configuration**, set **Site URL** to your app (e.g. `http://localhost:3000`). Under **Redirect URLs**, add `http://localhost:3000/auth/callback` (and production URL when you deploy). Enable **Email** provider under **Sign In / Providers**. For faster local testing, you can disable **Confirm email** under **Sign Up / Email** (re-enable before production).
+- **Supabase `profiles` (billing):** Run **`supabase/migrations/20260212000001_profiles.sql`** in **SQL Editor** once (creates `public.profiles` + RLS). Required before **Subscribe to 35mmPRO** / profile sync; without it, checkout return will error when saving Stripe ids.
 - **Routes:** `/login`, `/sign-up`, `/auth/callback` (OAuth / magic-link exchange), `/auth/auth-code-error`, `/account` (requires session). Supabase clients: `lib/supabase/client.ts` (browser), `lib/supabase/server.ts` (Server Components / Actions), `middleware.ts` + `lib/supabase/middleware.ts` (session refresh).
+- **Stripe (35mmPRO):** After `.env.local` has `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRICE_ID_PRO_MONTHLY`, and **Customer portal** enabled in Stripe Dashboard, the app **`/account`** page shows **Subscribe to 35mmPRO** and **Manage billing** (when a Stripe customer exists). Webhooks (**task 4**) will harden sync; until then, returning from Checkout runs **`finalizeCheckoutSession`** once.
 - Local secrets: **`.env*`** is gitignored except **`.env.example`**.
 
 ## Day-to-day catalog updates
