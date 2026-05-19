@@ -128,9 +128,11 @@ export function AboutPageContent({
             Last updated {lastUpdatedLabel}
           </p>
           <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-[#2a2a2a] bg-[#111]/60 px-4 py-3 text-left text-sm leading-relaxed text-[#a3a3a3] md:text-center">
-            35mmAI is <span className="text-[#e5e5e5]">independent</span> and not paid by the
-            companies listed here. Outbound links are for reference only — always verify pricing and
-            terms on the vendor&apos;s site.
+            35mmAI is an <span className="text-[#e5e5e5]">independent</span> directory. Some
+            outbound links are affiliate links — we may earn a commission at no extra cost to you.
+            Listings marked <span className="text-amber-300/90">Partner</span> use tracked links;
+            picks stay editorial, not pay-for-placement. Always verify pricing and terms on the
+            vendor&apos;s site.
           </div>
           <div className="mt-6 hidden flex-row flex-wrap justify-center gap-3 md:flex">
             <Button
@@ -342,7 +344,7 @@ export function AboutPageContent({
                   },
                   {
                     q: "Do you rank, endorse, or get paid by tools?",
-                    a: "We curate for usefulness and clarity. We are not paid by listed companies for placement. If that ever changes for a specific piece of content, we will label it conspicuously.",
+                    a: "We curate for usefulness and clarity — rankings and spotlights are editorial, not sold placements. We do participate in affiliate programs with some partners: if you subscribe or buy through a Partner link, we may earn a commission at no extra cost to you. That does not change how we choose what to list, and partner links are labeled clearly.",
                   },
                   {
                     q: "How do I suggest a tool or report an error?",
@@ -350,7 +352,7 @@ export function AboutPageContent({
                   },
                   {
                     q: "Are you affiliated with the products mentioned?",
-                    a: "No. 35mmAI is an independent editorial directory. Names and logos belong to their owners; we use them only to identify products for filmmakers.",
+                    a: "We are not owned by or officially representing the companies in the catalog. Where we have an affiliate relationship, you will see a Partner badge and may use a tracked outbound link. Product names and logos belong to their owners; we use them only to identify tools for filmmakers.",
                   },
                   {
                     q: "Does AI replace crew?",
