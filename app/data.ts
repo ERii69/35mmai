@@ -768,6 +768,7 @@ export const allTools = [
     price: "from $12/mo (Free tier available)",
     budgetFit: "both",
     link: "descript.com",
+    affiliateLink: "https://get.descript.com/p4dqbwe4hu34",
     roles: ["Editor", "Sound Designer", "Production Coordinator"],
     shortDescription: "Edit video by editing text — ideal for rough cuts, ADR notes, and dialogue-heavy scenes",
     howToUse: [
