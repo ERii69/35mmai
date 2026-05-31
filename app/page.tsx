@@ -24,7 +24,9 @@ import {
   BUDGET_DEFAULT_MICRO_ROWS,
   budgetLinesFromPreset,
   getCatalogKind,
+  getSpotlightToolForRole,
   getToolByRank,
+  hasPartnerLink,
   rehydrateKitEntry,
   rolesList,
   workflowStages,
@@ -354,9 +356,7 @@ export default function Home() {
 
   const spotlightToolForRole = useMemo(() => {
     if (!selectedRole) return null;
-    return allTools
-      .filter((tool) => tool.roles.includes(selectedRole))
-      .sort((a, b) => a.rank - b.rank)[0] || null;
+    return getSpotlightToolForRole(selectedRole);
   }, [selectedRole]);
 // === CURRENCY HELPERS ===
   const currencySymbol = useMemo(() => {
@@ -1328,13 +1328,22 @@ useEffect(() => {
           <div className="mb-10 md:mb-12 bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-[#e11d48]/30 rounded-3xl p-5 sm:p-8">
             <div className="flex items-center gap-3 mb-4">
               <div className="px-4 py-1 bg-[#e11d48] text-white text-xs font-medium rounded-full">SPOTLIGHT</div>
-              <div className="text-[#e11d48] text-sm">Top pick for {selectedRole}</div>
+              <div className="text-[#e11d48] text-sm">
+                {hasPartnerLink(spotlightToolForRole)
+                  ? `Partner pick for ${selectedRole}`
+                  : `Top pick for ${selectedRole}`}
+              </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="flex-1">
                 <h3 className="text-2xl md:text-3xl font-semibold mb-3">{spotlightToolForRole.name}</h3>
                 <div className="mb-4 flex flex-wrap items-center gap-2">
+                  {hasPartnerLink(spotlightToolForRole) ? (
+                    <span className="inline-flex shrink-0 items-center rounded-full border border-amber-500/50 bg-amber-950/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
+                      Partner
+                    </span>
+                  ) : null}
                   <CatalogKindBadge tool={spotlightToolForRole} />
                   <span className="text-xs text-[#737373]">{spotlightToolForRole.category}</span>
                 </div>
@@ -1614,13 +1623,22 @@ useEffect(() => {
           <div className="mb-12 bg-gradient-to-br from-[#1a1a1a] to-[#111] border border-[#e11d48]/30 rounded-3xl p-8">
             <div className="flex items-center gap-3 mb-4">
               <div className="px-4 py-1 bg-[#e11d48] text-white text-xs font-medium rounded-full">SPOTLIGHT</div>
-              <div className="text-[#e11d48] text-sm">Top pick for {selectedRole}</div>
+              <div className="text-[#e11d48] text-sm">
+                {hasPartnerLink(spotlightToolForRole)
+                  ? `Partner pick for ${selectedRole}`
+                  : `Top pick for ${selectedRole}`}
+              </div>
             </div>
 
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="flex-1">
                 <h3 className="text-3xl font-semibold mb-3">{spotlightToolForRole.name}</h3>
                 <div className="mb-4 flex flex-wrap items-center gap-2">
+                  {hasPartnerLink(spotlightToolForRole) ? (
+                    <span className="inline-flex shrink-0 items-center rounded-full border border-amber-500/50 bg-amber-950/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
+                      Partner
+                    </span>
+                  ) : null}
                   <CatalogKindBadge tool={spotlightToolForRole} />
                   <span className="text-xs text-[#737373]">{spotlightToolForRole.category}</span>
                 </div>

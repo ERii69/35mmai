@@ -1451,6 +1451,25 @@ export function getToolByRank(rank: number): Tool | undefined {
   return allTools.find((t) => t.rank === rank);
 }
 
+/** True when a tracked partner / affiliate URL is configured (accepted partnership). */
+export function hasPartnerLink(tool: Tool): boolean {
+  return Boolean(tool.affiliateLink?.trim());
+}
+
+/**
+ * Role spotlight: prefer accepted Partner tools (lowest rank among partners), else top catalog rank.
+ * Aligns SPOTLIGHT with affiliate partners without overriding roles that have no partner fit.
+ */
+export function getSpotlightToolForRole(role: string): Tool | null {
+  const matches = allTools.filter((t) => t.roles.includes(role));
+  if (matches.length === 0) return null;
+
+  const partners = matches.filter(hasPartnerLink).sort((a, b) => a.rank - b.rank);
+  if (partners.length > 0) return partners[0];
+
+  return matches.sort((a, b) => a.rank - b.rank)[0];
+}
+
 /** Default line items for Budget Templates — derived from catalog so renames/prices stay in sync. */
 export const BUDGET_DEFAULT_MICRO_ROWS = [
   { rank: 1, qty: 1 },
