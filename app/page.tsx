@@ -94,6 +94,10 @@ function catalogKindLabel(kind: CatalogKind): string {
   return "Gear & retail";
 }
 
+function exampleBlockLabel(kind: CatalogKind): string {
+  return kind === "ai" ? "Prompt example" : "Use case example";
+}
+
 function catalogKindSummary(kind: CatalogKind): string {
   if (kind === "ai") {
     return "Generative or AI-heavy workflow tools (video, audio, images, VFX assistants).";
@@ -3093,12 +3097,20 @@ useEffect(() => {
               {selectedTool.examplePrompt && (
                 <div className="mb-8 rounded-2xl border border-[#333] bg-[#1a1a1a] p-4 sm:p-6">
                   <div className="mb-3 flex items-center justify-between">
-                    <h4 className="font-medium text-[#e11d48]">Prompt example</h4>
+                    <h4 className="font-medium text-[#e11d48]">
+                      {exampleBlockLabel(getCatalogKind(selectedTool))}
+                    </h4>
                     <button
                       type="button"
                       onClick={() => {
                         navigator.clipboard.writeText(selectedTool.examplePrompt);
-                        setToast({ message: "Prompt copied", tone: "ok" });
+                        setToast({
+                          message:
+                            getCatalogKind(selectedTool) === "ai"
+                              ? "Prompt copied"
+                              : "Example copied",
+                          tone: "ok",
+                        });
                       }}
                       className="rounded-full bg-[#222] px-4 py-2 text-xs transition-colors hover:bg-[#e11d48] hover:text-white"
                     >
