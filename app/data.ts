@@ -11,6 +11,8 @@ export type Tool = {
   link: string;
   /** Optional tracked partner URL; falls back to `link` when unset. */
   affiliateLink?: string;
+  /** Optional partner logo under `/public` (shown on Partner badges). */
+  partnerLogo?: string;
   /** Override when kind is not inferred from category / catalog rank lists. */
   catalogKind?: CatalogKind;
   roles: string[];
@@ -294,6 +296,8 @@ export const allTools = [
     price: "from $29/mo",
     budgetFit: "both",
     link: "filmustage.com",
+    affiliateLink: "https://filmustage.cello.so/vA2BDdLdP89",
+    partnerLogo: "/partners/filmustage.png",
     roles: [
       "Producer / Line Producer",
       "Director",

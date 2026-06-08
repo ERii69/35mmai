@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
@@ -13,6 +14,10 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
 
+import {
+  PartnerBadge,
+  resolvePartnerLogoForTool,
+} from "@/components/catalog/PartnerBadge";
 import { AboutPageContent } from "@/components/about/AboutPageContent";
 import { HowItWorksContent } from "@/components/how-it-works/HowItWorksContent";
 import { StepFromQuery } from "@/components/about/StepFromQuery";
@@ -1344,9 +1349,7 @@ useEffect(() => {
                 <h3 className="text-2xl md:text-3xl font-semibold mb-3">{spotlightToolForRole.name}</h3>
                 <div className="mb-4 flex flex-wrap items-center gap-2">
                   {hasPartnerLink(spotlightToolForRole) ? (
-                    <span className="inline-flex shrink-0 items-center rounded-full border border-amber-500/50 bg-amber-950/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
-                      Partner
-                    </span>
+                    <PartnerBadge tool={spotlightToolForRole} />
                   ) : null}
                   <CatalogKindBadge tool={spotlightToolForRole} />
                   <span className="text-xs text-[#737373]">{spotlightToolForRole.category}</span>
@@ -1398,11 +1401,7 @@ useEffect(() => {
                 >
                   {tool.name}
                 </a>
-                {hasAffiliateLink(tool) && (
-                  <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
-                    Partner link
-                  </span>
-                )}
+                {hasAffiliateLink(tool) && <PartnerBadge tool={tool} compact />}
               </div>
               <div className="mt-2 text-sm font-medium text-emerald-400">{tool.price}</div>
               <p className="mt-2 text-sm leading-relaxed text-[#d1d5db] line-clamp-2">{getMobileSummary(tool)}</p>
@@ -1472,11 +1471,7 @@ useEffect(() => {
                       >
                         {tool.name}
                       </a>
-                      {hasAffiliateLink(tool) && (
-                        <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
-                          Partner
-                        </span>
-                      )}
+                      {hasAffiliateLink(tool) && <PartnerBadge tool={tool} />}
                     </div>
                   </td>
                   <td className="px-6 py-6 align-middle">
@@ -1639,9 +1634,7 @@ useEffect(() => {
                 <h3 className="text-3xl font-semibold mb-3">{spotlightToolForRole.name}</h3>
                 <div className="mb-4 flex flex-wrap items-center gap-2">
                   {hasPartnerLink(spotlightToolForRole) ? (
-                    <span className="inline-flex shrink-0 items-center rounded-full border border-amber-500/50 bg-amber-950/40 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
-                      Partner
-                    </span>
+                    <PartnerBadge tool={spotlightToolForRole} />
                   ) : null}
                   <CatalogKindBadge tool={spotlightToolForRole} />
                   <span className="text-xs text-[#737373]">{spotlightToolForRole.category}</span>
@@ -1723,11 +1716,7 @@ useEffect(() => {
                 >
                   {tool.name}
                 </a>
-                {hasAffiliateLink(tool) && (
-                  <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
-                    Partner link
-                  </span>
-                )}
+                {hasAffiliateLink(tool) && <PartnerBadge tool={tool} compact />}
               </div>
               <div className="mt-2 text-sm font-medium text-emerald-400">{tool.price}</div>
               <p className="mt-2 text-sm leading-relaxed text-[#d1d5db] line-clamp-2">{getMobileSummary(tool)}</p>
@@ -1799,11 +1788,7 @@ useEffect(() => {
                       >
                         {tool.name}
                       </a>
-                      {hasAffiliateLink(tool) && (
-                        <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
-                          Partner
-                        </span>
-                      )}
+                      {hasAffiliateLink(tool) && <PartnerBadge tool={tool} />}
                     </div>
                   </td>
                   <td className="py-5 px-4 align-middle">
@@ -2155,11 +2140,7 @@ useEffect(() => {
                                 >
                                   {tool.name}
                                 </a>
-                                {hasAffiliateLink(tool) && (
-                                  <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
-                                    Partner link
-                                  </span>
-                                )}
+                                {hasAffiliateLink(tool) && <PartnerBadge tool={tool} compact />}
                               </div>
 
                               <p className="text-[#d1d5db] text-sm leading-relaxed mt-2">
@@ -2653,11 +2634,7 @@ useEffect(() => {
                   >
                     {tool.name}
                   </a>
-                  {hasAffiliateLink(tool) && (
-                    <span className="rounded-full border border-amber-500/35 bg-amber-950/30 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
-                      Partner link
-                    </span>
-                  )}
+                  {hasAffiliateLink(tool) && <PartnerBadge tool={tool} compact />}
                 </div>
                 <div className="mt-2 flex flex-wrap items-center gap-2">
                   <CatalogKindBadge tool={tool} />
@@ -3040,7 +3017,19 @@ useEffect(() => {
             aria-label={`${selectedTool.name} details`}
           >
             <div className="flex items-center justify-between border-b border-[#333] px-4 py-4 sm:px-8 sm:py-6">
-             <h2 className="pr-3 text-xl font-semibold text-white sm:text-3xl">{selectedTool.name}</h2>
+              <div className="flex min-w-0 items-center gap-3 pr-3">
+                {resolvePartnerLogoForTool(selectedTool) ? (
+                  <Image
+                    src={resolvePartnerLogoForTool(selectedTool)!}
+                    alt=""
+                    width={87}
+                    height={16}
+                    className="h-5 w-auto shrink-0 object-contain"
+                    aria-hidden
+                  />
+                ) : null}
+                <h2 className="text-xl font-semibold text-white sm:text-3xl">{selectedTool.name}</h2>
+              </div>
               <button
                 ref={toolModalCloseButtonRef}
                 type="button"
