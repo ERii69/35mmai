@@ -1,23 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { AuthChrome } from "@/components/auth/AuthChrome";
+import { AuthPageShell } from "@/components/auth/AuthPageShell";
 import { Button } from "@/components/ui/button";
+import {
+  PRO_PRIVACY_PATH,
+  PRO_TERMS_PATH,
+} from "@/lib/pro/membership-policy";
+import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
+import {
+  PRO_MARKETING_PRICE,
+  PRO_MARKETING_SIGNUP_LEAD,
+} from "@/lib/pro/marketing-copy";
+import { proAuth, proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
 import { createClient } from "@/lib/supabase/client";
+
+function signInHref(next: string) {
+  if (next === "/account") return "/login";
+  return `/login?${new URLSearchParams({ next }).toString()}`;
+}
 
 export default function SignUpPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? "/account";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setMessage(null);
+    if (!acceptedTerms) {
+      setError("Please agree to the Privacy & data policy and Terms of use.");
+      return;
+    }
     setLoading(true);
     try {
       const origin =
@@ -35,7 +59,7 @@ export default function SignUpPage() {
         return;
       }
       if (data.session) {
-        router.push("/account");
+        router.push(next);
         router.refresh();
         return;
       }
@@ -46,18 +70,19 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-12 text-zinc-100">
-      <div className="mx-auto w-full max-w-sm space-y-8">
-        <div className="text-center">
-          <Link href="/" className="text-2xl font-extrabold tracking-widest text-white">
-            <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
-          </Link>
-          <p className="mt-3 text-sm text-zinc-400">Create a 35mmPRO account</p>
-        </div>
+    <AuthPageShell mode="signup" next={next}>
+      <div className="space-y-2 text-center">
+        <AuthChrome subtitle={`Create your ${BRAND_NAME_PRO} account`} showLogo={false} showTagline={false} />
+        <p className="mx-auto max-w-sm text-sm leading-relaxed text-pro-text-secondary">
+          {PRO_MARKETING_SIGNUP_LEAD}
+        </p>
+        <p className="text-xs text-pro-text-secondary/80">{PRO_MARKETING_PRICE.checkoutNote}</p>
+      </div>
 
-        <form onSubmit={onSubmit} className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
+      <form onSubmit={onSubmit} className={`${proAuth.card} mt-2`}>
+        <div className="space-y-4">
           <div>
-            <label htmlFor="signup-email" className="mb-1.5 block text-sm text-zinc-400">
+            <label htmlFor="signup-email" className={proAuth.label}>
               Email
             </label>
             <input
@@ -67,11 +92,11 @@ export default function SignUpPage() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm outline-none ring-[#e11d48]/30 focus:ring-2"
+              className={proSurface.field}
             />
           </div>
           <div>
-            <label htmlFor="signup-password" className="mb-1.5 block text-sm text-zinc-400">
+            <label htmlFor="signup-password" className={proAuth.label}>
               Password
             </label>
             <input
@@ -82,37 +107,61 @@ export default function SignUpPage() {
               minLength={8}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm outline-none ring-[#e11d48]/30 focus:ring-2"
+              className={proSurface.field}
             />
-            <p className="mt-1 text-xs text-zinc-500">At least 8 characters.</p>
+            <p className="mt-1.5 text-xs text-pro-text-secondary">At least 8 characters.</p>
           </div>
-          {error ? (
-            <p className="text-sm text-amber-400" role="alert">
-              {error}
-            </p>
-          ) : null}
-          {message ? (
-            <p className="text-sm text-emerald-400" role="status">
-              {message}
-            </p>
-          ) : null}
-          <Button type="submit" className="w-full bg-[#e11d48] hover:bg-[#c91840]" disabled={loading}>
-            {loading ? "Creating account…" : "Sign up"}
-          </Button>
-        </form>
+        </div>
 
-        <p className="text-center text-sm text-zinc-500">
-          Already have an account?{" "}
-          <Link href="/login" className="font-medium text-[#e11d48] underline-offset-2 hover:underline">
-            Sign in
-          </Link>
-        </p>
-        <p className="text-center text-sm">
-          <Link href="/" className="text-zinc-500 underline-offset-2 hover:text-zinc-300 hover:underline">
-            ← Home
-          </Link>
-        </p>
-      </div>
-    </div>
+        <div className={proAuth.cardInner}>
+          <label className="grid cursor-pointer grid-cols-[1.125rem_1fr] items-start gap-3">
+            <input
+              type="checkbox"
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              className="mt-0.5 size-[1.125rem] shrink-0 rounded border-white/20 accent-pro-primary"
+              required
+            />
+            <span className="text-left text-[13px] leading-relaxed text-pro-text-secondary">
+              I agree to the{" "}
+              <Link href={PRO_PRIVACY_PATH} className={proAuth.link}>
+                Privacy &amp; data policy
+              </Link>{" "}
+              and{" "}
+              <Link href={PRO_TERMS_PATH} className={proAuth.link}>
+                Terms of use
+              </Link>
+              . Projects stay private to your account and are not used to train AI models.
+            </span>
+          </label>
+        </div>
+
+        {error ? (
+          <p className="text-sm text-pro-warning" role="alert">
+            {error}
+          </p>
+        ) : null}
+        {message ? (
+          <p className="text-sm text-pro-success" role="status">
+            {message}
+          </p>
+        ) : null}
+
+        <Button
+          type="submit"
+          className={proBtn.primaryFull}
+          disabled={loading || !acceptedTerms}
+        >
+          {loading ? "Creating account…" : "Create account"}
+        </Button>
+      </form>
+
+      <p className="text-center text-sm leading-relaxed text-pro-text-secondary">
+        Already have an account?{" "}
+        <Link href={signInHref(next)} className={proAuth.link}>
+          Sign in
+        </Link>
+      </p>
+    </AuthPageShell>
   );
 }

@@ -9,7 +9,7 @@ create table if not exists public.profiles (
   updated_at timestamptz not null default now()
 );
 
-comment on table public.profiles is '35mmPRO billing profile; RLS scoped to auth.uid() = id.';
+comment on table public.profiles is '35mmAiPro billing profile; RLS scoped to auth.uid() = id.';
 
 alter table public.profiles enable row level security;
 

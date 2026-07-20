@@ -41,3 +41,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local scratch / nested checkouts (not part of product source)
+/tmp/
+/worktrees/
+/backups/

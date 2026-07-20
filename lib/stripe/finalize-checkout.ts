@@ -1,6 +1,7 @@
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getStripe } from "@/lib/stripe";
 import { upsertProfileStripe } from "@/lib/stripe/profile-upsert";
+import { subscriptionCurrentPeriodEndIso } from "@/lib/stripe/subscription-period-end";
 import type Stripe from "stripe";
 
 /**
@@ -28,12 +29,9 @@ export async function finalizeCheckoutSession(sessionId: string, userId: string)
     throw new Error("No subscription on checkout session.");
   }
 
-  const sub = (await stripe.subscriptions.retrieve(subId)) as {
-    id: string;
-    status: string;
-    current_period_end?: number | null;
-    items: { data: Array<{ price?: { id?: string } | null }> };
-  };
+  const sub = await stripe.subscriptions.retrieve(subId, {
+    expand: ["items.data.price"],
+  });
 
   const admin = createAdminClient();
   await upsertProfileStripe(admin, {
@@ -41,10 +39,13 @@ export async function finalizeCheckoutSession(sessionId: string, userId: string)
     stripe_customer_id: customerId,
     stripe_subscription_id: sub.id,
     subscription_status: sub.status,
-    subscription_current_period_end: sub.current_period_end
-      ? new Date(sub.current_period_end * 1000).toISOString()
-      : null,
-    stripe_price_id: sub.items.data[0]?.price?.id ?? null,
+    subscription_current_period_end: subscriptionCurrentPeriodEndIso(sub),
+    stripe_price_id:
+      typeof sub.items?.data?.[0]?.price === "string"
+        ? sub.items.data[0].price
+        : sub.items?.data?.[0]?.price && "id" in sub.items.data[0].price
+          ? sub.items.data[0].price.id
+          : null,
     updated_at: new Date().toISOString(),
   });
 }

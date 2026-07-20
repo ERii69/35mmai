@@ -1,24 +1,13 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type Stripe from "stripe";
 import { upsertProfileStripe } from "@/lib/stripe/profile-upsert";
+import { subscriptionCurrentPeriodEndIso } from "@/lib/stripe/subscription-period-end";
 
-/** Shape we read from Stripe subscription objects (API 2024+ typings omit some fields). */
-type SubscriptionLike = {
-  id: string;
-  status: string;
-  customer: string | Stripe.Customer | Stripe.DeletedCustomer;
-  metadata?: Stripe.Metadata | null;
-  current_period_end?: number | null;
-  items: { data: Array<{ price?: { id?: string } | null }> };
-};
-
-function periodEndIso(sub: SubscriptionLike): string | null {
-  if (!sub.current_period_end) return null;
-  return new Date(sub.current_period_end * 1000).toISOString();
-}
-
-function priceIdFromSubscription(sub: SubscriptionLike): string | null {
-  return sub.items.data[0]?.price?.id ?? null;
+function priceIdFromSubscription(sub: Stripe.Subscription): string | null {
+  const price = sub.items?.data?.[0]?.price;
+  if (typeof price === "string") return price;
+  if (price && typeof price === "object" && "id" in price) return price.id;
+  return null;
 }
 
 async function onCheckoutSessionCompleted(
@@ -45,20 +34,31 @@ async function onCheckoutSessionCompleted(
   const subId = typeof subRef === "string" ? subRef : subRef && "id" in subRef ? subRef.id : null;
   if (!subId) return;
 
-  const sub = (await stripe.subscriptions.retrieve(subId)) as SubscriptionLike;
+  const sub = await stripe.subscriptions.retrieve(subId, {
+    expand: ["items.data.price"],
+  });
 
   await upsertProfileStripe(admin, {
     id: userId,
     stripe_customer_id: customerId,
     stripe_subscription_id: sub.id,
     subscription_status: sub.status,
-    subscription_current_period_end: periodEndIso(sub),
+    subscription_current_period_end: subscriptionCurrentPeriodEndIso(sub),
     stripe_price_id: priceIdFromSubscription(sub),
     updated_at: new Date().toISOString(),
   });
 }
 
-async function onSubscriptionChange(sub: SubscriptionLike, admin: SupabaseClient): Promise<void> {
+async function onSubscriptionChange(
+  subFromEvent: Stripe.Subscription,
+  stripe: Stripe,
+  admin: SupabaseClient
+): Promise<void> {
+  /** Webhook payloads can omit nested item fields; always load the canonical object from the API. */
+  const sub = await stripe.subscriptions.retrieve(subFromEvent.id, {
+    expand: ["items.data.price"],
+  });
+
   const customerId =
     typeof sub.customer === "string"
       ? sub.customer
@@ -85,7 +85,42 @@ async function onSubscriptionChange(sub: SubscriptionLike, admin: SupabaseClient
     stripe_customer_id: customerId,
     stripe_subscription_id: sub.id,
     subscription_status: sub.status,
-    subscription_current_period_end: periodEndIso(sub),
+    subscription_current_period_end: subscriptionCurrentPeriodEndIso(sub),
+    stripe_price_id: priceIdFromSubscription(sub),
+    updated_at: new Date().toISOString(),
+  });
+}
+
+/**
+ * Customer Portal billing / address saves often emit `customer.updated` without a
+ * `customer.subscription.updated` event. Re-load the linked subscription so period end stays fresh.
+ */
+async function onCustomerUpdated(
+  customer: Stripe.Customer | Stripe.DeletedCustomer,
+  stripe: Stripe,
+  admin: SupabaseClient
+): Promise<void> {
+  if ("deleted" in customer && customer.deleted) return;
+  const customerId = customer.id;
+
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("id, stripe_subscription_id")
+    .eq("stripe_customer_id", customerId)
+    .maybeSingle();
+
+  if (!profile?.id || !profile.stripe_subscription_id) return;
+
+  const sub = await stripe.subscriptions.retrieve(profile.stripe_subscription_id, {
+    expand: ["items.data.price"],
+  });
+
+  await upsertProfileStripe(admin, {
+    id: profile.id,
+    stripe_customer_id: customerId,
+    stripe_subscription_id: sub.id,
+    subscription_status: sub.status,
+    subscription_current_period_end: subscriptionCurrentPeriodEndIso(sub),
     stripe_price_id: priceIdFromSubscription(sub),
     updated_at: new Date().toISOString(),
   });
@@ -102,7 +137,10 @@ export async function processStripeWebhookEvent(
       break;
     case "customer.subscription.updated":
     case "customer.subscription.deleted":
-      await onSubscriptionChange(event.data.object as SubscriptionLike, admin);
+      await onSubscriptionChange(event.data.object as Stripe.Subscription, stripe, admin);
+      break;
+    case "customer.updated":
+      await onCustomerUpdated(event.data.object as Stripe.Customer, stripe, admin);
       break;
     default:
       break;

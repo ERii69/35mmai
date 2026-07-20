@@ -11,6 +11,8 @@ export type Tool = {
   link: string;
   /** Optional tracked partner URL; falls back to `link` when unset. */
   affiliateLink?: string;
+  /** Optional partner logo under `/public` (shown on Partner badges). */
+  partnerLogo?: string;
   /** Override when kind is not inferred from category / catalog rank lists. */
   catalogKind?: CatalogKind;
   roles: string[];
@@ -294,6 +296,8 @@ export const allTools = [
     price: "from $29/mo",
     budgetFit: "both",
     link: "filmustage.com",
+    affiliateLink: "https://filmustage.cello.so/vA2BDdLdP89",
+    partnerLogo: "/partners/filmustage.png",
     roles: [
       "Producer / Line Producer",
       "Director",
@@ -768,6 +772,7 @@ export const allTools = [
     price: "from $12/mo (Free tier available)",
     budgetFit: "both",
     link: "descript.com",
+    affiliateLink: "https://get.descript.com/p4dqbwe4hu34",
     roles: ["Editor", "Sound Designer", "Production Coordinator"],
     shortDescription: "Edit video by editing text — ideal for rough cuts, ADR notes, and dialogue-heavy scenes",
     howToUse: [
@@ -980,6 +985,7 @@ export const allTools = [
     price: "from $17/mo",
     budgetFit: "both",
     link: "soundraw.io",
+    affiliateLink: "https://soundraw.io/?ref=ildargvr",
     roles: ["Sound Designer", "Editor", "Producer / Line Producer"],
     shortDescription: "Dial in instrumentation when you need repeatable sonic branding across episodes or campaign cuts",
     howToUse: [
@@ -1430,6 +1436,192 @@ export const allTools = [
     examplePrompt:
       "Convert a folder of 4K H.265 interview files to ProRes proxy for an offline Premiere reel",
   },
+  {
+    rank: 71,
+    name: "Google Flow",
+    category: "Production",
+    helps: "AI filmmaking studio built around Veo 3.1, Imagen, and Gemini — generate cinematic clips with native audio, reference ingredients, and assemble scenes in one project workspace",
+    price: "Free 50 credits/day; Google AI Pro from ~$19.99/mo (1,000 credits); Ultra from ~$249.99/mo",
+    budgetFit: "both",
+    link: "labs.google/flow",
+    roles: ["Director", "DOP (Director of Photography)", "Editor"],
+    shortDescription:
+      "Google's Veo-first creative studio for cinematic pre-vis and generative sequences with continuity controls",
+    howToUse: [
+      "Step 1: Open labs.google/flow with a Google AI Pro or Ultra account",
+      "Step 2: Create a project and set aspect ratio to match delivery",
+      "Step 3: Build character and location ingredients with Imagen reference stills",
+      "Step 4: Generate Veo clips with explicit camera and lighting prompts",
+      "Step 5: Extend scenes and export clips for your NLE timeline",
+    ],
+    examplePrompt:
+      "2.39:1 night interior — detective at rain-streaked window, slow push-in, practical lamp key, native room tone and dialogue",
+  },
+  {
+    rank: 72,
+    name: "MiniMax Hailuo 2.3",
+    category: "Production",
+    helps: "Text and image-to-video with precise camera and physics control, expressive micro-movements, and a Media Agent for multi-step generation workflows",
+    price: "Free tier available; Hailuo 2.3 Fast ~50% lower than Standard; API on Pro Max+",
+    budgetFit: "indie",
+    link: "hailuoai.video",
+    roles: ["Director", "DOP (Director of Photography)", "Editor"],
+    shortDescription:
+      "Cost-effective cinematic generator when prompts must obey camera moves — not random motion",
+    howToUse: [
+      "Step 1: Create an account at hailuoai.video or minimax.io",
+      "Step 2: Choose Text-to-Video or Image-to-Video mode",
+      "Step 3: Write explicit camera moves — dolly, rack focus, handheld, pan",
+      "Step 4: Use Hailuo 2.3 Fast for iterations and Standard for hero shots",
+      "Step 5: Download clips for edit assemblies or pre-vis boards",
+    ],
+    examplePrompt:
+      "Handheld chase in narrow alley, overcast, wet pavement reflections, whip pan to close-up, shallow DOF, no text overlays",
+  },
+  {
+    rank: 73,
+    name: "Artlist Studio",
+    category: "Production",
+    helps: "Shot-by-shot AI production with character and location tags, cross-scene consistency, cinematic framing, and frame-to-shot extension — paired with the Artlist AI Toolkit model hub",
+    price: "Included on Artlist AI plans (Starter+); credits shared across Toolkit and Studio",
+    budgetFit: "both",
+    link: "artlist.io/studio",
+    roles: [
+      "Director",
+      "Producer / Line Producer",
+      "Production Designer",
+      "DOP (Director of Photography)",
+    ],
+    shortDescription:
+      "Direct AI like a real shoot: cast, scout, frame, and extend sequences with visual continuity",
+    howToUse: [
+      "Step 1: Open artlist.io/studio on an Artlist AI plan",
+      "Step 2: Define prompt tags for recurring characters and locations",
+      "Step 3: Frame shots with angle and composition controls",
+      "Step 4: Generate clips and extend from key frames into new shots",
+      "Step 5: Export sequences for hybrid live-action planning or pre-vis",
+    ],
+    examplePrompt:
+      "Three-shot dialogue scene: same tagged protagonist in neon diner — OTS, close-up, wide — maintain wardrobe and lighting",
+  },
+  {
+    rank: 74,
+    name: "Frame.io",
+    category: "Post-Prod",
+    helps: "Cloud review with frame-accurate comments, version stacks, Camera to Cloud dailies, semantic search, and Adobe Premiere integration",
+    price: "Free (2 users, 2GB); Pro from ~$15/user/mo; Team from ~$25/user/mo",
+    budgetFit: "both",
+    link: "frame.io",
+    catalogKind: "software" as CatalogKind,
+    roles: [
+      "Editor",
+      "Director",
+      "Producer / Line Producer",
+      "1st Assistant Director",
+    ],
+    shortDescription:
+      "Industry-standard cut review — timecoded notes, version compare, and dailies without email chaos",
+    howToUse: [
+      "Step 1: Create a project on frame.io and upload your assembly or graded cut",
+      "Step 2: Share a review link with comment permissions for director and producer",
+      "Step 3: Stack versions and use the comparison viewer for picture changes",
+      "Step 4: Search transcripts and visuals with natural-language find (V4)",
+      "Step 5: Push approved notes back to Premiere via the Frame.io extension",
+    ],
+    examplePrompt:
+      "Share Assembly Cut v3 with director and producer — picture-only comments, passphrase on festival screener link",
+  },
+  {
+    rank: 75,
+    name: "ShotDeck",
+    category: "Pre-Prod",
+    helps: "Searchable HD movie-stills library tagged by lighting, lens, composition, color, mood, and era — build shareable look decks for crew alignment",
+    price: "from $99.95/yr (~$8.33/mo) or $12.95/mo; 2-week free trial",
+    budgetFit: "both",
+    link: "shotdeck.com",
+    roles: [
+      "DOP (Director of Photography)",
+      "Director",
+      "Production Designer",
+      "Gaffer (Lighting)",
+      "Costume Designer",
+    ],
+    shortDescription:
+      "Find the exact cinematic frame for your look — millions of tagged stills built by filmmakers",
+    howToUse: [
+      "Step 1: Start a trial at shotdeck.com",
+      "Step 2: Search by visual attributes — backlit, overcast, anamorphic, melancholic",
+      "Step 3: Save shots to a deck per scene or character",
+      "Step 4: Share deck links with production design and gaffer",
+      "Step 5: Use color picker and similar-shots for grade and wardrobe references",
+    ],
+    examplePrompt:
+      "Deck for Act 2 interrogation: single hard key, venetian blind shadows, cool cyan fill, 2.39:1, 1970s thriller palette",
+  },
+  {
+    rank: 76,
+    name: "Arc Studio Pro",
+    category: "Pre-Prod",
+    helps: "Industry-standard screenplay formatting, cloud sync, outlining, revision history, and real-time writer collaboration with Fountain and Final Draft export",
+    price: "Free (2 scripts, watermarked PDF); Essentials $69/yr; Pro $99 first year then ~$79/yr",
+    budgetFit: "indie",
+    link: "arcstudiopro.com",
+    catalogKind: "software" as CatalogKind,
+    roles: ["Director", "Producer / Line Producer", "Script Supervisor"],
+    shortDescription:
+      "Write and iterate scripts fast — export clean FDX for breakdown and scheduling tools",
+    howToUse: [
+      "Step 1: Sign up free at arcstudiopro.com",
+      "Step 2: Outline beats then draft in script mode",
+      "Step 3: Invite co-writer or script supervisor for comments",
+      "Step 4: Track revisions across production draft colors",
+      "Step 5: Export FDX to Filmustage, Studiovity, or Studiobinder",
+    ],
+    examplePrompt:
+      "Tighten Act 1 from 18 to 14 pages — keep inciting incident on page 12, preserve final image beat",
+  },
+  {
+    rank: 77,
+    name: "Sync Labs",
+    category: "Post-Prod",
+    helps: "AI lip-sync and dubbing on real footage — sync replacement dialogue to on-camera performance including difficult angles and facial detail (sync-3, lipsync-2-pro)",
+    price: "from ~$5/mo + usage (~$0.04–$0.13/sec depending on model)",
+    budgetFit: "both",
+    link: "sync.so",
+    roles: ["Editor", "Sound Designer", "Producer / Line Producer"],
+    shortDescription:
+      "Fix ADR and localization without reshoots when talent cannot return to set",
+    howToUse: [
+      "Step 1: Create a project at sync.so",
+      "Step 2: Upload picture lock or performance plate",
+      "Step 3: Upload replacement dialogue or dubbed audio track",
+      "Step 4: Choose lipsync-2-pro or sync-3 based on angle and beard complexity",
+      "Step 5: Export synced clip for your NLE or sound mix",
+    ],
+    examplePrompt:
+      "Replace corrupted dialogue on CU take 4B with clean ADR from booth session — match lip sync at 24fps",
+  },
+  {
+    rank: 78,
+    name: "AudioShake",
+    category: "Post-Prod",
+    helps: "AI stem separation — isolate dialogue, music, SFX, and instruments from mixed location or archival audio for cleanup, ADR prep, and clearance documentation",
+    price: "Indie from ~$20/mo (4 stems); API credit-based (~1.5 credits/min for dialogue/SFX models)",
+    budgetFit: "both",
+    link: "audioshake.ai",
+    roles: ["Sound Designer", "Editor", "Lawyer / Clearance"],
+    shortDescription:
+      "Unmix messy production audio when you cannot get another take on location",
+    howToUse: [
+      "Step 1: Upload mixed WAV or production audio at audioshake.ai",
+      "Step 2: Select dialogue, effects, and music_fx separation targets",
+      "Step 3: Download stems for DAW rebalance or cleaner dialogue chain",
+      "Step 4: Feed cleaner dialogue into Descript or your ADR workflow",
+      "Step 5: Document separated stems for music clearance if needed",
+    ],
+    examplePrompt:
+      "Split café scene boom mix — isolate dialogue from espresso machine bed and distant music for ADR session",
+  },
 ];
 
 /**
@@ -1447,6 +1639,25 @@ export function getCatalogKind(tool: Tool): CatalogKind {
 /** Stable join key between `allTools` and workflow / budget presets (unique per tool). */
 export function getToolByRank(rank: number): Tool | undefined {
   return allTools.find((t) => t.rank === rank);
+}
+
+/** True when a tracked partner / affiliate URL is configured (accepted partnership). */
+export function hasPartnerLink(tool: Tool): boolean {
+  return Boolean(tool.affiliateLink?.trim());
+}
+
+/**
+ * Role spotlight: prefer accepted Partner tools (lowest rank among partners), else top catalog rank.
+ * Aligns SPOTLIGHT with affiliate partners without overriding roles that have no partner fit.
+ */
+export function getSpotlightToolForRole(role: string): Tool | null {
+  const matches = allTools.filter((t) => t.roles.includes(role));
+  if (matches.length === 0) return null;
+
+  const partners = matches.filter(hasPartnerLink).sort((a, b) => a.rank - b.rank);
+  if (partners.length > 0) return partners[0];
+
+  return matches.sort((a, b) => a.rank - b.rank)[0];
 }
 
 /** Default line items for Budget Templates — derived from catalog so renames/prices stay in sync. */

@@ -1,6 +1,7 @@
-# Task list: 35mmPRO Phase 1 (API-free)
+# Task list: 35mmAiPro Phase 1 (API-free)
 
 **Source PRD:** `tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`  
+**Canonical guide (product + build direction):** `docs/35mmpro-phase1-implementation-guide.md`  
 **Branch:** `35mmpro-prototype` (local-only until you push).  
 **Do not merge to `main`** until intentional PRO launch.
 
@@ -84,54 +85,54 @@
   - [x] 4.6 Ensure **replay** of same `event.id` does not duplicate writes (transaction or insert-on-conflict-do-nothing on event id).
   - [x] 4.7 Implement **`isProEntitled(userId)`** (or session variant) reading DB: allowlist statuses e.g. `active`, `trialing` only.
 
-- [ ] **5.0** Pro shell, routing & marketing split (slice **1B**)
-  - [ ] 5.1 Add **`/pro/app`** (or agreed path) layout: authenticated + **subscription gate** — redirect non-subscribers to `/pro` or dedicated “subscribe” view with CTA.
-  - [ ] 5.2 **Middleware** (or layout server check): unauthenticated users hitting `/pro/app` → sign-in with `returnUrl`.
-  - [ ] 5.3 Pro dashboard **shell**: header with marketing line or subtitle, nav slots for Projects / Workspace / Exports (can be stubs until slices land).
-  - [ ] 5.4 Show **subscription status** + **current period end** on dashboard when available.
-  - [ ] 5.5 Update **`/pro`** marketing page: distinguish **logged-out** (pricing + waitlist optional) vs **signed-in non-Pro** (Subscribe) vs **subscriber** (link to app); avoid confusing labels (PRD §4.4).
-  - [ ] 5.6 Empty states: **no projects yet**, **no subscription** — copy aligned with *“isn’t another AI generator…”* line.
+- [x] **5.0** Pro shell, routing & marketing split (slice **1B**)
+  - [x] 5.1 Add **`/pro/app`** (or agreed path) layout: authenticated + **subscription gate** — redirect non-subscribers to `/pro` or dedicated “subscribe” view with CTA.
+  - [x] 5.2 **Middleware** (or layout server check): unauthenticated users hitting `/pro/app` → sign-in with `returnUrl`.
+  - [x] 5.3 Pro dashboard **shell**: header with marketing line or subtitle, nav slots for Projects / Workspace / Exports (can be stubs until slices land).
+  - [x] 5.4 Show **subscription status** + **current period end** on dashboard when available.
+  - [x] 5.5 Update **`/pro`** marketing page: distinguish **logged-out** (pricing + waitlist optional) vs **signed-in non-Pro** (Subscribe) vs **subscriber** (link to app); avoid confusing labels (PRD §4.4).
+  - [x] 5.6 Empty states: **no projects yet**, **no subscription** — copy aligned with *“isn’t another AI generator…”* line.
 
-- [ ] **6.0** Database — projects & cloud state (slices **1C** / **1D** backend)
-  - [ ] 6.1 Create **`projects`** table: id, user_id, name, archived_at nullable, created_at, updated_at, optional `is_default` flag.
-  - [ ] 6.2 Create **`project_state`** (or JSONB column on `projects`): kit JSON, workflow JSON, budget JSON — schema version field recommended (`schema_version` integer).
-  - [ ] 6.3 Add **RLS** (Supabase) or equivalent **authorization in every Server Action** so `user_id` on rows matches session user only.
-  - [ ] 6.4 Server Actions or route handlers: **list projects**, **create project**, **rename**, **archive**, **set active** (active can be user preference column on `profiles` or derive from last opened).
-  - [ ] 6.5 **Default project**: on first successful subscription webhook (or first app visit), auto-create **one** project if none exist.
-  - [ ] 6.6 Implement **loadProjectState(projectId)** and **saveProjectState(projectId, payload)** with validation (Zod optional) and max payload size guard.
+- [x] **6.0** Database — projects & cloud state (slices **1C** / **1D** backend)
+  - [x] 6.1 Create **`projects`** table: id, user_id, name, archived_at nullable, created_at, updated_at, optional `is_default` flag.
+  - [x] 6.2 Create **`project_state`** (or JSONB column on `projects`): kit JSON, workflow JSON, budget JSON — schema version field recommended (`schema_version` integer).
+  - [x] 6.3 Add **RLS** (Supabase) or equivalent **authorization in every Server Action** so `user_id` on rows matches session user only.
+  - [x] 6.4 Server Actions or route handlers: **list projects**, **create project**, **rename**, **archive**, **set active** (active can be user preference column on `profiles` or derive from last opened).
+  - [x] 6.5 **Default project**: on first successful subscription webhook (or first app visit), auto-create **one** project if none exist.
+  - [x] 6.6 Implement **loadProjectState(projectId)** and **saveProjectState(projectId, payload)** with validation (Zod optional) and max payload size guard.
 
-- [ ] **7.0** Workspace UI — cloud sync for kit, workflow, budget (slice **1C**)
-  - [ ] 7.1 Define **TypeScript types** for persisted kit/workflow/budget (reuse concepts from `app/page.tsx` local state where practical).
-  - [ ] 7.2 **Load** active project state into Pro workspace on mount (Server Component fetch or client + Server Action).
-  - [ ] 7.3 **Save** strategy: implement **debounced autosave** and/or explicit **Save** button (resolve PRD open question; document choice in `HANDOFF.md`).
-  - [ ] 7.4 Conflict policy v1: **last-write-wins**; document in code comment.
-  - [ ] 7.5 Surface **save errors** and **offline / retry** messaging (basic toast or inline alert).
+- [x] **7.0** Workspace UI — cloud sync for kit, workflow, budget (slice **1C**)
+  - [x] 7.1 Define **TypeScript types** for persisted kit/workflow/budget (reuse concepts from `app/page.tsx` local state where practical).
+  - [x] 7.2 **Load** active project state into Pro workspace on mount (Server Component fetch or client + Server Action).
+  - [x] 7.3 **Save** strategy: implement **debounced autosave** and/or explicit **Save** button (resolve PRD open question; document choice in `HANDOFF.md`).
+  - [x] 7.4 Conflict policy v1: **last-write-wins**; document in code comment.
+  - [x] 7.5 Surface **save errors** and **offline / retry** messaging (basic toast or inline alert).
   - [ ] 7.6 *(Optional)* **Import from localStorage**: button on Pro workspace reads existing free-app keys from browser, maps to cloud schema, saves to active project (one-time or merge policy documented).
 
-- [ ] **8.0** Projects UI (slice **1D**)
-  - [ ] 8.1 **Project switcher** in Pro shell (dropdown or sidebar): lists non-archived projects; switching loads that project’s state.
-  - [ ] 8.2 **Create project** flow: name input, create via Server Action, switch to new project.
-  - [ ] 8.3 **Rename** and **archive** (confirm dialog for archive); archived hidden from default list or in “Archived” section.
-  - [ ] 8.4 Verify **isolation**: switching projects never shows another project’s kit without reload bug.
+- [x] **8.0** Projects UI (slice **1D**)
+  - [x] 8.1 **Project switcher** in Pro shell (dropdown or sidebar): lists non-archived projects; switching loads that project’s state.
+  - [x] 8.2 **Create project** flow: name input, create via Server Action, switch to new project.
+  - [x] 8.3 **Rename** and **archive** (confirm dialog for archive); archived hidden from default list or in “Archived” section.
+  - [x] 8.4 Verify **isolation**: switching projects never shows another project’s kit without reload bug.
 
-- [ ] **9.0** Templates (slice **1E**)
-  - [ ] 9.1 Add **`lib/pro/templates.ts`** (or similar) with **≥3** static templates; each references budget preset keys / phase lists aligned with `app/data.ts` (`workflowStages`, `budgetLinesFromPreset` patterns).
-  - [ ] 9.2 **Apply template** UI: picker + **confirm** if current project state is non-empty (overwrite warning).
-  - [ ] 9.3 Server Action **applyTemplate(projectId, templateId)**: writes initial workflow + suggested kit placeholders + budget preset into `project_state`.
-  - [ ] 9.4 After apply, client refreshes or receives updated state from action return.
+- [x] **9.0** Templates (slice **1E**)
+  - [x] 9.1 Add **`lib/pro/templates.ts`** (or similar) with **≥3** static templates; each references budget preset keys / phase lists aligned with `app/data.ts` (`workflowStages`, `budgetLinesFromPreset` patterns).
+  - [x] 9.2 **Apply template** UI: picker + **confirm** if current project state is non-empty (overwrite warning).
+  - [x] 9.3 Server Action **applyTemplate(projectId, templateId)**: writes initial workflow + suggested kit placeholders + budget preset into `project_state`.
+  - [x] 9.4 After apply, client refreshes or receives updated state from action return.
 
-- [ ] **10.0** Exports (slice **1F**)
-  - [ ] 10.1 Implement **CSV export** for **kit list** (name, rank, category, link columns as useful) from **server-loaded** cloud state.
-  - [ ] 10.2 Implement **CSV** and/or **PDF** for **budget summary** / **workflow checklist** — minimum **one** format beyond kit CSV if PRD “prefer both” is deferred, document in `HANDOFF.md`.
-  - [ ] 10.3 If **PDF**: use `@react-pdf/renderer`, `pdfkit`, or server-friendly library; keep generation in **Route Handler** or Server Action returning `Response` / download URL.
-  - [ ] 10.4 Add **Export** buttons on Pro workspace; filenames include project name + date slug.
-  - [ ] 10.5 Verify exports **never** read only `localStorage` — always authoritative cloud snapshot.
+- [x] **10.0** Exports (slice **1F**)
+  - [x] 10.1 Implement **CSV export** for **kit list** (name, rank, category, link columns as useful) from **server-loaded** cloud state.
+  - [x] 10.2 Implement **CSV** and/or **PDF** for **budget summary** / **workflow checklist** — minimum **one** format beyond kit CSV if PRD “prefer both” is deferred, document in `HANDOFF.md`.
+  - [ ] 10.3 *(Deferred)* **PDF** exports — v1 ships **CSV only** (kit + budget + workflow); add `@react-pdf/renderer` or similar in a later slice.
+  - [x] 10.4 Add **Export** buttons on Pro workspace; filenames include project name + date slug.
+  - [x] 10.5 Verify exports **never** read only `localStorage` — always authoritative cloud snapshot.
 
-- [ ] **11.0** Quality, continuity & docs
-  - [ ] 11.1 Run **`npm run ci`** after each major slice; fix lint and type errors.
-  - [ ] 11.2 Manual smoke checklist: subscribe (test) → app access → save state → second browser login → same data → Portal cancel → access revoked.
-  - [ ] 11.3 Update **`HANDOFF.md`** with Pro routes, env vars, auth choice, and “merge to `main`” caution.
-  - [ ] 11.4 Ensure new Pro code paths are **inert on `main`** if merged without env (graceful missing-config messages, or feature flag) per PRD §4.9.
+- [x] **11.0** Quality, continuity & docs
+  - [x] 11.1 Run **`npm run ci`** after each major slice; fix lint and type errors.
+  - [x] 11.2 Manual smoke checklist: subscribe (test) → app access → save state → second browser login → same data → Portal cancel → access revoked.
+  - [x] 11.3 Update **`HANDOFF.md`** with Pro routes, env vars, auth choice, and “merge to `main`” caution.
+  - [x] 11.4 Ensure new Pro code paths are **inert on `main`** if merged without env (graceful missing-config messages, or feature flag) per PRD §4.9.
 
 ---
 
