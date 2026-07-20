@@ -8,13 +8,22 @@ import { PRO_STACK_ENV_HINT } from "@/lib/pro-stack-config";
 export default async function ProPage({
   searchParams,
 }: {
-  searchParams: Promise<{ subscribe?: string }>;
+  searchParams: Promise<{ subscribe?: string; invite?: string }>;
 }) {
-  const { subscribe } = await searchParams;
+  const { subscribe, invite } = await searchParams;
   const subscribeRequired = subscribe === "required";
+  const invalidInvite = invite === "invalid";
 
-  const { userEmail, userMetadata, entitled, canManageBilling, stackReady, signedIn } =
-    await getProMarketingSession();
+  const {
+    userEmail,
+    userMetadata,
+    entitled,
+    canManageBilling,
+    stackReady,
+    signedIn,
+    inviteOnly,
+    inviteUnlocked,
+  } = await getProMarketingSession();
 
   if (entitled) {
     redirect("/pro/app");
@@ -41,6 +50,9 @@ export default async function ProPage({
         stackReady={stackReady}
         signedIn={signedIn}
         entitled={entitled}
+        inviteOnly={inviteOnly}
+        inviteUnlocked={inviteUnlocked}
+        invalidInvite={invalidInvite}
       />
     </ProMarketingInfoPageShell>
   );

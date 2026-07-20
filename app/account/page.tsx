@@ -9,6 +9,7 @@ import { headerDisplayName } from "@/lib/pro/header-user-display";
 import { bootstrapDefaultProject, listProjectsForUser } from "@/lib/pro/bootstrap-default-project";
 import { pickWorkspaceRedirectProject } from "@/lib/pro/pick-continue-project";
 import {
+  PRO_INVITE_REQUIRED_ACCOUNT,
   PRO_MARKETING_CTA_TRIAL,
   PRO_MARKETING_PRICE,
 } from "@/lib/pro/marketing-copy";
@@ -16,6 +17,7 @@ import {
   PRO_CANCEL_RETENTION_SUMMARY,
   PRO_DATA_RETENTION_DAYS,
 } from "@/lib/pro/membership-policy";
+import { hasProInviteAccess } from "@/lib/pro/invite-gate";
 import { isSupabaseConfigured } from "@/lib/pro-stack-config";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
@@ -27,6 +29,7 @@ type Search = {
   checkout?: string;
   stripe?: string;
   portal?: string;
+  invite?: string;
 };
 
 function bannerForStripe(code: string | undefined): string | null {
@@ -103,6 +106,11 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     sp.portal === "no_customer"
       ? "Subscribe first — we need a Stripe customer before opening the billing portal."
       : null;
+  const inviteUnlocked = await hasProInviteAccess();
+  const inviteRequiredMsg =
+    sp.invite === "required" || (!subscribed && !inviteUnlocked)
+      ? PRO_INVITE_REQUIRED_ACCOUNT
+      : null;
 
   return (
     <div className={proAuth.page}>
@@ -120,6 +128,11 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
         {portalMsg ? (
           <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
             {portalMsg}
+          </p>
+        ) : null}
+        {inviteRequiredMsg ? (
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
+            {inviteRequiredMsg}
           </p>
         ) : null}
 
@@ -159,7 +172,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             ) : null}
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-              {!subscribed ? (
+              {!subscribed && inviteUnlocked ? (
                 <form action={startProCheckout}>
                   <Button type="submit" className={proBtn.primary}>
                     {PRO_MARKETING_CTA_TRIAL}

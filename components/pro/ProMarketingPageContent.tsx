@@ -33,6 +33,9 @@ type Props = {
   stackReady: boolean;
   signedIn: boolean;
   entitled: boolean;
+  inviteOnly?: boolean;
+  inviteUnlocked?: boolean;
+  invalidInvite?: boolean;
 };
 
 /** Entitled subscribers — logo, one line, one button. No marketing chrome. */
@@ -60,11 +63,21 @@ function ProMarketingEntitledLanding() {
 }
 
 /** Prospects — brand + headline first, then subscribe, workflows, compare. */
-function ProMarketingProspectLanding({ stackReady, signedIn, entitled }: Props) {
+function ProMarketingProspectLanding({
+  stackReady,
+  signedIn,
+  entitled,
+  inviteOnly = false,
+  inviteUnlocked = true,
+  invalidInvite = false,
+}: Props) {
   const subscribeProps = {
     stackReady,
     signedIn,
     entitled,
+    inviteOnly,
+    inviteUnlocked,
+    invalidInvite,
     hideStackWarning: !stackReady,
     sectionId: "pro-subscribe",
   };

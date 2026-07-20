@@ -3,6 +3,7 @@
 import type Stripe from "stripe";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { hasProInviteAccess } from "@/lib/pro/invite-gate";
 import { getAppUrl, getProMonthlyPriceId, getStripe } from "@/lib/stripe";
 import { PRO_SUBSCRIPTION_TRIAL_DAYS } from "@/lib/pro/subscription-trial";
 
@@ -13,6 +14,10 @@ export async function startProCheckout() {
   } = await supabase.auth.getUser();
   if (!user?.email) {
     redirect("/login?next=/account");
+  }
+
+  if (!(await hasProInviteAccess())) {
+    redirect("/account?invite=required");
   }
 
   let priceId: string;

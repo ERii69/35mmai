@@ -42,6 +42,14 @@ Use this file when opening a new chat so context is not “from zero.”
 - **Run locally:** `npm run dev:pro` → **localhost:3001** only. LAN script: `npm run dev:pro:lan` (**on hold**). Full checklist: **`docs/35mmpro-local-prototype.md`**.
 - **`main`** push → **production** on Vercel. Catalog-only updates for live stay on `main`; they do not require the PRO branch.
 
+## Soft launch (invite link only)
+
+- **Doc:** [`docs/soft-launch-invite.md`](docs/soft-launch-invite.md)
+- **Env:** `PRO_INVITE_ONLY=1` + `PRO_INVITE_CODES=…` (see `.env.example`)
+- **Generate 10 links:** `node scripts/generate-pro-invite-codes.mjs https://YOUR_DOMAIN`
+- **Entry URL:** `/pro/invite/[code]` → cookie → sign-up → Account checkout
+- **AI:** leave `ANTHROPIC_API_KEY` unset for local Script→Prompt ($0)
+
 ## Live stack
 
 - **Repo:** GitHub `ERii69/35mmai` (or current remote).

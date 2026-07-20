@@ -53,6 +53,20 @@ export const PRO_MARKETING_CTA_TRIAL = `Start ${PRO_SUBSCRIPTION_TRIAL_DAYS}-day
 
 export const PRO_MARKETING_CTA_CREATE_TRIAL = "Create account · free trial";
 
+/** Soft launch — invite link required. */
+export const PRO_INVITE_ONLY_EYEBROW = "Private beta · invite only";
+
+export const PRO_INVITE_ONLY_HEADLINE = "Invite-only soft launch";
+
+export const PRO_INVITE_ONLY_BODY =
+  "We’re opening 35mmAiPro to a small group of filmmakers first. If you received an invite link, open it to unlock signup and your free trial.";
+
+export const PRO_INVITE_INVALID =
+  "That invite link isn’t valid or has been revoked. Ask for a fresh link, or join the waitlist below.";
+
+export const PRO_INVITE_REQUIRED_ACCOUNT =
+  "Checkout is invite-only right now. Open the invite link we emailed you, then return here to start your trial.";
+
 /** One paragraph for mobile — replaces feature card grid below sm. */
 export const PRO_MARKETING_FEATURES_MOBILE =
   "Script → Look → Prompt pack: paste screenplay, lock look, export copy-ready prompts for Midjourney, Kling, LTX, Nano, and Higgsfield. Cloud projects and crew-ready exports.";

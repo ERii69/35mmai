@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { LayoutGrid } from "lucide-react";
+import { ProInviteOnlyPanel } from "@/components/pro/ProInviteOnlyPanel";
 import { ProMarketingAuthButtons } from "@/components/pro/ProMarketingAuthButtons";
 import { ProMarketingTrustStrip } from "@/components/pro/ProMarketingTrustStrip";
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
@@ -13,6 +14,10 @@ type Props = {
   stackReady: boolean;
   signedIn: boolean;
   entitled: boolean;
+  /** Soft launch: require invite cookie for trial CTAs. */
+  inviteOnly?: boolean;
+  inviteUnlocked?: boolean;
+  invalidInvite?: boolean;
   className?: string;
   /** Show trust bullets under pricing. */
   showTrustStrip?: boolean;
@@ -28,12 +33,25 @@ export function ProMarketingSubscribeCard({
   stackReady,
   signedIn,
   entitled,
+  inviteOnly = false,
+  inviteUnlocked = true,
+  invalidInvite = false,
   className,
   showTrustStrip = false,
   hideStackWarning = false,
   sectionId,
   loginNext = "/pro",
 }: Props) {
+  if (inviteOnly && !inviteUnlocked && !entitled) {
+    return (
+      <ProInviteOnlyPanel
+        invalidInvite={invalidInvite}
+        className={className}
+        sectionId={sectionId}
+      />
+    );
+  }
+
   return (
     <section
       id={sectionId}
@@ -84,7 +102,11 @@ export function ProMarketingSubscribeCard({
             {PRO_MARKETING_CTA_TRIAL}
           </Link>
         ) : stackReady ? (
-          <ProMarketingAuthButtons returnPath={loginNext} layout="inline" className="justify-start sm:justify-center" />
+          <ProMarketingAuthButtons
+            returnPath={loginNext}
+            layout="inline"
+            className="justify-start sm:justify-center"
+          />
         ) : (
           <Link href="/" className={`${proBtn.secondary} h-10 w-full justify-center`}>
             Back to free {BRAND_NAME}
