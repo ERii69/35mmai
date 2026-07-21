@@ -23,7 +23,7 @@ Use this checklist to sign off the refocus before merge or private beta.
 ## 15-minute walkthrough (manual)
 
 1. Sign in → `/pro/app` → open default project.
-2. **Script:** Tap **Try 3-scene demo → instant prompts** (or paste `lib/pro/demo-script-five-scenes.ts` and run Generate).
+2. **Script:** Tap **Try 3-scene demo** (instant prompts) or **Load 5-scene sample** then Run quick prep.
 4. **Look:** Add at least one palette swatch or visual mood (30 seconds).
 5. **Produce → Prompts:** Confirm prompts auto-built per scene; copy one prompt; **Open** tool link works.
 6. **Produce → Export:** Download **prompt pack** Markdown (or CSV); open file — tool names + prompts present.

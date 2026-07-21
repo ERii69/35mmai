@@ -7,6 +7,7 @@ type Props = {
   entitled: boolean;
   canManageBilling?: boolean;
   subscribeRequired?: boolean;
+  checkoutEnabled?: boolean;
   children: ReactNode;
 };
 
@@ -17,6 +18,7 @@ export function ProMarketingInfoPageShell({
   entitled,
   canManageBilling = false,
   subscribeRequired,
+  checkoutEnabled = true,
   children,
 }: Props) {
   return (
@@ -27,6 +29,7 @@ export function ProMarketingInfoPageShell({
         userMetadata={userMetadata}
         canManageBilling={canManageBilling}
         subscribeRequired={subscribeRequired}
+        checkoutEnabled={checkoutEnabled}
       />
       {children}
     </div>

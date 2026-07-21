@@ -36,7 +36,7 @@ function MobileSubTabRow({
   const moreActiveResolved = moreActive ?? moreTabs.some((t) => t.id === activeId);
 
   return (
-    <div className="relative min-w-0 flex-1 md:hidden">
+    <div className="relative min-w-0 flex-1">
       <div className={`relative z-10 ${proNavScroll}`} role="tablist" aria-label={ariaLabel}>
         {primaryTabs.map((t) => (
           <button
@@ -138,7 +138,7 @@ export function LookSubTabsDesktop({ lookTab, lookTabs, onLookTabChange }: LookP
   );
 
   return (
-    <div className="relative hidden md:block">
+    <div className="relative">
       <div className={proNavScroll} role="tablist" aria-label="Look sections">
         {primaryTabs.map((t) => (
           <button
@@ -210,7 +210,7 @@ export function ProduceSubTabsDesktop({
   const moreTabs = productionTabs.filter((t) => moreIds.includes(t.id));
 
   return (
-    <div className="relative hidden md:block">
+    <div className="relative">
       <div className={proNavScroll} role="tablist" aria-label="Finish sections">
         {primaryTabs.map((t) => (
           <button

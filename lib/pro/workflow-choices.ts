@@ -30,7 +30,7 @@ export const PRIMARY_WORKFLOW_CHOICES: {
   {
     id: "classical-ai-short",
     label: "Classical AI short",
-    description: "Location-pass method with 14-step playbook — coverage, shots, and classical prep.",
+    description: "Location-pass method with a 14-step playbook — classical short prep alongside Script to prompt.",
     badge: "Advanced",
   },
   {

@@ -28,6 +28,7 @@ import { ShotPlanSummary } from "@/components/pro/ShotPlanSummary";
 import { ShotSequenceContext } from "@/components/pro/ShotSequenceContext";
 import { applyCrossTabIntelligence } from "@/lib/pro/cross-tab-sync";
 import { ensureShotPlanFromScript } from "@/lib/pro/ensure-shot-plan-from-script";
+import { PRO_SCENE_HEADING_REQUIRED } from "@/lib/pro/scene-heading-copy";
 import { generateShotPlanFromPrep } from "@/lib/pro/generate-shot-plan-from-prep";
 import { migrateShotPlanLegacy } from "@/lib/pro/migrate-shot-plan-legacy";
 import { recordShotStatusMemory } from "@/lib/pro/record-shot-memory";
@@ -201,6 +202,12 @@ export function ShotsPanel({
         warning?: string;
       };
       if (!res.ok || !data.ok || !data.shotPlan) {
+        if (res.status === 429) {
+          const msg = data.error ?? "Daily AI limit reached — use quick prep";
+          setFeedback({ variant: "error", message: msg });
+          pushToast({ message: msg, variant: "error" });
+          return;
+        }
         setFeedback({ variant: "error", message: data.error ?? "Shot plan generation failed" });
         throw new Error(data.error ?? "Shot plan generation failed");
       }
@@ -441,8 +448,7 @@ export function ShotsPanel({
                     } else {
                       setFeedback({
                         variant: "error",
-                        message:
-                          "No scene headings found. Use INT./EXT. lines or run Prep step 3.",
+                        message: PRO_SCENE_HEADING_REQUIRED,
                       });
                     }
                     return applyCrossTabIntelligence(next, "full");

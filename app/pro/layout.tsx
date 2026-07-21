@@ -7,14 +7,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: "35mmAiPro — Script to prompt pack",
   description:
-    "Paste your screenplay, lock your look, export copy-ready AI prompts for Midjourney, Kling, LTX, and your kit. 7-day free trial, then $9/mo.",
+    "Paste your screenplay, lock your look, export copy-ready AI prompts for Midjourney, Kling, LTX, and more. Private beta — invite or waitlist.",
   alternates: {
     canonical: "/pro",
   },
   openGraph: {
     title: "35mmAiPro — Script to prompt pack",
     description:
-      "Professional prompt packs from your script and look bible. Tool names and catalog links on every beat.",
+      "Professional prompt packs from your script and look. Tool names and catalog links on every beat. Private beta.",
     type: "website",
     url: "/pro",
   },
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "35mmAiPro — Script to prompt pack",
     description:
-      "Script + look → exportable prompt pack for classical filmmakers using external AI tools.",
+      "Script + look → exportable prompt pack for classical filmmakers using external AI tools. Private beta.",
   },
 };
 

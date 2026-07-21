@@ -30,7 +30,7 @@ export const PRO_MARKETING_FEATURES: ProMarketingFeature[] = [
     icon: FolderDown,
     title: "Prompt pack export",
     body:
-      "Download Markdown or CSV with tool name, catalog link, prompt, and negative per beat — ready for your DOP or AI artist.",
+      "Download Markdown or CSV with tool name, catalog link, prompt, and negative per beat — ready to paste into Midjourney, Kling, LTX, and more.",
   },
 ];
 

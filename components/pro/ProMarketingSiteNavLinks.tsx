@@ -25,12 +25,12 @@ type Props = {
 
 const subscribeTitle = `${PRO_MARKETING_HERO} — ${PRO_MARKETING_HEADLINE}`;
 
-/** Shared site links for marketing / auth shells. */
+/** Shared site links for marketing / auth shells — no Subscribe / Free catalog (logo covers those). */
 export function ProMarketingSiteNavLinks({
   variant = "desktop",
   showLegal = true,
-  showSubscribe = true,
-  showFreeCatalog = true,
+  showSubscribe = false,
+  showFreeCatalog = false,
   showInPageSections = false,
   onNavigate,
 }: Props) {

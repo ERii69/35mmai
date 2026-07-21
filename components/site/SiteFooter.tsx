@@ -24,19 +24,10 @@ export function SiteFooter({ className = "" }: Props) {
         </p>
         <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
           <Link
-            href="/how-it-works"
-            className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
-          >
-            How it works
-          </Link>
-          <span className="text-[#444]" aria-hidden>
-            ·
-          </span>
-          <Link
             href="/about"
             className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
           >
-            About {BRAND_NAME}
+            About
           </Link>
           <span className="text-[#444]" aria-hidden>
             ·
@@ -45,7 +36,7 @@ export function SiteFooter({ className = "" }: Props) {
             href="/pro"
             className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
           >
-            {BRAND_NAME_PRO}
+            Pro
           </Link>
         </p>
         <p className="mt-6 text-xs text-[#555]">Made with ❤️ for the film community</p>

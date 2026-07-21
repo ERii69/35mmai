@@ -12,6 +12,7 @@ import {
   parseScenesFromScreenplayText,
   screenplayTextForLocalParse,
 } from "@/lib/pro/parse-scene-headings";
+import { PRO_SCENE_HEADING_REQUIRED } from "@/lib/pro/scene-heading-copy";
 import type {
   AgentStagingBundle,
   DirectorRulesState,
@@ -59,11 +60,10 @@ export function buildLocalPrepImport(input: {
   }
 
   if (scenes.length === 0) {
-    let error =
-      "No scene headings found. Use standard lines like INT. KITCHEN - NIGHT, or add ANTHROPIC_API_KEY for AI breakdown.";
+    let error = PRO_SCENE_HEADING_REQUIRED;
     if (excerpt) {
       error +=
-        " Your optional excerpt in step 1 has no headings — clear it or paste INT./EXT. lines there.";
+        " Your optional excerpt in step 1 has no headings — clear it or paste headings there.";
     }
     return { error };
   }

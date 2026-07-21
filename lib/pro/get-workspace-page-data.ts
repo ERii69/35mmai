@@ -1,4 +1,4 @@
-import { isClaudeAgentsConfigured } from "@/lib/pro/agents/anthropic-client";
+import { areProAgentsEnabled } from "@/lib/pro/launch-flags";
 import { createClient } from "@/lib/supabase/server";
 import { normalizeProjectState } from "@/lib/pro/validate-project-state";
 import { createEmptyProjectState } from "@/lib/pro/project-state-defaults";
@@ -77,6 +77,6 @@ export async function getWorkspacePageData(
     project: mapProject(project as Record<string, unknown>),
     state,
     updatedAt,
-    claudeAgentsEnabled: isClaudeAgentsConfigured(),
+    claudeAgentsEnabled: areProAgentsEnabled(),
   };
 }

@@ -116,27 +116,28 @@ async function signInSession() {
 async function applySessionCookies(context, session) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const projectRef = new URL(url).hostname.split(".")[0];
-  const value = encodeURIComponent(
-    JSON.stringify({
-      access_token: session.access_token,
-      refresh_token: session.refresh_token,
-      expires_at: session.expires_at,
-      expires_in: session.expires_in,
-      token_type: "bearer",
-      user: session.user,
-    })
-  );
-  await context.addCookies([
-    {
-      name: `sb-${projectRef}-auth-token`,
+  const cookieName = `sb-${projectRef}-auth-token`;
+  const encoded = `base64-${Buffer.from(JSON.stringify(session), "utf8").toString("base64url")}`;
+  const chunkSize = 3180;
+  const values =
+    encoded.length <= chunkSize
+      ? [{ name: cookieName, value: encoded }]
+      : Array.from({ length: Math.ceil(encoded.length / chunkSize) }, (_, index) => ({
+          name: `${cookieName}.${index}`,
+          value: encoded.slice(index * chunkSize, (index + 1) * chunkSize),
+        }));
+
+  await context.clearCookies();
+  await context.addCookies(
+    values.map(({ name, value }) => ({
+      name,
       value,
-      domain: "127.0.0.1",
-      path: "/",
+      url: BASE,
       httpOnly: false,
-      secure: false,
+      secure: BASE.startsWith("https://"),
       sameSite: "Lax",
-    },
-  ]);
+    }))
+  );
 }
 
 async function shot(page, name) {
@@ -219,14 +220,18 @@ async function main() {
     const footerVisible = await page.locator("footer").first().isVisible();
     log(footerVisible, "Footer visible on mobile viewport");
     const menuBtn = page.getByRole("button", { name: /open menu|close menu/i });
-    if (await menuBtn.count()) {
+    if (await menuBtn.isVisible().catch(() => false)) {
       await menuBtn.click();
       const authInMenu =
-        (await page.getByRole("link", { name: /create account|start.*trial|sign in/i }).count()) > 0;
+        (await page.getByRole("link", { name: /create account|start.*trial|join waitlist|sign in/i }).count()) > 0;
       log(authInMenu, "Signed-out mobile menu shows auth CTAs");
       await page.keyboard.press("Escape").catch(() => {});
     } else {
-      log(false, "Signed-out mobile menu shows auth CTAs", "menu button missing");
+      const directAuth = page
+        .getByRole("link", { name: /create account|start.*trial|join waitlist|sign in/i })
+        .first();
+      const directAuthVisible = await directAuth.isVisible().catch(() => false);
+      log(directAuthVisible, "Signed-out mobile header shows auth CTAs", "direct header layout");
     }
     await page.setViewportSize({ width: 1280, height: 900 });
 
@@ -240,7 +245,7 @@ async function main() {
     await page.locator("form").getByRole("button", { name: /^sign in$/i }).click();
     let uiLoginOk = false;
     try {
-      await page.waitForURL(/\/pro\/app/, { timeout: 15000 });
+      await page.waitForURL((url) => url.pathname.startsWith("/pro/app"), { timeout: 15000 });
       uiLoginOk = true;
       log(true, "UI login form → /pro/app", page.url());
     } catch {
@@ -251,7 +256,7 @@ async function main() {
     if (!uiLoginOk) {
       await page.goto(`${BASE}/pro/app`, { waitUntil: "domcontentloaded" });
     }
-    await page.waitForURL(/\/pro\/app/, { timeout: 20000 });
+    await page.waitForURL((url) => url.pathname.startsWith("/pro/app"), { timeout: 20000 });
     log(true, "Studio reachable as entitled user", page.url());
     await dismissOverlays();
     await shot(page, "dashboard");
