@@ -1,7 +1,9 @@
-# 35mmPRO — next steps (API-free, minimum budget)
+# 35mmAiPro — next steps (API-free, minimum budget)
+
+> **Agents:** Prefer **`docs/35mmpro-phase1-implementation-guide.md`** for current direction (includes AI-native workflow on the built stack). This file is a shorter historical checklist.
 
 **Direction:** Subscription-only PRO — **cloud persistence, projects, exports, templates**, workflow/budget depth aligned with the free app. **No** inference APIs, **no** credits.  
-**Marketing line:** *“35mmPRO isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.”*
+**Marketing line:** *“35mmAiPro isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.”*
 
 ---
 
@@ -9,7 +11,7 @@
 
 | Decision | Choice |
 | -------- | ------ |
-| Auth + database | **Supabase** (Auth + Postgres + RLS) — see **`HANDOFF.md`** §35mmPRO stack |
+| Auth + database | **Supabase** (Auth + Postgres + RLS) — see **`HANDOFF.md`** §35mmAiPro stack |
 | Payments | **Stripe** (test keys + **Stripe CLI** for local webhooks — commands in **`HANDOFF.md`**) |
 | Env | **`.env.example`** → copy to **`.env.local`**; never commit secrets |
 

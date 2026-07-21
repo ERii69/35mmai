@@ -1,4 +1,4 @@
-# PRD: 35mmPRO Phase 1 — Membership, billing, credits foundation & Pro dashboard shell
+# PRD: 35mmAiPro Phase 1 — Membership, billing, credits foundation & Pro dashboard shell
 
 > **SUPERSEDED (product direction change):** v1 PRO is **API-free** — subscription + cloud workspace only. Use **`tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`** for implementation. **Keep this file** as reference if you later add **credits + inference pipelines** (e.g. mood board + 5s clip).
 
@@ -15,7 +15,7 @@
 
 ### Problem
 
-35mmAI today is free: catalog, workflow builder, and My Kit live in the browser without accounts or payments. **35mmPRO** must introduce **accounts**, **paid access**, and **credit-based usage** so subscribers get a **cloud-backed workspace** (later phases) and **metered runs** on a single curated pipeline (**still mood board + 5s clip**), without exposing wholesale API costs directly.
+35mmAI today is free: catalog, workflow builder, and My Kit live in the browser without accounts or payments. **35mmAiPro** must introduce **accounts**, **paid access**, and **credit-based usage** so subscribers get a **cloud-backed workspace** (later phases) and **metered runs** on a single curated pipeline (**still mood board + 5s clip**), without exposing wholesale API costs directly.
 
 ### Phase 1 goal
 

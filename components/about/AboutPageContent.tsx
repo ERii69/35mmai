@@ -20,6 +20,7 @@ const MAILTO = `mailto:${SITE_CONTACT_EMAIL}`;
 
 const MOBILE_SECTION_NAV = [
   ["#about-intro", "Story"],
+  ["#how-it-works", "How"],
   ["#about-stats", "Overview"],
   ["#about-pillars", "Impact"],
   ["#about-picking", "Curation"],
@@ -27,6 +28,21 @@ const MOBILE_SECTION_NAV = [
   ["#about-faq", "FAQ"],
   ["#about-quote", "Values"],
   ["#about-contact", "Contact"],
+] as const;
+
+const HOW_IT_WORKS_STEPS = [
+  {
+    title: "Choose your stage",
+    body: "Start with the part of production you’re working on now.",
+  },
+  {
+    title: "Compare the fit",
+    body: "Check workflow, price, strengths, and trade-offs before opening a tool.",
+  },
+  {
+    title: "Keep a lean kit",
+    body: "Save only the tools that earn a place in your real production workflow.",
+  },
 ] as const;
 
 const OBSERVE_IDS = MOBILE_SECTION_NAV.map(([href]) => href.slice(1));
@@ -128,9 +144,11 @@ export function AboutPageContent({
             Last updated {lastUpdatedLabel}
           </p>
           <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-[#2a2a2a] bg-[#111]/60 px-4 py-3 text-left text-sm leading-relaxed text-[#a3a3a3] md:text-center">
-            35mmAI is <span className="text-[#e5e5e5]">independent</span> and not paid by the
-            companies listed here. Outbound links are for reference only — always verify pricing and
-            terms on the vendor&apos;s site.
+            35mmAI is an <span className="text-[#e5e5e5]">independent</span> directory. Some
+            outbound links are affiliate links — we may earn a commission at no extra cost to you.
+            Listings marked <span className="text-amber-300/90">Partner</span> use tracked links;
+            picks stay editorial, not pay-for-placement. Always verify pricing and terms on the
+            vendor&apos;s site.
           </div>
           <div className="mt-6 hidden flex-row flex-wrap justify-center gap-3 md:flex">
             <Button
@@ -144,10 +162,10 @@ export function AboutPageContent({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onNavigate(10)}
               className="h-11 min-h-[44px] border-[#444] text-[#e5e5e5] hover:bg-[#1a1a1a] md:px-6"
+              asChild
             >
-              How it works
+              <a href="#how-it-works">How it works</a>
             </Button>
             <Button
               type="button"
@@ -193,6 +211,29 @@ export function AboutPageContent({
                 context on pricing and workflow.
               </p>
             </div>
+          </section>
+
+          <section id="how-it-works" className={scrollMt}>
+            <div className="text-center">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#e11d48]">
+                How it works
+              </p>
+              <h2 className="mt-1 text-lg font-semibold text-white md:text-xl">
+                Find the right tool without app hunting
+              </h2>
+            </div>
+            <ol className="mt-5 grid gap-3 md:grid-cols-3">
+              {HOW_IT_WORKS_STEPS.map((item, index) => (
+                <li
+                  key={item.title}
+                  className="rounded-2xl border border-[#2a2a2a] bg-[#111]/80 p-5"
+                >
+                  <p className="text-xs font-semibold text-[#e11d48]">0{index + 1}</p>
+                  <h3 className="mt-2 text-sm font-semibold text-white">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#a3a3a3]">{item.body}</p>
+                </li>
+              ))}
+            </ol>
           </section>
 
           <section id="about-stats" className={scrollMt}>
@@ -342,7 +383,7 @@ export function AboutPageContent({
                   },
                   {
                     q: "Do you rank, endorse, or get paid by tools?",
-                    a: "We curate for usefulness and clarity. We are not paid by listed companies for placement. If that ever changes for a specific piece of content, we will label it conspicuously.",
+                    a: "We curate for usefulness and clarity — rankings and spotlights are editorial, not sold placements. We do participate in affiliate programs with some partners: if you subscribe or buy through a Partner link, we may earn a commission at no extra cost to you. That does not change how we choose what to list, and partner links are labeled clearly.",
                   },
                   {
                     q: "How do I suggest a tool or report an error?",
@@ -350,7 +391,7 @@ export function AboutPageContent({
                   },
                   {
                     q: "Are you affiliated with the products mentioned?",
-                    a: "No. 35mmAI is an independent editorial directory. Names and logos belong to their owners; we use them only to identify products for filmmakers.",
+                    a: "We are not owned by or officially representing the companies in the catalog. Where we have an affiliate relationship, you will see a Partner badge and may use a tracked outbound link. Product names and logos belong to their owners; we use them only to identify tools for filmmakers.",
                   },
                   {
                     q: "Does AI replace crew?",

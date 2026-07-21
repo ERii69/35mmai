@@ -1,9 +1,9 @@
-# PRD: 35mmPRO Phase 1 — Cloud workspace, subscription, no inference APIs
+# PRD: 35mmAiPro Phase 1 — Cloud workspace, subscription, no inference APIs
 
 **Document:** `0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`  
 **Supersedes for implementation:** `0001-prd-35mmpro-phase1-membership-credits.md` (credits + wholesale AI deferred).  
 **Related:** `docs/phase-0-35mmpro-product-lock.md`, `docs/35mmpro-local-prototype.md`, `app/data.ts` (catalog, `workflowStages`, budget presets).  
-**Marketing line:** *“35mmPRO isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.”*  
+**Marketing line:** *“35mmAiPro isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.”*  
 **Branch:** **`35mmpro-prototype`**; do not merge to **`main`** until intentional PRO launch. Local-only until you push.
 
 ---
@@ -16,7 +16,7 @@ The free 35mmAI experience is **browser-local**: My Kit, workflow steps, and bud
 
 ### Solution (v1)
 
-**35mmPRO** delivers a **professional, filmmaker-focused workspace** under a **simple USD subscription**: **accounts**, **projects**, **cloud-synced kit + workflow + budget state**, **templates** grounded in existing free-app structures, and **exports** — **no** wholesale AI APIs, **no** credits ledger.
+**35mmAiPro** delivers a **professional, filmmaker-focused workspace** under a **simple USD subscription**: **accounts**, **projects**, **cloud-synced kit + workflow + budget state**, **templates** grounded in existing free-app structures, and **exports** — **no** wholesale AI APIs, **no** credits ledger.
 
 ### Phase 1 scope (this PRD)
 

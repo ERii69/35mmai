@@ -1,10 +1,19 @@
-import type { Metadata } from "next";
+import { ProMarketingHeader } from "@/components/pro/ProMarketingHeader";
+import { ProWebShell } from "@/components/pro/ProWebShell";
+import { getProMarketingSession } from "@/lib/pro/marketing-session";
 
-export const metadata: Metadata = {
-  title: "Account — 35mmAI",
-  description: "Your 35mmAI account and 35mmPRO billing",
-};
+export default async function AccountLayout({ children }: { children: React.ReactNode }) {
+  const { userEmail, userMetadata, entitled, canManageBilling } = await getProMarketingSession();
 
-export default function AccountLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <ProWebShell>
+      <ProMarketingHeader
+        email={userEmail}
+        entitled={entitled}
+        userMetadata={userMetadata}
+        canManageBilling={canManageBilling}
+      />
+      {children}
+    </ProWebShell>
+  );
 }

@@ -1,24 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AuthChrome } from "@/components/auth/AuthChrome";
+import { AuthPageShell } from "@/components/auth/AuthPageShell";
 import { Button } from "@/components/ui/button";
+import { safeNextPath } from "@/lib/auth/safe-next-path";
+import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { createClient } from "@/lib/supabase/client";
+import { proAuth, proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
+
+function signUpHref(next: string) {
+  if (next === "/account") return "/sign-up";
+  return `/sign-up?${new URLSearchParams({ next }).toString()}`;
+}
 
 export default function LoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const next = searchParams.get("next") ?? "/account";
+  const next = safeNextPath(searchParams.get("next"));
   const configError = searchParams.get("error") === "config";
 
+  const [hydrated, setHydrated] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(configError ? "Server is missing Supabase env vars." : null);
+  const [error, setError] = useState<string | null>(
+    configError ? "Server is missing Supabase env vars." : null
+  );
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true);
+  }, []);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!hydrated || loading) return;
     setError(null);
     setLoading(true);
     try {
@@ -31,74 +48,71 @@ export default function LoginPage() {
         setError(signError.message);
         return;
       }
-      router.push(next);
-      router.refresh();
+      // Full navigation so middleware + server layout see the new session cookies.
+      window.location.assign(next);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Sign in failed. Try again.");
     } finally {
       setLoading(false);
     }
   }
 
+  const submitDisabled = !hydrated || loading;
+
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-12 text-zinc-100">
-      <div className="mx-auto w-full max-w-sm space-y-8">
-        <div className="text-center">
-          <Link href="/" className="text-2xl font-extrabold tracking-widest text-white">
-            <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
-          </Link>
-          <p className="mt-3 text-sm text-zinc-400">Sign in to 35mmPRO</p>
+    <AuthPageShell mode="login" next={next}>
+      <AuthChrome subtitle={`Sign in to ${BRAND_NAME_PRO}`} showLogo={false} showTagline={false} />
+
+      <form onSubmit={onSubmit} className={proAuth.card} noValidate={false}>
+        <div>
+          <label htmlFor="login-email" className={proAuth.label}>
+            Email
+          </label>
+          <input
+            id="login-email"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={proSurface.field}
+          />
         </div>
+        <div>
+          <label htmlFor="login-password" className={proAuth.label}>
+            Password
+          </label>
+          <input
+            id="login-password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={proSurface.field}
+          />
+        </div>
+        {error ? (
+          <p className="text-sm text-pro-warning" role="alert">
+            {error}
+          </p>
+        ) : null}
+        <Button type="submit" className={proBtn.primaryFull} disabled={submitDisabled}>
+          {!hydrated ? "Preparing…" : loading ? "Signing in…" : "Sign in"}
+        </Button>
+        {!hydrated ? (
+          <p className="text-center text-xs text-pro-text-secondary" aria-live="polite">
+            Getting sign-in ready…
+          </p>
+        ) : null}
+      </form>
 
-        <form onSubmit={onSubmit} className="space-y-4 rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <div>
-            <label htmlFor="login-email" className="mb-1.5 block text-sm text-zinc-400">
-              Email
-            </label>
-            <input
-              id="login-email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm outline-none ring-[#e11d48]/30 focus:ring-2"
-            />
-          </div>
-          <div>
-            <label htmlFor="login-password" className="mb-1.5 block text-sm text-zinc-400">
-              Password
-            </label>
-            <input
-              id="login-password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-950 px-3 py-2 text-sm outline-none ring-[#e11d48]/30 focus:ring-2"
-            />
-          </div>
-          {error ? (
-            <p className="text-sm text-amber-400" role="alert">
-              {error}
-            </p>
-          ) : null}
-          <Button type="submit" className="w-full bg-[#e11d48] hover:bg-[#c91840]" disabled={loading}>
-            {loading ? "Signing in…" : "Sign in"}
-          </Button>
-        </form>
-
-        <p className="text-center text-sm text-zinc-500">
-          No account?{" "}
-          <Link href="/sign-up" className="font-medium text-[#e11d48] underline-offset-2 hover:underline">
-            Create one
-          </Link>
-        </p>
-        <p className="text-center text-sm">
-          <Link href="/" className="text-zinc-500 underline-offset-2 hover:text-zinc-300 hover:underline">
-            ← Home
-          </Link>
-        </p>
-      </div>
-    </div>
+      <p className="text-center text-sm leading-relaxed text-pro-text-secondary">
+        No account?{" "}
+        <Link href={signUpHref(next)} className={proAuth.link}>
+          Create one
+        </Link>
+      </p>
+    </AuthPageShell>
   );
 }

@@ -14,8 +14,11 @@
   }
   body {
     background: #0f0f0f;
-    color: #f5f5f5;
-    font-family: 'Inter', system-ui, sans-serif;
+    color: #f5f5f7;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
@@ -37,4 +40,174 @@
 }
 .custom-scroll::-webkit-scrollbar-track {
   background: transparent;
+}
+
+@keyframes pro-shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+
+/* Subtle film grain on wordmark only */
+.logo-wordmark::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -2px -4px;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-wordmark::after {
+    display: none;
+  }
+}
+
+@keyframes brand-mark-pulse {
+  0%,
+  100% {
+    opacity: 0.88;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+
+.brand-mark-loader {
+  animation: brand-mark-pulse 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-mark-loader {
+    animation: none;
+  }
+}
+
+/** Dashboard: new default project — spotlight then settle into sort order */
+@keyframes pro-default-spotlight {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(227, 6, 19, 0.5),
+      0 0 28px rgba(200, 16, 46, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 0 0 2px rgba(227, 6, 19, 0.75),
+      0 0 44px rgba(200, 16, 46, 0.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pro-default-spotlight-active {
+    animation: none !important;
+  }
+}
+
+::view-transition-old(project-card),
+::view-transition-new(project-card) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pro-hero-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.85rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pro-hero-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.pro-marketing-hero-glow {
+  background:
+    radial-gradient(ellipse 70% 55% at 20% 20%, rgba(200, 16, 46, 0.14), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 85% 70%, rgba(255, 255, 255, 0.04), transparent 50%),
+    linear-gradient(180deg, rgba(15, 15, 15, 0.2) 0%, rgba(15, 15, 15, 0.85) 100%);
+  animation: pro-hero-glow 10s ease-in-out infinite;
+}
+
+.pro-hero-enter {
+  animation: pro-hero-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.pro-hero-enter-1 {
+  animation-delay: 0.05s;
+}
+.pro-hero-enter-2 {
+  animation-delay: 0.12s;
+}
+.pro-hero-enter-3 {
+  animation-delay: 0.2s;
+}
+.pro-hero-enter-4 {
+  animation-delay: 0.28s;
+}
+.pro-hero-enter-5 {
+  animation-delay: 0.36s;
+}
+
+.pro-hero-frame {
+  transform: perspective(900px) rotateY(-4deg) rotateX(2deg);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (min-width: 1024px) {
+  .pro-hero-frame:hover {
+    transform: perspective(900px) rotateY(-1deg) rotateX(0deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pro-marketing-hero-glow,
+  .pro-hero-enter {
+    animation: none;
+  }
+  .pro-hero-frame {
+    transform: none;
+  }
+}
+
+/** Pro app — subtle cinematic backdrop */
+.pro-cinematic-bg {
+  background-color: #0f0f0f;
+  background-image:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(200, 16, 46, 0.07), transparent 55%),
+    radial-gradient(ellipse 100% 60% at 50% 110%, rgba(0, 0, 0, 0.45), transparent 50%);
+}
+
+.pro-cinematic-bg::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: overlay;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pro-cinematic-bg::before {
+    display: none;
+  }
 }

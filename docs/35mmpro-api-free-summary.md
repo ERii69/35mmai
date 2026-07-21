@@ -1,13 +1,14 @@
-# 35mmPRO — API-free product summary (north star)
+# 35mmAiPro — API-free product summary (north star)
 
 **Purpose:** Single place to re-read intent before continuing implementation.  
-**Stack docs:** `HANDOFF.md`, `docs/phase-0-35mmpro-product-lock.md`, `tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`, `tasks/tasks-0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`.
+**Canonical implementation guide (agents):** `docs/35mmpro-phase1-implementation-guide.md`  
+**Stack docs:** `HANDOFF.md`, `docs/README.md`, `docs/phase-0-35mmpro-product-lock.md`, `tasks/0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`, `tasks/tasks-0002-prd-35mmpro-phase1-cloud-workspace-subscription.md`.
 
 ---
 
 ## Marketing line
 
-> **35mmPRO isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.**
+> **35mmAiPro isn’t another AI generator — it’s where your kit, workflow, and budget stay organized like a real production.**
 
 Position as **production prep OS**, not an AI studio. Do not promise generated clips unless/until inference APIs are added later.
 
@@ -48,6 +49,20 @@ Think **production OS for prep**, not **AI generator**.
 - **Rules + templates** from `app/data.ts` (not LLMs).
 - **Prompt starters as curated library** (content, not generation).
 - **Integrations later** (e.g. `.ics`, CSV for other tools) — still no AI bill.
+
+---
+
+## Pricing (proposed tiers — owner decision)
+
+| Tier | Price | What it is | Inference |
+|------|-------|------------|-----------|
+| **Free** | $0 | Full **35mmAI catalog** — tools, workflow builder, kit & budget in browser (`localStorage`) | User uses external tools themselves |
+| **Pro Prep** | **$9/mo** | Cloud **projects**, Director's Prep, templates, exports, snapshots — **API-free** | Copy/paste Claude prompt; no hosted LLM |
+| **Pro Studio** | **$19/mo** | Everything in $9 + **hybrid AI** (Phase 1.5→2): BYOK or included breakdown runs later | BYOK first; optional hosted script breakdown with monthly cap |
+
+**Upgrade path:** $9 stays API-free forever (predictable margin). $19 adds **optional** “Break down script” when you ship Phase 2 — start with **Bring your own Anthropic/OpenAI key** (zero token cost to you), later swap to **N included runs/month** on platform keys for users who don't BYOK.
+
+**Do not** merge tiers until Stripe products exist for each price. One subscription product today can map to $9; add second price when $19 ships.
 
 ---
 

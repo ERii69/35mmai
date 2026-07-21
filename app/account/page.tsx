@@ -1,9 +1,31 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import { AccountDisplayNameForm } from "@/components/account/AccountDisplayNameForm";
+import { ManageBillingButton } from "@/components/account/ManageBillingButton";
 import { Button } from "@/components/ui/button";
+import { ProStackUnavailable } from "@/components/pro/ProStackUnavailable";
+import { ProPrivateStudioBadge } from "@/components/pro/ProPrivateStudioBadge";
+import { proAuth, proBtn, proWebShell } from "@/components/pro/ux/pro-surfaces";
+import { headerDisplayName } from "@/lib/pro/header-user-display";
+import { bootstrapDefaultProject, listProjectsForUser } from "@/lib/pro/bootstrap-default-project";
+import { pickWorkspaceRedirectProject } from "@/lib/pro/pick-continue-project";
+import { ensureInviteTrialEntitlement } from "@/lib/pro/entitle-invite-user";
+import {
+  PRO_CHECKOUT_DISABLED_ACCOUNT,
+  PRO_INVITE_REQUIRED_ACCOUNT,
+  PRO_MARKETING_CTA_TRIAL,
+  PRO_MARKETING_PRICE,
+} from "@/lib/pro/marketing-copy";
+import {
+  PRO_CANCEL_RETENTION_SUMMARY,
+  PRO_DATA_RETENTION_DAYS,
+} from "@/lib/pro/membership-policy";
+import { canStartProCheckout, hasProInviteAccess } from "@/lib/pro/invite-gate";
+import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
+import { isSupabaseConfigured } from "@/lib/pro-stack-config";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
-import { openCustomerPortal, startProCheckout } from "@/app/actions/stripe";
+import { startProCheckout } from "@/app/actions/stripe";
 import { finalizeCheckoutSession } from "@/lib/stripe/finalize-checkout";
 
 type Search = {
@@ -11,6 +33,7 @@ type Search = {
   checkout?: string;
   stripe?: string;
   portal?: string;
+  invite?: string;
 };
 
 function bannerForStripe(code: string | undefined): string | null {
@@ -27,6 +50,10 @@ function bannerForStripe(code: string | undefined): string | null {
 
 export default async function AccountPage({ searchParams }: { searchParams: Promise<Search> }) {
   const sp = await searchParams;
+
+  if (!isSupabaseConfigured()) {
+    return <ProStackUnavailable context="account" />;
+  }
 
   const supabase = await createClient();
   const {
@@ -45,6 +72,9 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     }
     redirect("/account");
   }
+
+  // Soft launch: invite cookie → auto-trial so Account always shows “Open projects”.
+  await ensureInviteTrialEntitlement(user.id);
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -67,98 +97,151 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     row?.subscription_status === "active" || row?.subscription_status === "trialing";
   const hasCustomer = Boolean(row?.stripe_customer_id);
 
+  let workspaceHref = "/pro/app";
+  if (subscribed) {
+    await bootstrapDefaultProject(supabase, user.id);
+    const { projects } = await listProjectsForUser(supabase, user.id);
+    const projectId = pickWorkspaceRedirectProject(projects);
+    workspaceHref = projectId ? `/pro/app/workspace/${projectId}` : "/pro/app";
+  }
+
+  const displayName = headerDisplayName(user.email ?? "", user.user_metadata);
+
   const cancelMsg = sp.checkout === "cancel" ? "Checkout was canceled. No charge was made." : null;
   const stripeMsg = bannerForStripe(sp.stripe);
   const portalMsg =
     sp.portal === "no_customer"
       ? "Subscribe first — we need a Stripe customer before opening the billing portal."
       : null;
+  const inviteUnlocked = await hasProInviteAccess();
+  const checkoutEnabled = isProPublicCheckoutEnabled();
+  const canCheckout = await canStartProCheckout();
+  const inviteRequiredMsg =
+    sp.invite === "required" || (!subscribed && !inviteUnlocked)
+      ? PRO_INVITE_REQUIRED_ACCOUNT
+      : null;
+  const checkoutDisabledMsg =
+    !subscribed &&
+    inviteUnlocked &&
+    (!checkoutEnabled || sp.checkout === "disabled")
+      ? PRO_CHECKOUT_DISABLED_ACCOUNT
+      : null;
 
   return (
-    <div className="min-h-screen bg-zinc-950 px-4 py-12 text-zinc-100">
-      <div className="mx-auto max-w-md space-y-8">
-        <div className="flex items-center justify-between gap-4">
-          <Link href="/" className="text-xl font-extrabold tracking-widest text-white">
-            <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
-          </Link>
-          <Link href="/pro" className="text-sm text-zinc-400 hover:text-[#e11d48]">
-            Pro
-          </Link>
-        </div>
-
+    <div className={proAuth.page}>
+      <div className={`${proAuth.shellWide} mx-auto w-full max-w-pro space-y-4`}>
         {cancelMsg ? (
-          <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
             {cancelMsg}
           </p>
         ) : null}
         {stripeMsg ? (
-          <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
             {stripeMsg}
           </p>
         ) : null}
         {portalMsg ? (
-          <p className="rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
             {portalMsg}
           </p>
         ) : null}
+        {inviteRequiredMsg ? (
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
+            {inviteRequiredMsg}
+          </p>
+        ) : null}
+        {checkoutDisabledMsg ? (
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
+            {checkoutDisabledMsg}
+          </p>
+        ) : null}
 
-        <div className="rounded-xl border border-zinc-800 bg-zinc-900/50 p-6">
-          <h1 className="text-lg font-semibold text-white">Account</h1>
-          <p className="mt-1 text-sm text-zinc-400">Signed in as</p>
-          <p className="mt-2 break-all font-mono text-sm text-zinc-200">{user.email}</p>
-          <p className="mt-1 text-xs text-zinc-500">User id: {user.id}</p>
+        {subscribed ? (
+          <div className="rounded-2xl border border-pro-primary/35 bg-pro-primary/10 px-5 py-5 sm:px-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-pro-primary">
+              Your studio
+            </p>
+            <h2 className="mt-1 text-lg font-semibold text-pro-text sm:text-xl">
+              Projects &amp; dashboard
+            </h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-pro-text-secondary">
+              Open the app to create projects, run Script → Prompt, and manage your workspace.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+              <Link href={workspaceHref} className={`${proBtn.secondary} inline-flex h-11 px-5`}>
+                Open projects dashboard
+              </Link>
+              <Link href="/pro/app" className={`${proBtn.outline} inline-flex h-11 px-5`}>
+                All projects
+              </Link>
+            </div>
+          </div>
+        ) : null}
 
-          <div className="mt-6 border-t border-zinc-800 pt-6">
-            <h2 className="text-sm font-semibold text-zinc-200">35mmPRO billing</h2>
-            <p className="mt-1 text-xs text-zinc-500">
+        <div className={proAuth.card}>
+          <h1 className={proWebShell.pageTitle}>Account</h1>
+          <p className="mt-1 text-sm text-pro-text-secondary">Signed in as</p>
+          <p className="mt-2 break-all text-sm font-medium text-pro-text">{user.email}</p>
+          <AccountDisplayNameForm initialName={displayName} />
+          <p className="mt-4 text-xs text-pro-text-secondary">User id: {user.id}</p>
+
+          {subscribed ? (
+            <div className="mt-4">
+              <ProPrivateStudioBadge />
+            </div>
+          ) : null}
+
+          <div className="mt-6 border-t border-white/[0.06] pt-6">
+            <h2 className="text-sm font-semibold text-pro-text">35mmAiPro billing</h2>
+            <p className="mt-1 text-xs text-pro-text-secondary">
               {subscribed
-                ? "Subscription is active (sandbox or live, depending on your Stripe keys)."
-                : "Subscribe for monthly access. Use test card 4242… in Checkout when in Stripe test/sandbox."}
+                ? "Studio access is on — cloud projects, save, and prompt pack export. AI assist is separate (flag + quota)."
+                : checkoutEnabled
+                  ? `${PRO_MARKETING_PRICE.valueProp}. ${PRO_MARKETING_PRICE.trialThenLabel}. ${PRO_MARKETING_PRICE.checkoutNote} Use test card 4242… in Checkout when in Stripe test/sandbox.`
+                  : "Soft launch: card Checkout is off. Studio access is granted from the invite allowlist — not a Stripe trial."}
             </p>
             {row?.subscription_status ? (
-              <p className="mt-2 text-xs text-zinc-400">
-                Stripe status: <span className="font-mono text-zinc-300">{row.subscription_status}</span>
+              <p className="mt-2 text-xs text-pro-text-secondary">
+                Stripe status:{" "}
+                <span className="font-mono text-pro-text">{row.subscription_status}</span>
               </p>
             ) : null}
             {row?.subscription_current_period_end ? (
-              <p className="mt-1 text-xs text-zinc-400">
+              <p className="mt-1 text-xs text-pro-text-secondary">
                 Current period ends:{" "}
-                <span className="font-mono text-zinc-300">
+                <span className="font-mono text-pro-text">
                   {new Date(row.subscription_current_period_end).toLocaleString()}
                 </span>
               </p>
             ) : null}
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-              {!subscribed ? (
+              {!subscribed && canCheckout ? (
                 <form action={startProCheckout}>
-                  <Button type="submit" className="bg-[#e11d48] hover:bg-[#c91840]">
-                    Subscribe to 35mmPRO
+                  <Button type="submit" variant="secondary" className={proBtn.secondary}>
+                    {PRO_MARKETING_CTA_TRIAL}
                   </Button>
                 </form>
               ) : null}
-              {hasCustomer ? (
-                <form action={openCustomerPortal}>
-                  <Button type="submit" variant="outline" className="border-zinc-600 text-zinc-200 hover:bg-zinc-800">
-                    Manage billing
-                  </Button>
-                </form>
-              ) : null}
+              {hasCustomer ? <ManageBillingButton /> : null}
+            </div>
+            <div className={`mt-4 ${proAuth.cardInner}`}>
+              <p className="text-xs font-medium text-pro-text">If you cancel</p>
+              <p className="mt-1 text-xs leading-relaxed text-pro-text-secondary">
+                {PRO_CANCEL_RETENTION_SUMMARY}
+              </p>
+              <p className="mt-2 text-xs text-pro-text-secondary">
+                Retention window: {PRO_DATA_RETENTION_DAYS} days after access ends.
+              </p>
             </div>
           </div>
 
           <form action={signOut} className="mt-6">
-            <Button type="submit" variant="outline" className="border-zinc-600 text-zinc-200 hover:bg-zinc-800">
+            <Button type="submit" variant="outline" className={proBtn.outline}>
               Sign out
             </Button>
           </form>
         </div>
-
-        <p className="text-center text-sm text-zinc-500">
-          <Link href="/" className="underline-offset-2 hover:text-zinc-300 hover:underline">
-            ← Home
-          </Link>
-        </p>
       </div>
     </div>
   );
