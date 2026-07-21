@@ -1,17 +1,13 @@
 import Link from "next/link";
 import { Logo35mmAI } from "@/components/brand/Logo35mmAI";
 import { ProBadge } from "@/components/brand/ProBadge";
-import { ProMarketingAboutCompareMobile } from "@/components/pro/ProMarketingAboutMobile";
-import { ProMarketingCompareTiers } from "@/components/pro/ProMarketingCompareTiers";
 import { ProMarketingInfoBottomStrip } from "@/components/pro/ProMarketingInfoBottomStrip";
 import { ProMarketingStepsSection } from "@/components/pro/ProMarketingStepsSection";
 import { ProMarketingSubscribeCard } from "@/components/pro/ProMarketingSubscribeCard";
-import { ProMarketingWorkflowsSection } from "@/components/pro/ProMarketingWorkflowsSection";
 import { proBtn, proWebShell } from "@/components/pro/ux/pro-surfaces";
 import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import {
   PRO_INVITE_ONLY_EYEBROW,
-  PRO_MARKETING_CTA_WAITLIST,
   PRO_MARKETING_HEADLINE,
   PRO_MARKETING_SUBHEAD,
 } from "@/lib/pro/marketing-copy";
@@ -70,8 +66,7 @@ function ProMarketingHero({
   inviteUnlocked: boolean;
   inviteOnly: boolean;
 }) {
-  const showWaitlistCta = inviteOnly && !inviteUnlocked;
-  const showInviteSignInCta = inviteUnlocked && !signedIn;
+  const showRequestCta = inviteOnly && !signedIn;
   const showStudioCta = signedIn && inviteUnlocked;
 
   return (
@@ -108,23 +103,15 @@ function ProMarketingHero({
                   {PRO_CONTINUE_STUDIO_LABEL}
                 </Link>
               ) : null}
-              {showInviteSignInCta ? (
+              {showRequestCta ? (
                 <a
                   href="#pro-subscribe"
                   className={`${proBtn.secondary} h-11 min-w-[12rem] justify-center px-6`}
                 >
-                  Get sign-in link
+                  Request access
                 </a>
               ) : null}
-              {showWaitlistCta ? (
-                <a
-                  href="#pro-subscribe"
-                  className={`${proBtn.secondary} h-11 min-w-[12rem] justify-center px-6`}
-                >
-                  {PRO_MARKETING_CTA_WAITLIST}
-                </a>
-              ) : null}
-              {!signedIn && !showInviteSignInCta ? (
+              {!signedIn ? (
                 <Link
                   href={loginHref("/pro")}
                   className="text-sm font-medium text-pro-text-secondary underline-offset-4 transition hover:text-pro-text hover:underline"
@@ -132,23 +119,7 @@ function ProMarketingHero({
                   Sign in
                 </Link>
               ) : null}
-              {showInviteSignInCta ? (
-                <a
-                  href="#pro-waitlist"
-                  className="text-sm font-medium text-pro-text-secondary underline-offset-4 transition hover:text-pro-text hover:underline"
-                >
-                  Join waitlist
-                </a>
-              ) : null}
             </div>
-
-            <p className="pro-hero-enter pro-hero-enter-5 text-xs text-pro-text-secondary/70 lg:text-left">
-              {showInviteSignInCta
-                ? "Invite unlocked on this browser — continue below to email yourself a one-click link."
-                : showWaitlistCta
-                  ? "Have an invite link? Open it first. Otherwise join the waitlist below."
-                  : "Have an invite link? Open it to unlock a one-click sign-in."}
-            </p>
           </div>
 
           <div className="pro-hero-enter pro-hero-enter-3 px-1 sm:px-4 lg:px-0">
@@ -218,40 +189,14 @@ function ProMarketingProspectLanding({
       />
 
       <div
-        className={`relative z-10 mx-auto space-y-8 pb-8 pt-8 md:space-y-12 md:pb-14 md:pt-12 ${proWebShell.main}`}
+        className={`relative z-10 mx-auto space-y-8 pb-8 pt-8 md:pb-14 md:pt-12 ${proWebShell.main}`}
       >
         <div className="mx-auto max-w-5xl">
           <ProMarketingStepsSection />
         </div>
 
-        <div className="mx-auto max-w-3xl md:hidden">
-          <ProMarketingWorkflowsSection headingId="pro-workflows-heading-mobile" />
-        </div>
-        <div className="mx-auto hidden max-w-3xl md:block">
-          <ProMarketingWorkflowsSection />
-        </div>
-
-        <section
-          id="pro-compare"
-          aria-labelledby="pro-compare-heading"
-          className="mx-auto max-w-3xl space-y-3"
-        >
-          <h2
-            id="pro-compare-heading"
-            className="text-[10px] font-semibold uppercase tracking-[0.14em] text-pro-text-secondary"
-          >
-            Compare tiers
-          </h2>
-          <div className="md:hidden">
-            <ProMarketingAboutCompareMobile checkoutEnabled={checkoutEnabled} />
-          </div>
-          <div className="hidden md:block">
-            <ProMarketingCompareTiers checkoutEnabled={checkoutEnabled} />
-          </div>
-        </section>
-
         <div className="mx-auto max-w-3xl">
-          <ProMarketingSubscribeCard {...subscribeProps} showTrustStrip />
+          <ProMarketingSubscribeCard {...subscribeProps} />
         </div>
       </div>
     </>

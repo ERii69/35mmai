@@ -8,10 +8,7 @@ import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 import { proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
 import {
   PRO_INVITE_INVALID,
-  PRO_INVITE_ONLY_BODY,
   PRO_INVITE_ONLY_EYEBROW,
-  PRO_INVITE_ONLY_HEADLINE,
-  PRO_MARKETING_CTA_WAITLIST,
 } from "@/lib/pro/marketing-copy";
 
 type Props = {
@@ -26,17 +23,15 @@ const initial: ProWaitlistState = { status: "idle" };
 export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId }: Props) {
   const [state, formAction, isPending] = useActionState(submitProWaitlist, initial);
   const [email, setEmail] = useState("");
-  const [note, setNote] = useState("");
 
   const mailtoHref = useMemo(() => {
     if (state.status !== "success" || state.persisted || !email.trim()) return "";
     const subject = encodeURIComponent("35mmAiPro — waitlist");
     const body = encodeURIComponent(
-      `Please add me to the 35mmAiPro waitlist.\n\nMy email: ${email.trim()}\n` +
-        (note.trim() ? `\nNote: ${note.trim()}\n` : "\n")
+      `Please add me to the 35mmAiPro waitlist.\n\nMy email: ${email.trim()}\n`
     );
     return `mailto:${SITE_CONTACT_EMAIL}?subject=${subject}&body=${body}`;
-  }, [state, email, note]);
+  }, [state, email]);
 
   return (
     <section
@@ -48,9 +43,12 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
         {PRO_INVITE_ONLY_EYEBROW}
       </p>
       <h2 id="pro-invite-only-heading" className="mt-2 text-xl font-bold tracking-tight text-pro-text sm:text-2xl">
-        {PRO_INVITE_ONLY_HEADLINE}
+        Request private beta access
       </h2>
-      <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">{PRO_INVITE_ONLY_BODY}</p>
+      <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">
+        We&apos;re inviting filmmakers in small batches. Leave your email and we&apos;ll contact you
+        when a place opens.
+      </p>
       {invalidInvite ? (
         <p
           className="mt-3 rounded-lg border border-pro-warning/30 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning"
@@ -60,29 +58,31 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
         </p>
       ) : null}
 
-      <div className="mt-6 border-t border-white/[0.06] pt-5">
-        <p className="text-sm font-medium text-pro-text">Want an invite?</p>
-        <p className="mt-1 text-xs text-pro-text-secondary">
-          Join the waitlist — we&apos;re onboarding filmmakers in small batches.
-        </p>
-
+      <div className="mt-5">
         {state.status === "success" ? (
-          <div className="mt-4 rounded-xl bg-pro-success/10 px-3 py-3 text-sm text-pro-text ring-1 ring-pro-success/25">
-            <p className="font-medium">You&apos;re on the list.</p>
+          <div className="rounded-xl bg-pro-success/10 px-3 py-3 text-sm text-pro-text ring-1 ring-pro-success/25">
             {!state.persisted && mailtoHref ? (
-              <a
-                href={mailtoHref}
-                className="mt-2 inline-flex items-center gap-1.5 text-pro-text underline-offset-2 hover:underline"
-              >
-                <Mail className="size-3.5" aria-hidden />
-                Send a quick email to confirm
-              </a>
+              <>
+                <p className="font-medium">Finish your request in email</p>
+                <p className="mt-1 text-xs text-pro-text-secondary">
+                  We&apos;ll prepare an email to our soft-launch inbox. Review it, then press Send.
+                </p>
+                <a href={mailtoHref} className={`${proBtn.primaryFull} mt-3`}>
+                  <Mail className="size-4" aria-hidden />
+                  Open email request
+                </a>
+              </>
             ) : (
-              <p className="mt-1 text-xs text-pro-text-secondary">We&apos;ll reach out when a spot opens.</p>
+              <>
+                <p className="font-medium">Request received.</p>
+                <p className="mt-1 text-xs text-pro-text-secondary">
+                  We&apos;ll reach out when a spot opens.
+                </p>
+              </>
             )}
           </div>
         ) : (
-          <form action={formAction} className="mt-4 space-y-3">
+          <form action={formAction} className="space-y-3">
             <div>
               <label htmlFor="pro-invite-waitlist-email" className="mb-1 block text-xs text-pro-text-secondary">
                 Email
@@ -98,21 +98,6 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
                 className={proSurface.field}
               />
             </div>
-            <div>
-              <label htmlFor="pro-invite-waitlist-note" className="mb-1 block text-xs text-pro-text-secondary">
-                Optional note
-              </label>
-              <input
-                id="pro-invite-waitlist-note"
-                name="note"
-                type="text"
-                maxLength={500}
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Short film, commercial, indie…"
-                className={proSurface.field}
-              />
-            </div>
             {state.status === "error" ? (
               <p className="text-sm text-pro-warning" role="alert">
                 {state.message}
@@ -125,7 +110,7 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
                   Submitting…
                 </>
               ) : (
-                PRO_MARKETING_CTA_WAITLIST
+                "Request access"
               )}
             </button>
           </form>

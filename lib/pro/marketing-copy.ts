@@ -15,7 +15,7 @@ export const PRO_MARKETING_HEADLINE = "From screenplay to copy-ready prompts.";
 
 /** One line under headline — paste → prep → export. */
 export const PRO_MARKETING_SUBHEAD =
-  "Pick a workflow, paste your script, lock your look, export a prompt pack for Midjourney, Kling, LTX, and more.";
+  "Paste your screenplay, set the look, and export copy-ready prompts for Midjourney, Kling, LTX, and more.";
 
 /** Compact pitch on the free catalog (All Tools / landing). */
 export const FREE_CATALOG_PRO_TEASER =
@@ -100,7 +100,7 @@ export const PRO_CHECKOUT_DISABLED_ACCOUNT =
   "Checkout is paused for soft launch. If you used your invite link, we’ll enable your studio from the allowlist — no card needed yet.";
 
 export const PRO_INVITE_UNLOCKED_NO_CHECKOUT =
-  "You’re invited. Enter your email for a one-click sign-in link — we’ll turn on studio access for that email. Card checkout stays off until we open public Subscribe.";
+  "Email yourself a one-click sign-in link. No card is required during the soft launch.";
 
 /** Invite accept page — magic link. */
 export const PRO_INVITE_MAGIC_LEAD =

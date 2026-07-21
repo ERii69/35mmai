@@ -8,7 +8,7 @@ import { ProHeaderAccountMenu } from "@/components/pro/ProHeaderAccountMenu";
 import { ProMarketingAuthButtons } from "@/components/pro/ProMarketingAuthButtons";
 import { PRO_SUBSCRIBE_PATH } from "@/components/pro/ProMarketingSiteNavLinks";
 import { proBtn, proWebShell } from "@/components/pro/ux/pro-surfaces";
-import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import { loginHref } from "@/lib/auth/safe-next-path";
 import {
   PRO_SUBSCRIBE_REQUIRED_LIVE,
@@ -93,8 +93,8 @@ export function ProMarketingHeader({
       <div className={`${proWebShell.headerInner} flex items-center justify-between gap-3 py-2 md:py-2.5`}>
         <Logo35mmAI
           className={proWebShell.headerLogo}
-          href={entitled ? "/pro/app" : PRO_SUBSCRIBE_PATH}
-          aria-label={BRAND_NAME_PRO}
+          href="/"
+          aria-label={`${BRAND_NAME} free catalog`}
         />
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
