@@ -4,16 +4,25 @@
   "private": true,
   "scripts": {
     "dev": "next dev --webpack",
+    "dev:lan": "next dev --webpack --hostname 0.0.0.0",
+    "dev:pro": "next dev --webpack --hostname 127.0.0.1 --port 3001",
+    "dev:pro:lan": "next dev --webpack --hostname 0.0.0.0 --port 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "ci": "npm run lint && npm run build",
+    "ci": "npm run lint && npm run build && npm run smoke:pro",
+    "smoke:pro": "node scripts/smoke-pro-workspace.mjs",
+    "e2e:pro": "node scripts/e2e-pro-user-walkthrough.mjs",
+    "verify:script-to-prompt": "npx tsx scripts/verify-script-to-prompt.mjs",
     "affiliates:check": "node scripts/check-affiliate-links.mjs",
     "links:check": "node scripts/check-tool-links.mjs",
     "media-kit:pdf": "python3 scripts/generate-media-kit-pdf.py"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.98.0",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.90.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
@@ -21,6 +30,7 @@
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "stripe": "^20.3.1",
     "tailwind-merge": "^3.4.0"
   },
   "overrides": {
@@ -34,6 +44,7 @@
     "autoprefixer": "^10.4.27",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",
+    "playwright": "^1.51.0",
     "postcss": "8.5.14",
     "shadcn": "^3.8.4",
     "tailwindcss": "^3.4.1",

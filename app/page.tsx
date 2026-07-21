@@ -18,10 +18,13 @@ import {
   PartnerBadge,
   resolvePartnerLogoForTool,
 } from "@/components/catalog/PartnerBadge";
+import { FreeCatalogProHandoff } from "@/components/catalog/FreeCatalogProHandoff";
+import { Logo35mmAI } from "@/components/brand/Logo35mmAI";
+import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { AboutPageContent } from "@/components/about/AboutPageContent";
 import { HowItWorksContent } from "@/components/how-it-works/HowItWorksContent";
 import { StepFromQuery } from "@/components/about/StepFromQuery";
-import { ProComingSoonContent } from "@/components/pro/ProComingSoonContent";
+import { ProMarketingTeaser } from "@/components/pro/ProMarketingTeaser";
 import { BudgetSheetLinks } from "@/components/budget/BudgetSheetLinks";
 import {
   allTools,
@@ -254,6 +257,14 @@ export default function Home() {
     const t = window.setTimeout(() => setToast(null), 3200);
     return () => window.clearTimeout(t);
   }, [toast]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const m = window.location.hash.match(/^#tool-rank-(\d+)$/);
+    if (!m) return;
+    const el = document.getElementById(`tool-rank-${m[1]}`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -880,14 +891,12 @@ useEffect(() => {
 
   {/* Left: Logo */}
   <div className="flex min-w-0 items-center gap-2 md:gap-2.5">
-    <button
-      type="button"
-      className="cursor-pointer shrink-0 text-2xl font-extrabold tracking-widest text-white md:text-4xl"
+    <Logo35mmAI
+      className="h-[28px] text-[28px] md:h-[40px] md:text-[40px]"
+      href="/"
       onClick={() => setStep(0)}
       aria-label="Go to home"
-    >
-      <span className="text-[#e11d48]">35</span>mm<span className="text-[#e11d48]">AI</span>
-    </button>
+    />
   </div>
 
   {/* Centered Navigation */}
@@ -940,13 +949,12 @@ useEffect(() => {
     >
       My Kit
     </Button>
-    <Button 
-      variant="ghost" 
-      onClick={() => setStep(step === 6 ? 0 : 6)}
-      aria-current={step === 6 ? "page" : undefined}
+    <Button
+      variant="ghost"
+      asChild
       className="flex items-center gap-1.5 border border-[#e11d48]/30 text-[#d1d5db] hover:border-[#e11d48] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
-      ✨ 35mmAI Pro
+      <Link href="/pro">✨ {BRAND_NAME_PRO}</Link>
     </Button>
     <Button 
       variant="ghost" 
@@ -1027,7 +1035,7 @@ useEffect(() => {
         <p className="text-sm md:text-xl text-[#d1d5db]">
           Plan gear and post with mostly AI-first tools and retailer picks built for indie budgets from script to screen.
         </p>
-        <div className="mt-4 flex items-center justify-center gap-3">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
             onClick={() => {
@@ -1038,6 +1046,12 @@ useEffect(() => {
           >
             How it works
           </button>
+          <Link
+            href="/pro"
+            className="min-h-[44px] inline-flex items-center rounded-xl border border-[#E30613]/35 px-4 py-2 text-sm font-medium text-[#d1d5db] transition-colors hover:border-[#E30613] hover:text-white"
+          >
+            {BRAND_NAME_PRO}
+          </Link>
         </div>
       </div>
 
@@ -1073,6 +1087,10 @@ useEffect(() => {
         </button>
       </div>
 
+      <div className="order-3 mx-auto mt-6 w-full max-w-5xl md:mt-10">
+        <FreeCatalogProHandoff />
+      </div>
+
     </div>
   </div>
 )}
@@ -1089,6 +1107,7 @@ useEffect(() => {
           Browse all <span className="font-semibold text-white">{allTools.length}</span>{" "}
           picks for your production, <span className="text-white">not only AI</span>
         </p>
+        <FreeCatalogProHandoff variant="compact" className="mx-auto mb-4 max-w-xl" />
         <div className="mx-auto mb-4 grid max-w-4xl grid-cols-1 gap-2 rounded-2xl border border-[#2a2a2a] bg-[#111]/90 p-3 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3 lg:p-4">
           <button
             type="button"
@@ -1458,7 +1477,8 @@ useEffect(() => {
               filteredTools.map((tool: any) => (
                 <tr
                   key={tool.rank}
-                  className="group border-b border-[#222] transition-colors hover:bg-[#1a1a1a]"
+                  id={`tool-rank-${tool.rank}`}
+                  className="group scroll-mt-24 border-b border-[#222] transition-colors hover:bg-[#1a1a1a]"
                 >
                   <td className="px-6 py-6 font-medium">
                     <div className="flex flex-wrap items-center gap-2">
@@ -1515,6 +1535,8 @@ useEffect(() => {
         </table>
         </div>
       </div>
+
+      <FreeCatalogProHandoff className="mt-10 mb-4" />
     </div>
   </div>
 )}
@@ -2576,7 +2598,7 @@ useEffect(() => {
   </div>
 )}
 {/* === STEP 6: 35mmAI PRO PAGE === */}
-{step === 6 && <ProComingSoonContent variant="embedded" onNavigate={setStep} />}
+{step === 6 && <ProMarketingTeaser />}
 {/* === STEP 7: MY KIT SUMMARY === */}
 {step === 7 && (
   <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden bg-[#0f0f0f] text-[#f5f5f5]">
@@ -2698,45 +2720,6 @@ useEffect(() => {
 )}
  </div> {/* closes flex-1 main content area */}
 
-       {/* Footer - at the very bottom */}
-<footer className="mt-auto shrink-0 border-t border-[#333] py-6 text-center text-[#666] text-sm md:py-8">
-  <div className="max-w-5xl mx-auto px-6">
-    <p>© 2026 35mmAI • Built for independent filmmakers</p>
-    <p className="mt-2 text-xs">
-      FTC: Some links are affiliate links. We may earn a commission at no extra cost to you. Picks stay editorially independent.
-    </p>
-    <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
-      <Link
-        href="/how-it-works"
-        className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
-      >
-        How it works
-      </Link>
-      <span className="text-[#444]" aria-hidden>
-        ·
-      </span>
-      <Link
-        href="/about"
-        className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
-      >
-        About 35mmAI
-      </Link>
-      <span className="text-[#444]" aria-hidden>
-        ·
-      </span>
-      <Link
-        href="/pro"
-        className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
-      >
-        Pro (waitlist)
-      </Link>
-    </p>
-    <p className="mt-6 text-xs text-[#555]">
-      Made with ❤️ for the film community
-    </p>
-  </div>
-</footer>
-
       </div> {/* closes flex-col wrapper */}
 
     {/* Improved Hamburger Menu (Step 8) - Mobile Only - Popup Style */}
@@ -2807,12 +2790,13 @@ useEffect(() => {
           My Kit
         </button>
 
-        <button 
-          onClick={() => setStep(6)}
+        <Link
+          href="/pro"
+          onClick={closeMobileMenu}
           className="block w-full rounded-2xl px-6 py-4 text-left text-lg font-medium text-white transition-all hover:bg-[#1a1a1a] hover:text-[#e11d48] active:scale-[0.98]"
         >
-          35mmAI Pro
-        </button>
+          {BRAND_NAME_PRO}
+        </Link>
 
         <button
           type="button"
@@ -2836,7 +2820,7 @@ useEffect(() => {
         >
           <div className="w-full max-w-lg rounded-3xl border border-[#333] bg-[#111] p-6 shadow-2xl sm:p-7">
             <div className="mb-3 inline-flex rounded-full border border-emerald-500/40 bg-emerald-950/30 px-3 py-1 text-xs font-medium text-emerald-300">
-              Roll camera with 35mmAI
+              Roll camera with {BRAND_NAME}
             </div>
             <h2 id="onboarding-title" className="text-2xl font-semibold text-white">
               Build your first stack in one minute
