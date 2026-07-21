@@ -3,9 +3,11 @@
 import { FileUp, Layers, Sparkles, Upload } from "lucide-react";
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 import { proBtn } from "@/components/pro/ux/pro-surfaces";
+import { PRO_SCENE_HEADING_REQUIRED } from "@/lib/pro/scene-heading-copy";
 
 type Props = {
   onTryDemo: () => void;
+  onLoadFiveSceneSample: () => void;
   onPasteScript: () => void;
   onUploadScript: () => void;
   onChangeWorkflow: () => void;
@@ -15,6 +17,7 @@ type Props = {
 /** Empty Script tab — template-first entry for Script to prompt. */
 export function ScriptToPromptStartHero({
   onTryDemo,
+  onLoadFiveSceneSample,
   onPasteScript,
   onUploadScript,
   onChangeWorkflow,
@@ -70,6 +73,19 @@ export function ScriptToPromptStartHero({
             <span className="mt-0.5 block text-xs text-pro-text-secondary">Or pick another template</span>
           </span>
         </button>
+      </div>
+
+      <div className="flex flex-col items-center gap-1.5 text-center">
+        <button
+          type="button"
+          onClick={onLoadFiveSceneSample}
+          className="text-xs font-medium text-pro-text-secondary underline-offset-2 transition hover:text-pro-text hover:underline"
+        >
+          Load 5-scene sample
+        </button>
+        <p className="max-w-md text-[11px] leading-snug text-pro-text-secondary/80">
+          {PRO_SCENE_HEADING_REQUIRED}
+        </p>
       </div>
 
       <p className="text-center text-xs text-pro-text-secondary">

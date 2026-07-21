@@ -111,6 +111,12 @@ export function WorldPanel({
       };
 
       if (!res.ok || !data.ok || !data.worldBible) {
+        if (res.status === 429) {
+          const msg = data.error ?? "Daily AI limit reached — use quick prep";
+          setFeedback(msg);
+          toastError(msg);
+          return;
+        }
         if (!agentsEnabled && hasScript) {
           const local = generateWorldFromScript(state);
           updateState((p) => applyWorldBibleToState(p, local, "replace"));
@@ -194,7 +200,7 @@ export function WorldPanel({
       ) : (
         <p className="text-xs text-pro-text-secondary/80">
           Local mode: parses ALL CAPS and title-case character cues, INT./EXT. and documentary
-          sluglines (DAY - FIELDS). Add ANTHROPIC_API_KEY for richer notes and roles.
+          sluglines (DAY - FIELDS).
         </p>
       )}
 

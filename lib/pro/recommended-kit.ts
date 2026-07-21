@@ -77,7 +77,7 @@ export function getRecommendedKitRanks(state: ProjectStatePayload): RecommendedK
     !isScriptToPromptTemplate(state.directorPrep.appliedTemplateId) &&
     state.directorPrep.scenes.some((s) => s.status === "approved")
   ) {
-    push(52, "Stripboard when scenes are approved");
+    push(52, "Scheduling / day-out-of-days when scenes are approved");
     push(14, "Script breakdown / tagging");
   }
 

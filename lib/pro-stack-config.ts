@@ -3,6 +3,8 @@
  * Used so catalog-only deploys on `main` (no Supabase/Stripe) stay healthy per PRD §4.9.
  */
 
+import { areProAgentsEnabled } from "@/lib/pro/launch-flags";
+
 export function isSupabaseConfigured(): boolean {
   return Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() &&
@@ -23,9 +25,9 @@ export function isProStackConfigured(): boolean {
   return isSupabaseConfigured() && isStripeConfigured();
 }
 
-/** Server-side Anthropic key — enables native Director's Agent (Phase 2). */
+/** Native agents — PRO_AGENTS_ENABLED + ANTHROPIC_API_KEY (see areProAgentsEnabled). */
 export function isClaudeAgentsStackConfigured(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+  return areProAgentsEnabled();
 }
 
 export const PRO_STACK_ENV_HINT =

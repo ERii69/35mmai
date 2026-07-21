@@ -46,8 +46,10 @@ export function ProPrivacyContent() {
           </li>
           <li>
             <strong>We do not use</strong> your scripts, scene rows, or workspace content to train
-            AI models. 35mmAiPro v1 is API-free: breakdown assist is copy/paste to external tools you
-            choose; we do not send your screenplay to our own LLM.
+            AI models. When server AI assist is off (no provider API key), prep stays local /
+            API-free and we do not send your screenplay to an LLM. When AI assist is enabled, relevant
+            project text may be sent to that provider to run the request — still not used to train
+            their or our models under our configuration.
           </li>
           <li>
             <strong>We do not expose</strong> your projects on the public 35mmAI catalog or in

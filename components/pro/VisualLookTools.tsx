@@ -213,6 +213,9 @@ export function VisualLookTools({
       };
 
       if (!res.ok || !data.ok || !data.visual) {
+        if (res.status === 429) {
+          throw new Error(data.error ?? "Daily AI limit reached — use quick prep");
+        }
         throw new Error(data.error ?? `Mood board failed (${res.status})`);
       }
 
@@ -291,6 +294,9 @@ export function VisualLookTools({
         warning?: string;
       };
       if (!res.ok || !data.ok) {
+        if (res.status === 429) {
+          throw new Error(data.error ?? "Daily AI limit reached — use quick prep");
+        }
         throw new Error(data.error ?? "Consistency check failed");
       }
       const apiIssues = data.conflicts ?? [];

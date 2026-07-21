@@ -79,7 +79,7 @@ export function DirectorAgentPanel({
   const dp = state.directorPrep;
   const manualRef = useRef<HTMLDetailsElement>(null);
   const [agentsEnabled, setAgentsEnabled] = useState(claudeAgentsEnabled);
-  const [manualOpen, setManualOpen] = useState(!claudeAgentsEnabled);
+  const [manualOpen, setManualOpen] = useState(false);
   const [running, setRunning] = useState(false);
   const [progressStep, setProgressStep] = useState<AgentProgressStep | null>(null);
   const [progressMessage, setProgressMessage] = useState<string | null>(null);
@@ -92,7 +92,6 @@ export function DirectorAgentPanel({
 
   useEffect(() => {
     setAgentsEnabled(claudeAgentsEnabled);
-    if (!claudeAgentsEnabled) setManualOpen(true);
   }, [claudeAgentsEnabled]);
 
   useEffect(() => {
@@ -102,26 +101,12 @@ export function DirectorAgentPanel({
       .then((j: { configured?: boolean }) => {
         if (cancelled || typeof j.configured !== "boolean") return;
         setAgentsEnabled(j.configured);
-        if (!j.configured) setManualOpen(true);
       })
       .catch(() => {});
     return () => {
       cancelled = true;
     };
   }, []);
-
-  function openManualAgent() {
-    setManualOpen(true);
-    if (!hasScript) {
-      setError("Paste your screenplay in the Script section below first.");
-      document.getElementById("playbook-step-script")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    setError(null);
-    window.setTimeout(() => {
-      manualRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 50);
-  }
 
   const previewMd = useMemo(() => {
     if (!staging || staging.status !== "review") return "";
@@ -276,31 +261,9 @@ export function DirectorAgentPanel({
         </div>
 
         {!agentsEnabled ? (
-          <div className="mt-3 space-y-2 rounded-lg border border-pro-warning/30 bg-pro-warning/15 px-3 py-3 text-sm text-pro-warning">
-            <p className="font-medium text-pro-warning">Native agents need an Anthropic API key</p>
-            <ol className="list-decimal space-y-1 pl-4 text-xs text-pro-warning">
-              <li>
-                Get a key at{" "}
-                <a
-                  href="https://console.anthropic.com/settings/keys"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-pro-warning underline underline-offset-2"
-                >
-                  console.anthropic.com
-                </a>
-              </li>
-              <li>
-                Add to <code className="text-pro-warning">.env.local</code>:{" "}
-                <code className="text-pro-warning">ANTHROPIC_API_KEY=sk-ant-…</code>
-              </li>
-              <li>Restart the dev server (<code className="text-pro-warning">npm run dev</code>)</li>
-              <li>Reload this page — one-click run will turn on</li>
-            </ol>
-            <p className="text-xs text-pro-warning/80">
-              Until then, use <strong className="text-pro-warning">Run manual agent</strong> — same
-              output via copy/paste in Claude.
-            </p>
+          <div className="mt-3 rounded-lg border border-white/[0.06] bg-pro-muted/40 px-3 py-2.5 text-xs text-pro-text-secondary">
+            AI prep is off for this beta — use Script → Run quick prep (local). Manual copy/paste below
+            still works.
           </div>
         ) : null}
 
@@ -321,16 +284,7 @@ export function DirectorAgentPanel({
                 "Run Director's Agent"
               )}
             </Button>
-          ) : (
-            <Button
-              type="button"
-              className="bg-pro-primary hover:brightness-110"
-              disabled={running}
-              onClick={openManualAgent}
-            >
-              Run manual agent
-            </Button>
-          )}
+          ) : null}
           {staging?.status === "review" ? (
             <Button
               type="button"
@@ -552,7 +506,7 @@ export function DirectorAgentPanel({
         <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-pro-text-secondary marker:content-none [&::-webkit-details-marker]:hidden">
           {agentsEnabled
             ? "Manual fallback (copy/paste — API-free tier)"
-            : "Manual agent — copy prompt → paste JSON (works now)"}
+            : "Manual agent (optional copy/paste)"}
         </summary>
         <div className="border-t border-white/[0.08] p-4 pt-0">
           <ScriptToPrepAgentPanel projectId={projectId} state={state} updateState={updateState} />

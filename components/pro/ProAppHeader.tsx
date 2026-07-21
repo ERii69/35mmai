@@ -38,8 +38,8 @@ export function ProAppHeader({
       leading={
         <Logo35mmAI
           className={FREE_CATALOG_LOGO_CLASS}
-          href="/"
-          aria-label={`Go to free ${BRAND_NAME} catalog`}
+          href="/pro/app"
+          aria-label={`${BRAND_NAME} Pro studio`}
         />
       }
       mobileCenter={
@@ -55,6 +55,7 @@ export function ProAppHeader({
           <ProBadge
             variant="header"
             title="Pro workspace"
+            href="/pro/app"
             className="max-md:h-6 max-md:px-1.5 max-md:text-[11px]"
           />
           {email ? (
@@ -66,7 +67,9 @@ export function ProAppHeader({
               archivedCount={archivedCount}
               mobileTrigger="user"
             />
-          ) : null}
+          ) : (
+            <span className="inline-flex size-9 shrink-0 sm:size-10" aria-hidden />
+          )}
         </>
       }
       nav={<ProShellNav projects={projects} archivedCount={archivedCount} />}

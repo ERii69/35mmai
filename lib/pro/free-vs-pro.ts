@@ -3,7 +3,6 @@
  */
 
 import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
-import { PRO_SUBSCRIPTION_TRIAL_DAYS } from "@/lib/pro/subscription-trial";
 
 export const FREE_VS_PRO = {
   freeTitle: `Free ${BRAND_NAME}`,
@@ -17,10 +16,10 @@ export const FREE_VS_PRO = {
 export const FREE_VS_PRO_HIGHLIGHTS = {
   free: ["Discover tools in catalog", "Local kit & budget math", "Free forever"] as const,
   pro: [
-    "Script workflow templates",
-    "Script → look → prompt pack",
-    "Cloud projects & exports",
-    `${PRO_SUBSCRIPTION_TRIAL_DAYS}-day free trial`,
+    "Cloud projects + prompt packs",
+    "Script → look → export",
+    "Private studio save & sync",
+    "AI assist separate (when enabled)",
   ] as const,
 };
 

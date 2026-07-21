@@ -78,15 +78,15 @@ export function PromptPackDeliverable({
 
   return (
     <section className="rounded-2xl border border-emerald-600/25 bg-gradient-to-br from-emerald-950/30 to-pro-muted p-4 sm:p-5">
-      <h3 className="text-sm font-semibold text-pro-text">Your deliverable</h3>
+      <h3 className="text-sm font-semibold text-pro-text">Download prompt pack</h3>
       <p className="mt-1 max-w-xl text-sm leading-relaxed text-pro-text-secondary">
-        Scene-ordered prompts with tool names and outbound links — download here when you&apos;re
-        done. This is the canonical export for your project.
+        Scene-ordered prompts with tool names and outbound links — Markdown or CSV. This is the
+        primary deliverable for Script to prompt.
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <Button
           type="button"
-          className="bg-pro-primary hover:brightness-110"
+          className={proBtn.secondary}
           disabled={busy || saveBlocked}
           onClick={() =>
             void run(
@@ -120,7 +120,7 @@ export function PromptPackDeliverable({
           {loading === "csv" ? (
             <Loader2 className="mr-1.5 size-3.5 animate-spin" aria-hidden />
           ) : null}
-          CSV for spreadsheets
+          CSV (prompt pack)
         </Button>
         <Button
           type="button"

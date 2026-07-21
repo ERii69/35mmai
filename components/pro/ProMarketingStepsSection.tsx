@@ -8,7 +8,7 @@ type Props = {
   showEntitledHint?: boolean;
 };
 
-/** Three-step orientation — pick workflow, prep, export. */
+/** Three-step Pro orientation — script, look, prompt pack. */
 export function ProMarketingStepsSection({
   sectionId = "pro-steps",
   headingId = "pro-steps-heading",
@@ -16,18 +16,23 @@ export function ProMarketingStepsSection({
 }: Props) {
   return (
     <section id={sectionId} aria-labelledby={headingId} className={proMarketing.section}>
-      <div className="space-y-1 text-center md:text-left">
+      <div className="space-y-1 text-center">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-pro-accent/90">
+          Script → Look → Prompt pack
+        </p>
         <h2 id={headingId} className="text-lg font-semibold text-pro-text md:text-xl">
-          How it works
+          How Pro works
         </h2>
-        <p className="text-sm text-pro-text-secondary">Three steps from template to prompt pack.</p>
+        <p className="text-sm text-pro-text-secondary">
+          Three focused steps. No required stop in Shots or Budget.
+        </p>
       </div>
 
-      <ol className="mt-4 space-y-3">
+      <ol className="mt-5 grid gap-3 md:grid-cols-3">
         {PRO_MARKETING_STEPS.map(({ step, title, body }) => (
           <li
             key={step}
-            className="flex gap-3 rounded-xl border border-white/[0.08] bg-pro-elevated/60 p-4"
+            className="relative flex gap-3 rounded-xl border border-white/[0.08] bg-pro-elevated/70 p-4 shadow-[0_12px_28px_-22px_rgba(0,0,0,0.9)]"
           >
             <span
               className="flex size-7 shrink-0 items-center justify-center rounded-full bg-pro-accent/15 text-xs font-bold text-pro-accent-bright ring-1 ring-pro-accent/25"
@@ -46,7 +51,7 @@ export function ProMarketingStepsSection({
       </ol>
 
       {showEntitledHint ? (
-        <p className="mt-3 text-center text-xs text-pro-text-secondary md:text-left">
+        <p className="mt-3 text-center text-xs text-pro-text-secondary">
           In the studio: pick a workflow on the dashboard, then paste your script on the Script tab.
         </p>
       ) : null}

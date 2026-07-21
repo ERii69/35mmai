@@ -82,6 +82,7 @@ export const PRODUCTION_TABS: { id: ProductionTabId; label: string }[] = [
 
 /**
  * Finish-phase tab order (script-to-prompt) — happy path first: prompts → export → sign-off.
+ * Shots / Budget / World / Kit / Phases stay behind More / Change workflow (not required for S2P).
  */
 export const SCRIPT_TO_PROMPT_PRODUCTION_TAB_ORDER: ProductionTabId[] = [
   "prompts",

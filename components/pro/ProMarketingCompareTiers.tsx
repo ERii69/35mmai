@@ -4,19 +4,22 @@ import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { FREE_VS_PRO, FREE_VS_PRO_HIGHLIGHTS } from "@/lib/pro/free-vs-pro";
 import { PRO_TRIAL_SIGNUP_HREF } from "@/lib/pro/marketing-about";
-import { PRO_MARKETING_FEATURES_MOBILE, PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
+import { PRO_MARKETING_CTA_WAITLIST, PRO_MARKETING_FEATURES_MOBILE, PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 
 const tierCol = "flex h-full min-h-0 flex-col p-4 sm:p-5";
 
 type CompareProps = {
   trialHref?: string;
   showProTrialLink?: boolean;
+  /** PRO_PUBLIC_CHECKOUT — when false, show invite-only (no trial badge/CTA). */
+  checkoutEnabled?: boolean;
 };
 
 /** Compact tier comparison — secondary to subscribe card. */
 export function ProMarketingCompareTiers({
   trialHref = PRO_TRIAL_SIGNUP_HREF,
   showProTrialLink = false,
+  checkoutEnabled = true,
 }: CompareProps = {}) {
   return (
     <div className={proMarketing.card}>
@@ -47,12 +50,16 @@ export function ProMarketingCompareTiers({
           <div className="flex flex-wrap items-center gap-1.5">
             <p className="text-[10px] font-medium uppercase tracking-wide text-pro-text-secondary">Paid tier</p>
             <span className={proMarketing.accentBadge}>
-              {PRO_MARKETING_PRICE.trialLabel}
+              {checkoutEnabled ? PRO_MARKETING_PRICE.trialLabel : "Invite only"}
             </span>
           </div>
           <h3 className="mt-0.5 text-sm font-semibold text-pro-text">{FREE_VS_PRO.proTitle}</h3>
           <p className="mt-1 flex-1 text-xs leading-relaxed text-pro-text sm:leading-snug">
-            {FREE_VS_PRO.proBody} {PRO_MARKETING_PRICE.trialLabel}, then {PRO_MARKETING_PRICE.fullLabel}.
+            {FREE_VS_PRO.proBody}{" "}
+            {checkoutEnabled
+              ? PRO_MARKETING_PRICE.trialThenLabel
+              : `${PRO_MARKETING_PRICE.valueProp} · private beta`}
+            .
           </p>
           <ul className="mt-2 space-y-1">
             {FREE_VS_PRO_HIGHLIGHTS.pro.map((item) => (
@@ -63,11 +70,16 @@ export function ProMarketingCompareTiers({
             ))}
           </ul>
           <p className="mt-2 text-[11px] leading-5 text-pro-text-secondary sm:mt-auto sm:pt-2.5">
-            Then {PRO_MARKETING_PRICE.fullLabel} · cancel anytime
+            {PRO_MARKETING_PRICE.valueProp} · {PRO_MARKETING_PRICE.currencyNote}
           </p>
-          {showProTrialLink ? (
+          {checkoutEnabled && showProTrialLink ? (
             <Link href={trialHref} className={`mt-2 inline-flex text-xs leading-5 ${proMarketing.accentLink} sm:mt-auto`}>
-              Start trial →
+              {PRO_MARKETING_PRICE.trialDays > 0 ? "Start trial →" : "Subscribe →"}
+            </Link>
+          ) : null}
+          {!checkoutEnabled ? (
+            <Link href="#pro-waitlist" className={`mt-2 inline-flex text-xs leading-5 ${proMarketing.accentLink} sm:mt-auto`}>
+              {PRO_MARKETING_CTA_WAITLIST} →
             </Link>
           ) : null}
         </div>

@@ -46,14 +46,15 @@ export const proAuth = {
   card: "space-y-4 rounded-2xl border border-white/[0.06] bg-pro-elevated/90 p-6 shadow-lg ring-1 ring-white/[0.04]",
   cardInner: "rounded-xl border border-white/[0.06] bg-pro-muted/40 p-3",
   label: "mb-1.5 block text-sm text-pro-text-secondary",
-  link: "font-medium text-pro-primary underline-offset-2 transition hover:text-pro-primary/80 hover:underline",
+  link: "font-medium text-pro-text underline-offset-2 transition hover:text-pro-text/90 hover:underline",
   mutedLink: "text-pro-text-secondary underline-offset-2 transition hover:text-pro-text hover:underline",
 } as const;
 
 export const proBtn = {
-  primary: `inline-flex items-center justify-center gap-2 rounded-xl bg-pro-primary px-5 py-2.5 text-[15px] font-semibold text-white shadow-lg shadow-pro-primary/25 transition hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/60 disabled:pointer-events-none disabled:opacity-50`,
+  /** Quiet primary — elevated fill (PRO seal stays the only bright red). */
+  primary: `inline-flex items-center justify-center gap-2 rounded-xl bg-pro-elevated px-5 py-2.5 text-[15px] font-semibold text-pro-text ring-1 ring-white/[0.14] shadow-sm transition hover:bg-pro-muted hover:ring-white/22 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 disabled:pointer-events-none disabled:opacity-50`,
   primaryLg: `inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-pro-success to-emerald-400 px-6 py-3.5 text-base font-semibold text-[#0a0a0a] shadow-xl shadow-emerald-900/30 transition hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-success/50 sm:w-auto`,
-  ctaHero: `inline-flex w-full items-center justify-center gap-2 rounded-xl bg-pro-primary px-8 py-4 text-base font-semibold text-white shadow-xl shadow-pro-primary/30 transition hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/60 sm:w-auto`,
+  ctaHero: `inline-flex w-full items-center justify-center gap-2 rounded-xl bg-pro-elevated px-8 py-4 text-base font-semibold text-pro-text ring-1 ring-white/[0.16] shadow-lg transition hover:bg-pro-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 sm:w-auto`,
   secondary:
     "inline-flex items-center justify-center gap-2 rounded-xl bg-pro-secondary/80 px-4 py-2.5 text-[15px] font-medium text-pro-text ring-1 ring-white/[0.08] transition hover:bg-pro-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20",
   ghost:
@@ -67,13 +68,13 @@ export const proBtn = {
   /** Toolbar ghost (exports, tertiary) */
   ghostToolbar:
     "rounded-xl text-pro-text-secondary transition hover:bg-pro-muted hover:text-pro-text active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/40",
-  /** Full-width auth submit */
-  primaryFull: `inline-flex w-full items-center justify-center gap-2 rounded-xl bg-pro-primary px-5 py-3 text-[15px] font-semibold text-white shadow-lg shadow-pro-primary/25 transition hover:brightness-110 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/60 disabled:pointer-events-none disabled:opacity-50`,
-  /** Public marketing pages — cinematic red (matches PRO seal) */
+  /** Full-width auth submit — quiet (not PRO red) */
+  primaryFull: `inline-flex w-full items-center justify-center gap-2 rounded-xl bg-pro-elevated px-5 py-3 text-[15px] font-semibold text-pro-text ring-1 ring-white/[0.14] shadow-sm transition hover:bg-pro-muted hover:ring-white/22 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 disabled:pointer-events-none disabled:opacity-50`,
+  /** Marketing CTAs — quiet elevated (PRO seal owns bright red) */
   marketingPrimary:
-    "inline-flex items-center justify-center gap-2 rounded-xl bg-pro-primary px-5 py-2.5 text-[15px] font-semibold text-white shadow-lg shadow-pro-primary/30 transition hover:brightness-110 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/50 disabled:pointer-events-none disabled:opacity-50",
-  /** Dashboard — open workspace (cinematic red outline) */
-  dashboardOpenOutline: `inline-flex items-center justify-center gap-2 rounded-xl border-2 border-pro-primary/50 bg-transparent px-4 py-2.5 text-sm font-semibold text-pro-text transition hover:bg-pro-primary/10 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/50`,
+    "inline-flex items-center justify-center gap-2 rounded-xl bg-pro-elevated px-5 py-2.5 text-[15px] font-semibold text-pro-text ring-1 ring-white/[0.14] shadow-sm transition hover:bg-pro-muted hover:ring-white/22 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/25 disabled:pointer-events-none disabled:opacity-50",
+  /** Dashboard — open workspace (subtle primary outline, no red fill) */
+  dashboardOpenOutline: `inline-flex items-center justify-center gap-2 rounded-xl border border-white/[0.16] bg-transparent px-4 py-2.5 text-sm font-semibold text-pro-text transition hover:bg-white/[0.06] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20`,
   /** Top-corner dismiss (kit / mood board pattern) */
   cardDismiss:
     "absolute right-3 top-3 z-20 rounded-lg bg-black/50 p-1.5 text-pro-text-secondary opacity-0 ring-1 ring-white/10 backdrop-blur-sm transition hover:bg-black/70 hover:text-pro-warning focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pro-primary/50 group-hover:opacity-100",

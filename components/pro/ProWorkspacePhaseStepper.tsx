@@ -30,6 +30,7 @@ import {
   type WorkspaceMode,
 } from "@/lib/pro/workspace-modes";
 import type { ProjectStatePayload } from "@/lib/pro/types";
+import { useMdUp } from "@/lib/pro/use-md-up";
 import type { ReactNode } from "react";
 
 const navItem = "shrink-0 whitespace-nowrap touch-manipulation";
@@ -50,7 +51,7 @@ function WorkspaceSubTabRow({
   if (tabs.length === 0) return null;
 
   return (
-    <div className="relative hidden md:block">
+    <div className="relative">
       <div className={proNavScroll} role="tablist" aria-label={ariaLabel}>
         {tabs.map((t) => (
           <button
@@ -65,7 +66,7 @@ function WorkspaceSubTabRow({
           </button>
         ))}
       </div>
-      <div className={`${proNavScrollFade} md:hidden`} aria-hidden />
+      <div className={proNavScrollFade} aria-hidden />
     </div>
   );
 }
@@ -165,62 +166,71 @@ function ScriptPhaseSubNav({
   hasScript,
   usesPipeline,
   onPrepStepChange,
+  mdUp,
 }: {
   prepStep: PrepStepId;
   prepTabs: { id: PrepStepId; label: string }[];
   hasScript: boolean;
   usesPipeline: boolean;
   onPrepStepChange: (step: PrepStepId) => void;
+  /** When false, mount mobile only; when true, desktop only. null → mobile-first (SSR). */
+  mdUp: boolean | null;
 }) {
   const subTabs = prepSubTabsForPhase(prepTabs);
   const onScript = prepStep === "script";
   const scriptLabel = hasScript ? "Edit script" : "Upload script";
+  const showMobile = mdUp !== true;
+  const showDesktop = mdUp === true;
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-1.5 md:hidden">
-        <button
-          type="button"
-          onClick={() => onPrepStepChange("script")}
-          className={`${proNavPillDense(onScript)} inline-flex shrink-0 items-center gap-1.5 touch-manipulation whitespace-nowrap`}
-        >
-          <FileUp className="size-3.5" aria-hidden />
-          {scriptLabel}
-        </button>
-        <PrepSubTabsMobile
-          prepStep={prepStep}
-          prepTabs={subTabs}
-          onPrepStepChange={onPrepStepChange}
-          pipelineLayout={usesPipeline}
-        />
-      </div>
-      <div className="relative hidden md:block">
-        <div className={proNavScroll} role="tablist" aria-label="Script workflow">
+      {showMobile ? (
+        <div className="flex flex-wrap items-center gap-1.5">
           <button
             type="button"
-            role="tab"
-            aria-selected={onScript}
             onClick={() => onPrepStepChange("script")}
-            className={`${proNavPill(onScript)} ${navItem} inline-flex items-center gap-1.5 !py-1.5 text-xs md:text-sm`}
+            className={`${proNavPillDense(onScript)} inline-flex shrink-0 items-center gap-1.5 touch-manipulation whitespace-nowrap`}
           >
             <FileUp className="size-3.5" aria-hidden />
             {scriptLabel}
           </button>
-          {subTabs.map((t) => (
+          <PrepSubTabsMobile
+            prepStep={prepStep}
+            prepTabs={subTabs}
+            onPrepStepChange={onPrepStepChange}
+            pipelineLayout={usesPipeline}
+          />
+        </div>
+      ) : null}
+      {showDesktop ? (
+        <div className="relative">
+          <div className={proNavScroll} role="tablist" aria-label="Script workflow">
             <button
-              key={t.id}
               type="button"
               role="tab"
-              aria-selected={prepStep === t.id}
-              onClick={() => onPrepStepChange(t.id)}
-              className={`${proNavPill(prepStep === t.id)} ${navItem} !py-1.5 text-xs md:text-sm`}
+              aria-selected={onScript}
+              onClick={() => onPrepStepChange("script")}
+              className={`${proNavPill(onScript)} ${navItem} inline-flex items-center gap-1.5 !py-1.5 text-xs md:text-sm`}
             >
-              {t.label}
+              <FileUp className="size-3.5" aria-hidden />
+              {scriptLabel}
             </button>
-          ))}
+            {subTabs.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                role="tab"
+                aria-selected={prepStep === t.id}
+                onClick={() => onPrepStepChange(t.id)}
+                className={`${proNavPill(prepStep === t.id)} ${navItem} !py-1.5 text-xs md:text-sm`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <div className={proNavScrollFade} aria-hidden />
         </div>
-        <div className={proNavScrollFade} aria-hidden />
-      </div>
+      ) : null}
     </>
   );
 }
@@ -265,6 +275,9 @@ export function ProWorkspacePhaseStepper({
   const statuses = unifiedStepStatuses(state, mode, prepStep, lookTab, productionTab);
   const activeMeta = UNIFIED_WORKSPACE_STEPS.find((s) => s.id === activeStep);
   const hasScript = state.directorPrep.screenplay.rawText.trim().length > 0;
+  const mdUp = useMdUp();
+  const showMobileNav = mdUp !== true;
+  const showDesktopNav = mdUp === true;
 
   return (
     <div className="space-y-1 md:space-y-2">
@@ -292,56 +305,63 @@ export function ProWorkspacePhaseStepper({
           hasScript={hasScript}
           usesPipeline={usesPipeline}
           onPrepStepChange={onPrepStepChange}
+          mdUp={mdUp}
         />
       ) : null}
 
       {activeStep === "look" ? (
         <>
-          <div className="md:hidden">
+          {showMobileNav ? (
             <LookSubTabsMobile
               lookTab={lookTab}
               lookTabs={lookTabs}
               onLookTabChange={onLookTabChange}
             />
-          </div>
-          <LookSubTabsDesktop
-            lookTab={lookTab}
-            lookTabs={lookTabs}
-            onLookTabChange={onLookTabChange}
-          />
+          ) : null}
+          {showDesktopNav ? (
+            <LookSubTabsDesktop
+              lookTab={lookTab}
+              lookTabs={lookTabs}
+              onLookTabChange={onLookTabChange}
+            />
+          ) : null}
         </>
       ) : null}
 
       {activeStep === "finish" && mode === "production" ? (
         <>
-          <div className="md:hidden">
+          {showMobileNav ? (
             <ProduceSubTabsMobile
               productionTab={productionTab}
               productionTabs={productionTabs}
               pipelineLayout={usesPipeline}
               onProductionTabChange={onProductionTabChange}
             />
-          </div>
-          <ProduceSubTabsDesktop
-            productionTab={productionTab}
-            productionTabs={productionTabs}
-            pipelineLayout={usesPipeline}
-            onProductionTabChange={onProductionTabChange}
-          />
+          ) : null}
+          {showDesktopNav ? (
+            <ProduceSubTabsDesktop
+              productionTab={productionTab}
+              productionTabs={productionTabs}
+              pipelineLayout={usesPipeline}
+              onProductionTabChange={onProductionTabChange}
+            />
+          ) : null}
         </>
       ) : null}
 
       {activeStep === "finish" && mode === "post" && onPostTabChange ? (
         <>
-          <div className="md:hidden">
+          {showMobileNav ? (
             <PostSubTabsMobile postTab={postTab} onPostTabChange={onPostTabChange} />
-          </div>
-          <WorkspaceSubTabRow
-            tabs={POST_TABS}
-            activeId={postTab}
-            onSelect={(id) => onPostTabChange(id as PostTabId)}
-            ariaLabel="Post sections"
-          />
+          ) : null}
+          {showDesktopNav ? (
+            <WorkspaceSubTabRow
+              tabs={POST_TABS}
+              activeId={postTab}
+              onSelect={(id) => onPostTabChange(id as PostTabId)}
+              ariaLabel="Post sections"
+            />
+          ) : null}
         </>
       ) : null}
     </div>

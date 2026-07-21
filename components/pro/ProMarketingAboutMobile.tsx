@@ -11,14 +11,19 @@ import {
   PRO_MARKETING_FEATURE_GROUPS,
   proMarketingHiddenFeatureCount,
 } from "@/lib/pro/marketing-features";
-import { PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
+import { PRO_MARKETING_CTA_WAITLIST, PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 
 type CompareProps = {
   trialHref?: string;
+  /** PRO_PUBLIC_CHECKOUT — when false, show invite-only (no trial CTA). */
+  checkoutEnabled?: boolean;
 };
 
 /** Mobile About — compact Free vs Pro row only. */
-export function ProMarketingAboutCompareMobile({ trialHref = PRO_TRIAL_SIGNUP_HREF }: CompareProps) {
+export function ProMarketingAboutCompareMobile({
+  trialHref = PRO_TRIAL_SIGNUP_HREF,
+  checkoutEnabled = true,
+}: CompareProps) {
   return (
     <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-pro-elevated/50">
       <div className="grid grid-cols-2 divide-x divide-white/[0.06]">
@@ -36,16 +41,24 @@ export function ProMarketingAboutCompareMobile({ trialHref = PRO_TRIAL_SIGNUP_HR
           <div className="flex flex-wrap items-center gap-1">
             <p className="text-[10px] font-medium uppercase tracking-wide text-pro-text-secondary">Pro</p>
             <span className="rounded-full border border-pro-accent/35 bg-pro-accent/10 px-1.5 py-px text-[9px] font-semibold text-pro-accent-bright">
-              {PRO_MARKETING_PRICE.trialLabel}
+              {checkoutEnabled ? PRO_MARKETING_PRICE.trialLabel : "Invite only"}
             </span>
           </div>
           <p className="mt-1 text-xs font-semibold leading-snug text-pro-text">{FREE_VS_PRO.proTitle}</p>
           <p className="mt-1 flex-1 text-[11px] leading-relaxed text-pro-text-secondary">
-            Then {PRO_MARKETING_PRICE.fullLabel}
+            {checkoutEnabled
+              ? `Then ${PRO_MARKETING_PRICE.fullLabel}`
+              : PRO_MARKETING_PRICE.valueProp}
           </p>
-          <Link href={trialHref} className={`${proMarketing.accentLink} mt-2 text-[11px]`}>
-            Start trial →
-          </Link>
+          {checkoutEnabled ? (
+            <Link href={trialHref} className={`${proMarketing.accentLink} mt-2 text-[11px]`}>
+              {PRO_MARKETING_PRICE.trialDays > 0 ? "Start trial →" : "Subscribe →"}
+            </Link>
+          ) : (
+            <Link href="#pro-waitlist" className={`${proMarketing.accentLink} mt-2 text-[11px]`}>
+              {PRO_MARKETING_CTA_WAITLIST} →
+            </Link>
+          )}
         </div>
       </div>
     </div>

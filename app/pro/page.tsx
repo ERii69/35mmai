@@ -23,6 +23,7 @@ export default async function ProPage({
     signedIn,
     inviteOnly,
     inviteUnlocked,
+    checkoutEnabled,
   } = await getProMarketingSession();
 
   if (entitled) {
@@ -36,6 +37,7 @@ export default async function ProPage({
       entitled={entitled}
       canManageBilling={canManageBilling}
       subscribeRequired={subscribeRequired}
+      checkoutEnabled={checkoutEnabled}
     >
       {!stackReady ? (
         <div className="border-b border-pro-warning/30 bg-pro-warning/10 px-4 py-3 text-center text-sm text-pro-warning">
@@ -52,6 +54,7 @@ export default async function ProPage({
         entitled={entitled}
         inviteOnly={inviteOnly}
         inviteUnlocked={inviteUnlocked}
+        checkoutEnabled={checkoutEnabled}
         invalidInvite={invalidInvite}
       />
     </ProMarketingInfoPageShell>

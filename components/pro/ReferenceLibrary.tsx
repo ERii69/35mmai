@@ -135,6 +135,9 @@ export function ReferenceLibrary({ id, projectId, state, updateState, agentsEnab
       };
 
       if (!res.ok || !data.ok) {
+        if (res.status === 429) {
+          throw new Error(data.error ?? "Daily AI limit reached — use quick prep");
+        }
         throw new Error(data.error ?? "Could not find references.");
       }
 

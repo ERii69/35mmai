@@ -61,6 +61,11 @@ const PREP_EXPORT_ITEMS: ExportItem[] = [
   },
 ];
 
+/** Director-packet / heavy prep — buried under Advanced for S2P honesty. */
+const ADVANCED_CREW_PACK_ITEMS: ExportItem[] = [
+  ...PREP_EXPORT_ITEMS,
+];
+
 const PRODUCTION_EXPORT_ITEMS: ExportItem[] = [
   {
     kind: "shot-plan",
@@ -219,8 +224,8 @@ export function ProExportPanel({ projectId, projectName, state, saveStatus, onSa
       <header>
         <h2 className="text-xl font-semibold text-pro-text">Export</h2>
         <p className="mt-1 max-w-2xl text-sm text-pro-text-secondary">
-          Canonical download hub — get your prompt pack here when you&apos;re done. Prompts and Prep
-          link here; secondary formats are below.
+          Start with your <strong className="font-medium text-pro-text">prompt pack</strong> (Markdown
+          or CSV). Other formats are optional extras below.
         </p>
       </header>
 
@@ -247,18 +252,9 @@ export function ProExportPanel({ projectId, projectName, state, saveStatus, onSa
             <ExportButtonGrid items={ALSO_EXPORT_ITEMS} {...gridProps} />
           </CollapsibleSection>
 
-          {!scriptToPrompt ? (
-            <CollapsibleSection title="Prep & script files">
-              <ExportButtonGrid items={PREP_EXPORT_ITEMS} {...gridProps} />
-            </CollapsibleSection>
-          ) : (
-            <CollapsibleSection title="Prep summary">
-              <ExportButtonGrid
-                items={PREP_EXPORT_ITEMS.filter((i) => i.kind === "preproduction-report")}
-                {...gridProps}
-              />
-            </CollapsibleSection>
-          )}
+          <CollapsibleSection title="Look & locations">
+            <ExportButtonGrid items={LOOK_EXPORT_ITEMS} {...gridProps} />
+          </CollapsibleSection>
 
           {!scriptToPrompt ? (
             <CollapsibleSection title="Production & kit">
@@ -273,8 +269,11 @@ export function ProExportPanel({ projectId, projectName, state, saveStatus, onSa
             </CollapsibleSection>
           )}
 
-          <CollapsibleSection title="Look & locations">
-            <ExportButtonGrid items={LOOK_EXPORT_ITEMS} {...gridProps} />
+          <CollapsibleSection title="Advanced / crew packs">
+            <p className="mb-3 text-xs leading-relaxed text-pro-text-secondary">
+              Optional director-packet and prep reports — not required for Script → Look → Prompt pack.
+            </p>
+            <ExportButtonGrid items={ADVANCED_CREW_PACK_ITEMS} {...gridProps} />
           </CollapsibleSection>
         </div>
       </div>

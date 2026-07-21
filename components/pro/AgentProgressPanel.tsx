@@ -12,6 +12,7 @@ import {
 import { agentResultDetail, agentResultPreview } from "@/lib/pro/agent-result-detail";
 import { agentStatusLine } from "@/lib/pro/agent-running-labels";
 import type { FilmmakerAgentInsight } from "@/lib/pro/agent-thinking-summaries";
+import { PRO_SCENE_HEADING_REQUIRED } from "@/lib/pro/scene-heading-copy";
 import type { AgentStagingBundle } from "@/lib/pro/types";
 
 export type AgentSlotStatus = "waiting" | "running" | "done" | "error" | "skipped";
@@ -148,7 +149,7 @@ export function AgentProgressPanel({
 
   const phaseSubtitle =
     runPhase === "blocked"
-      ? phaseHint ?? "Fix the issue above, then try again."
+      ? phaseHint ?? PRO_SCENE_HEADING_REQUIRED
       : runPhase === "running"
         ? `${doneCount}/${order.length} complete${runningId ? ` · ${agentStatusLine(runningId, "running", null)}` : ""}`
         : runPhase === "complete"

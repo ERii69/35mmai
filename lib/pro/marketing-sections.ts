@@ -6,8 +6,8 @@ export type ProMarketingSectionLink = {
 };
 
 export const PRO_SUBSCRIBE_PAGE_SECTIONS: ProMarketingSectionLink[] = [
+  { href: "#pro-steps", label: "How Pro works" },
   { href: "#pro-workflows", label: "Workflows" },
-  { href: "#pro-steps", label: "Steps" },
   { href: "#pro-compare", label: "Compare" },
   { href: "#pro-subscribe", label: "Pricing" },
 ];

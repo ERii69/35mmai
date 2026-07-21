@@ -1,19 +1,24 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { parseJsonFromModelText } from "@/lib/pro/agents/context";
+import { areProAgentsEnabled } from "@/lib/pro/launch-flags";
 
+/** Agents + Anthropic calls — requires PRO_AGENTS_ENABLED and API key. */
 export function isClaudeAgentsConfigured(): boolean {
-  return Boolean(process.env.ANTHROPIC_API_KEY?.trim());
+  return areProAgentsEnabled();
 }
 
 export function anthropicModel(): string {
-  return process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-4-20250514";
+  // Soft-launch / beta default: cheaper Haiku. Override with ANTHROPIC_MODEL for Sonnet quality.
+  return process.env.ANTHROPIC_MODEL?.trim() || "claude-3-5-haiku-20241022";
 }
 
 let client: Anthropic | null = null;
 
 function getClient(): Anthropic {
   if (!isClaudeAgentsConfigured()) {
-    throw new Error("ANTHROPIC_API_KEY is not configured.");
+    throw new Error(
+      "Native agents are off. Set PRO_AGENTS_ENABLED=1 and ANTHROPIC_API_KEY, or use local quick prep."
+    );
   }
   if (!client) {
     client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });

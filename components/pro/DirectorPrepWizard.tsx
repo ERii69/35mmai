@@ -50,6 +50,15 @@ import {
 import { buildScriptToPromptPackState } from "@/lib/pro/build-script-to-prompt-pack";
 import { applyInstantDemoPrep } from "@/lib/pro/instant-demo-prep";
 import {
+  DEMO_SCRIPT_FIVE_SCENES,
+  DEMO_SCRIPT_FIVE_SCENES_TITLE,
+} from "@/lib/pro/demo-script-five-scenes";
+import { PRO_SCENE_HEADING_REQUIRED } from "@/lib/pro/scene-heading-copy";
+import {
+  AI_QUOTA_EXCEEDED_MESSAGE,
+  isAiQuotaExceededError,
+} from "@/lib/pro/ai-quota-shared";
+import {
   refreshScriptToPromptStagingShots,
 } from "@/lib/pro/build-script-to-prompt-shots";
 import { countPromptsInStaging, synthesizeVisualBeatsFromScenes } from "@/lib/pro/synthesize-visual-beats";
@@ -200,7 +209,8 @@ export function DirectorPrepWizard({
         : [],
     [hasScript, detectedHeadingCount, dp.screenplay.rawText]
   );
-  const localPrepBlocked = hasScript && !agentsEnabled && detectedHeadingCount === 0;
+  /** No headings → block both quick prep and AI (quota guard). */
+  const localPrepBlocked = hasScript && detectedHeadingCount === 0;
 
   /** Align applied template with picker before prep (keeps script + staging). */
   function syncPrepTemplateFromPicker(): void {
@@ -457,6 +467,11 @@ export function DirectorPrepWizard({
     refine?: boolean;
     agents?: PrepPipelineAgentId[];
   }) {
+    if (detectedHeadingCount === 0) {
+      setError(PRO_SCENE_HEADING_REQUIRED);
+      return;
+    }
+
     const pipeline =
       options?.agents ??
       (options?.refine && refineHint.trim()
@@ -504,7 +519,10 @@ export function DirectorPrepWizard({
       });
 
       if (!res.ok) {
-        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        const j = (await res.json().catch(() => ({}))) as { error?: string; code?: string };
+        if (res.status === 429 || j.code === "ai_quota_exceeded" || isAiQuotaExceededError(j.error)) {
+          throw new Error(AI_QUOTA_EXCEEDED_MESSAGE);
+        }
         throw new Error(j.error ?? `Prep failed (${res.status})`);
       }
       if (!res.body) throw new Error("No response stream.");
@@ -681,6 +699,10 @@ export function DirectorPrepWizard({
         }
       } else {
         const msg = e instanceof Error ? e.message : "Prep failed.";
+        if (isAiQuotaExceededError(msg)) {
+          failPrepRun(AI_QUOTA_EXCEEDED_MESSAGE);
+          return;
+        }
         if (/ANTHROPIC|503|not configured|Native agents/i.test(msg)) {
           setAgentsEnabled(false);
           setError(null);
@@ -838,6 +860,12 @@ export function DirectorPrepWizard({
       return;
     }
 
+    if (detectedHeadingCount === 0) {
+      setError(PRO_SCENE_HEADING_REQUIRED);
+      setActiveStep(1);
+      return;
+    }
+
     setError(null);
     syncPrepTemplateFromPicker();
     stagingPatchGenRef.current += 1;
@@ -918,13 +946,13 @@ export function DirectorPrepWizard({
       }
       if (!(e.metaKey || e.ctrlKey) || e.key !== "Enter") return;
       if (!hasScript || running || activeStep !== 2 || showReviewPanel) return;
-      if (!agentsEnabled && detectedHeadingCount === 0) return;
+      if (detectedHeadingCount === 0) return;
       e.preventDefault();
       void runPrepRef.current();
     }
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [hasScript, running, activeStep, showReviewPanel, agentsEnabled, detectedHeadingCount]);
+  }, [hasScript, running, activeStep, showReviewPanel, detectedHeadingCount]);
 
   async function copyPrepPrompt() {
     const text = buildScriptToPrepAgentPrompt(
@@ -1164,6 +1192,27 @@ export function DirectorPrepWizard({
     );
   }
 
+  function loadFiveSceneSample() {
+    resetPrepResultsState();
+    patchDirectorPrep((prev) => ({
+      ...prev,
+      agentStaging: null,
+      screenplay: {
+        ...prev.screenplay,
+        title: prev.screenplay.title.trim() || DEMO_SCRIPT_FIVE_SCENES_TITLE,
+        rawText: DEMO_SCRIPT_FIVE_SCENES.slice(0, SCREENPLAY_RAW_TEXT_MAX_CHARS),
+        lastImportedAt: new Date().toISOString(),
+      },
+    }));
+    setError(null);
+    setActiveStep(1);
+    onPrepStepChange("script");
+    showToast("5-scene sample loaded — run quick prep when ready.");
+    requestAnimationFrame(() => {
+      scriptTextareaRef.current?.focus();
+    });
+  }
+
   function scriptToPromptQuickAdd() {
     if (!staging || staging.status !== "review" || quickAddBusy) return;
     setQuickAddBusy(true);
@@ -1306,6 +1355,7 @@ export function DirectorPrepWizard({
         {!hasScript && scriptToPromptActive ? (
           <ScriptToPromptStartHero
             onTryDemo={runInstantDemo}
+            onLoadFiveSceneSample={loadFiveSceneSample}
             onPasteScript={() => scriptTextareaRef.current?.focus()}
             onUploadScript={() => fileInputRef.current?.click()}
             onChangeWorkflow={() => onOpenWorkflow?.()}
@@ -1353,7 +1403,7 @@ export function DirectorPrepWizard({
             >
               {detectedHeadingCount > 0
                 ? `${detectedHeadingCount} scene heading${detectedHeadingCount === 1 ? "" : "s"} detected`
-                : "No scene headings detected — use INT. LOCATION - DAY (one per line)"}
+                : PRO_SCENE_HEADING_REQUIRED}
             </span>
           ) : null}
           <input
@@ -1397,7 +1447,6 @@ export function DirectorPrepWizard({
               type="button"
               size="sm"
               className="bg-pro-primary hover:brightness-110"
-              disabled={localPrepBlocked && !agentsEnabled}
               onClick={() => {
                 setActiveStep(2);
                 onPrepStepChange("generate");
@@ -1636,7 +1685,6 @@ export function DirectorPrepWizard({
               type="button"
               size="sm"
               className="shrink-0 bg-pro-primary hover:brightness-110"
-              disabled={localPrepBlocked && !agentsEnabled}
               onClick={() => {
                 setActiveStep(2);
                 onPrepStepChange("generate");
@@ -1688,15 +1736,9 @@ export function DirectorPrepWizard({
         ) : null}
 
         {prepRunPhase === "blocked" ? (
-          <ProStatusBanner
-            variant="error"
-            message="Quick prep needs scene lines in Step 1 — e.g. INT. KITCHEN - NIGHT (one per line)."
-          />
-        ) : !hasScript ? null : localPrepBlocked && !agentsEnabled ? (
-          <ProStatusBanner
-            variant="error"
-            message="No scene headings detected. Add INT./EXT. lines in Step 1, or turn on AI prep for prose breakdown."
-          />
+          <ProStatusBanner variant="error" message={PRO_SCENE_HEADING_REQUIRED} />
+        ) : !hasScript ? null : localPrepBlocked ? (
+          <ProStatusBanner variant="error" message={PRO_SCENE_HEADING_REQUIRED} />
         ) : showReviewPanel ? null : (
           <ProStatusBanner
             variant="info"
@@ -1717,7 +1759,7 @@ export function DirectorPrepWizard({
                   <span className="text-pro-text">3–4 copy-ready prompts per scene</span> — no shot
                   lists or coverage grids.
                 </p>
-              ) : (
+              ) : agentsEnabled ? (
                 <PrepAgentSelector
                   selected={selectedAgents}
                   onChange={setSelectedAgents}
@@ -1725,6 +1767,10 @@ export function DirectorPrepWizard({
                   estimateLabel={runEstimate.minutesLabel}
                   costLabel={runEstimate.costLabel}
                 />
+              ) : (
+                <p className="text-sm text-pro-text-secondary">
+                  Quick prep runs on your device from scene headings — no cloud AI this session.
+                </p>
               )
             ) : null}
 
@@ -1762,13 +1808,14 @@ export function DirectorPrepWizard({
                 <AgentProgressPanel
                   slots={agentSlots}
                   activeOnly={activePipeline ?? selectedAgents}
-                  estimatedLabel={running ? runEstimate.minutesLabel : undefined}
-                  costLabel={running ? runEstimate.costLabel : undefined}
+                  estimatedLabel={running && agentsEnabled ? runEstimate.minutesLabel : undefined}
+                  costLabel={running && agentsEnabled ? runEstimate.costLabel : undefined}
                   insights={agentInsights}
                   staging={staging}
                   onCancel={running && agentsEnabled ? cancelPrepRun : undefined}
                   runPhase={prepRunPhase}
                   prepMode={agentsEnabled ? "ai" : "quick"}
+                  phaseHint={prepRunPhase === "blocked" ? PRO_SCENE_HEADING_REQUIRED : undefined}
                   onRunAgain={undefined}
                 />
               </>
@@ -1864,7 +1911,7 @@ export function DirectorPrepWizard({
           <ProStatusBanner variant="loading" message={progressMessage} />
         ) : null}
 
-        {(showManualSteps || agentsEnabled) && !running && showPrepSelector ? (
+        {agentsEnabled && !running && showPrepSelector ? (
           <details className={`${proSurface.sectionMuted} group`}>
             <summary className="cursor-pointer list-none px-4 py-3 text-sm font-medium text-pro-text-secondary marker:content-none [&::-webkit-details-marker]:hidden">
               Power users: auto-fill from Claude JSON
