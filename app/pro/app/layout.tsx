@@ -10,10 +10,11 @@ import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { createClient } from "@/lib/supabase/server";
 import { bootstrapDefaultProject, countArchivedProjectsForUser, listProjectsForUser } from "@/lib/pro/bootstrap-default-project";
 import { getProBillingSnapshot, isProEntitled } from "@/lib/entitlements";
+import { ensureInviteTrialEntitlement } from "@/lib/pro/entitle-invite-user";
 
 export const metadata: Metadata = {
   title: "35mmAiPro — Workspace",
-  description: "Pro workspace: projects, cloud state, and exports (rolling out).",
+  description: "Pro workspace: cloud projects, save, and prompt pack export.",
 };
 
 export default async function ProAppLayout({ children }: { children: React.ReactNode }) {
@@ -29,6 +30,9 @@ export default async function ProAppLayout({ children }: { children: React.React
   if (!user) {
     redirect("/login?next=/pro/app");
   }
+
+  // Soft launch allowlist: invite cookie → studio access before the gate.
+  await ensureInviteTrialEntitlement(user.id);
 
   const entitled = await isProEntitled();
   if (!entitled) {

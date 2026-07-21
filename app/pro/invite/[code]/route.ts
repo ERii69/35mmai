@@ -15,7 +15,7 @@ type Ctx = { params: Promise<{ code: string }> };
 
 /**
  * Invite link entry: /pro/invite/YOUR-CODE
- * Validates against PRO_INVITE_CODES, sets httpOnly cookie, sends filmmaker to sign-up.
+ * Validates against PRO_INVITE_CODES, sets httpOnly cookie, sends filmmaker to magic-link accept.
  */
 export async function GET(request: Request, context: Ctx) {
   const { code: raw } = await context.params;
@@ -30,7 +30,6 @@ export async function GET(request: Request, context: Ctx) {
   }
 
   const dest = new URL(PRO_INVITE_POST_ACCEPT_HREF, request.url);
-  dest.searchParams.set("invited", "1");
   const res = NextResponse.redirect(dest);
   res.cookies.set(PRO_INVITE_COOKIE, code, {
     httpOnly: true,

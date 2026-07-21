@@ -1,11 +1,12 @@
 import { cookies } from "next/headers";
+import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
 
 /** httpOnly cookie set after a valid /pro/invite/[code] visit. */
 export const PRO_INVITE_COOKIE = "pro_invite_code";
 
 const COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 60; // 60 days
 
-/** Soft launch: Checkout/trial CTAs require a valid invite cookie. */
+/** Soft launch: public CTAs require a valid invite cookie. */
 export function isProInviteOnly(): boolean {
   const raw = process.env.PRO_INVITE_ONLY?.trim().toLowerCase();
   return raw === "1" || raw === "true" || raw === "yes";
@@ -49,6 +50,15 @@ export async function hasProInviteAccess(): Promise<boolean> {
   return isValidInviteCode(code);
 }
 
+/**
+ * May start Stripe Checkout: invite OK (if required) + public checkout flag on.
+ * Soft launch with PRO_PUBLIC_CHECKOUT=0 uses SQL allowlist instead.
+ */
+export async function canStartProCheckout(): Promise<boolean> {
+  if (!isProPublicCheckoutEnabled()) return false;
+  return hasProInviteAccess();
+}
+
 export async function setProInviteCookie(code: string): Promise<void> {
   const jar = await cookies();
   jar.set(PRO_INVITE_COOKIE, normalizeInviteCode(code), {
@@ -60,5 +70,5 @@ export async function setProInviteCookie(code: string): Promise<void> {
   });
 }
 
-/** After invite: sign up then Account checkout. */
-export const PRO_INVITE_POST_ACCEPT_HREF = "/sign-up?next=/account";
+/** After invite: magic-link email → studio dashboard (auto-entitled when invite cookie valid). */
+export const PRO_INVITE_POST_ACCEPT_HREF = "/pro/invite/accept?next=/pro/app";

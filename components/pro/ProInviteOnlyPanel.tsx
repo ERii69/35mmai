@@ -2,7 +2,6 @@
 
 import { useActionState, useMemo, useState } from "react";
 import { Loader2, Mail } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { submitProWaitlist, type ProWaitlistState } from "@/app/actions/waitlist";
 import { SITE_CONTACT_EMAIL } from "@/app/data";
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
@@ -12,6 +11,7 @@ import {
   PRO_INVITE_ONLY_BODY,
   PRO_INVITE_ONLY_EYEBROW,
   PRO_INVITE_ONLY_HEADLINE,
+  PRO_MARKETING_CTA_WAITLIST,
 } from "@/lib/pro/marketing-copy";
 
 type Props = {
@@ -44,10 +44,10 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
       className={`${proMarketing.proPanel} ${className ?? ""}`}
       aria-labelledby="pro-invite-only-heading"
     >
-      <p className="text-xs font-semibold uppercase tracking-wide text-pro-primary">
+      <p className="text-xs font-semibold uppercase tracking-wide text-pro-text-secondary">
         {PRO_INVITE_ONLY_EYEBROW}
       </p>
-      <h2 id="pro-invite-only-heading" className="mt-2 text-2xl font-bold tracking-tight text-pro-text">
+      <h2 id="pro-invite-only-heading" className="mt-2 text-xl font-bold tracking-tight text-pro-text sm:text-2xl">
         {PRO_INVITE_ONLY_HEADLINE}
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">{PRO_INVITE_ONLY_BODY}</p>
@@ -72,7 +72,7 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
             {!state.persisted && mailtoHref ? (
               <a
                 href={mailtoHref}
-                className="mt-2 inline-flex items-center gap-1.5 text-pro-primary underline-offset-2 hover:underline"
+                className="mt-2 inline-flex items-center gap-1.5 text-pro-text underline-offset-2 hover:underline"
               >
                 <Mail className="size-3.5" aria-hidden />
                 Send a quick email to confirm
@@ -118,16 +118,16 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
                 {state.message}
               </p>
             ) : null}
-            <Button type="submit" disabled={isPending} className={proBtn.primary}>
+            <button type="submit" disabled={isPending} className={proBtn.primaryFull}>
               {isPending ? (
                 <>
                   <Loader2 className="size-4 animate-spin" aria-hidden />
                   Submitting…
                 </>
               ) : (
-                "Join the waitlist"
+                PRO_MARKETING_CTA_WAITLIST
               )}
-            </Button>
+            </button>
           </form>
         )}
       </div>

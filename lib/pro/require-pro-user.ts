@@ -24,7 +24,7 @@ export async function requireProUser(): Promise<ProUserContext> {
 
   const entitled = await isProEntitled();
   if (!entitled) {
-    throw new Error("An active 35mmAiPro subscription is required.");
+    throw new Error("An active 35mmAiPro studio subscription is required (cloud projects + export).");
   }
 
   return { supabase, user };
