@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isClaudeAgentsConfigured } from "@/lib/pro/agents/anthropic-client";
 import { runVisualConsistencyAgent } from "@/lib/pro/agents/visual-bible-agent";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -59,6 +60,9 @@ export async function POST(
       conflicts: heuristic,
     });
   }
+
+  const quota = await consumeAiQuotaOrReject(user.id, "visual/consistency", projectId);
+  if (!quota.ok) return quota.response;
 
   try {
     const agent = await runVisualConsistencyAgent({

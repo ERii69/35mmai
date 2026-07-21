@@ -3,6 +3,7 @@ import { runShotListAgent } from "@/lib/pro/agents/shot-list-agent";
 import { isClaudeAgentsConfigured } from "@/lib/pro/agents/anthropic-client";
 import { applyAgentShotListToPlan } from "@/lib/pro/apply-agent-shot-list";
 import { generateShotPlanFromPrep } from "@/lib/pro/generate-shot-plan-from-prep";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -53,6 +54,9 @@ export async function POST(
 
   try {
     if (isClaudeAgentsConfigured()) {
+      const quota = await consumeAiQuotaOrReject(user.id, "shot-plan/generate", projectId);
+      if (!quota.ok) return quota.response;
+
       const suggestions = await runShotListAgent({
         rules: state.directorPrep.directorRules,
         scenes,

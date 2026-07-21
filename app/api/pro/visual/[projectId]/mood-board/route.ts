@@ -12,6 +12,7 @@ import {
   lensGrainFromStillInsights,
 } from "@/lib/pro/infer-lens-grain-variants";
 import type { MoodBoardSection } from "@/lib/pro/apply-mood-board-partial";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -135,6 +136,11 @@ export async function POST(
   const dp = state.directorPrep;
   const sections = body.sections ?? [];
   const variant = body.lensGrainVariant ?? body.templateOffset ?? 0;
+
+  if (isClaudeAgentsConfigured()) {
+    const quota = await consumeAiQuotaOrReject(user.id, "visual/mood-board", projectId);
+    if (!quota.ok) return quota.response;
+  }
 
   if (isLensGrainOnly(sections)) {
     if (!hasVisionEligibleStills(state)) {

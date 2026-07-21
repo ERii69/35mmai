@@ -6,6 +6,7 @@ import {
 } from "@/lib/pro/agents/reference-vision-agent";
 import { runVisualBibleAgent } from "@/lib/pro/agents/visual-bible-agent";
 import { buildLocalReferenceLibraryAnalysis } from "@/lib/pro/analyze-reference-library";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -73,6 +74,9 @@ export async function POST(
 
   try {
     if (isClaudeAgentsConfigured() && hasVisionEligibleStills(state)) {
+      const quota = await consumeAiQuotaOrReject(user.id, "visual/analyze-refs", projectId);
+      if (!quota.ok) return quota.response;
+
       const vision = await runReferenceVisionAgent(state);
       return NextResponse.json({
         ok: true,
@@ -89,6 +93,9 @@ export async function POST(
     }
 
     if (isClaudeAgentsConfigured()) {
+      const quota = await consumeAiQuotaOrReject(user.id, "visual/analyze-refs", projectId);
+      if (!quota.ok) return quota.response;
+
       const visual = await runVisualBibleAgent({
         rules: state.directorPrep.directorRules,
         scenes: state.directorPrep.scenes,
