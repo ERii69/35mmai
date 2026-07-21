@@ -24,7 +24,7 @@ export function ProMarketingStepsSection({
           How Pro works
         </h2>
         <p className="text-sm text-pro-text-secondary">
-          Three focused steps. No required stop in Shots or Budget.
+          Turn a screenplay into a reusable prompt pack.
         </p>
       </div>
 

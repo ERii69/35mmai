@@ -8,7 +8,6 @@ import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 import { proBtn } from "@/components/pro/ux/pro-surfaces";
 import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import {
-  PRO_INVITE_UNLOCKED_NO_CHECKOUT,
   PRO_MARKETING_CTA_TRIAL,
   PRO_MARKETING_PRICE,
 } from "@/lib/pro/marketing-copy";
@@ -35,7 +34,6 @@ export function ProMarketingSubscribeCard({
   signedIn,
   entitled,
   inviteOnly = false,
-  inviteUnlocked = true,
   checkoutEnabled = true,
   invalidInvite = false,
   className,
@@ -44,59 +42,14 @@ export function ProMarketingSubscribeCard({
   sectionId,
   loginNext = "/pro",
 }: Props) {
-  /** Public / no invite → waitlist (Join waitlist), never Start trial. */
-  if ((inviteOnly && !inviteUnlocked && !entitled) || (!checkoutEnabled && !inviteUnlocked && !entitled)) {
+  /** Soft launch → one access-request form; sign-in links are sent manually. */
+  if ((inviteOnly || !checkoutEnabled) && !entitled) {
     return (
       <ProInviteOnlyPanel
         invalidInvite={invalidInvite}
         className={className}
         sectionId={sectionId}
       />
-    );
-  }
-
-  /** Invited, but Checkout kill switch on — no Subscribe button. */
-  if (!checkoutEnabled && !entitled) {
-    return (
-      <div className={cn("space-y-6", className)}>
-        <section
-          id={sectionId}
-          className={proMarketing.proPanel}
-          aria-labelledby="pro-subscribe-heading"
-        >
-          <p className="text-xs font-semibold uppercase tracking-wide text-pro-text-secondary">
-            Private beta
-          </p>
-          <h2 id="pro-subscribe-heading" className="mt-2 text-2xl font-bold tracking-tight text-pro-text">
-            You’re on the invite list
-          </h2>
-          <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">
-            {PRO_INVITE_UNLOCKED_NO_CHECKOUT}
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2">
-            {stackReady && !signedIn ? (
-              <Link
-                href="/pro/invite/accept?next=/pro/app"
-                className={`${proBtn.secondary} h-11 justify-center px-5`}
-              >
-                Get sign-in link
-              </Link>
-            ) : null}
-            {signedIn ? (
-              <Link href="/pro/app" className={`${proBtn.secondary} h-11 justify-center px-5`}>
-                {PRO_CONTINUE_STUDIO_LABEL}
-              </Link>
-            ) : null}
-            {signedIn ? (
-              <Link href="/account" className={`${proBtn.outline} inline-flex h-11 items-center px-5`}>
-                Account
-              </Link>
-            ) : null}
-          </div>
-        </section>
-
-        <ProInviteOnlyPanel sectionId="pro-waitlist" />
-      </div>
     );
   }
 
