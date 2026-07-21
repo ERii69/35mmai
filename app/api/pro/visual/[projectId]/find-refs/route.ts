@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isClaudeAgentsConfigured } from "@/lib/pro/agents/anthropic-client";
 import { runLookReferenceAgent } from "@/lib/pro/agents/look-reference-agent";
 import { buildLocalLookReferenceSuggestions } from "@/lib/pro/suggest-look-references";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -57,6 +58,9 @@ export async function POST(
 
   try {
     if (isClaudeAgentsConfigured()) {
+      const quota = await consumeAiQuotaOrReject(user.id, "visual/find-refs", projectId);
+      if (!quota.ok) return quota.response;
+
       const suggestions = await runLookReferenceAgent({
         rules,
         scenes: state.directorPrep.scenes,

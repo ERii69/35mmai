@@ -3,6 +3,7 @@ import { runDirectorAgentPipeline } from "@/lib/pro/agents/orchestrator";
 import { planRefineAgents } from "@/lib/pro/plan-refine-agents";
 import type { PrepPipelineAgentId } from "@/lib/pro/agent-roster";
 import { isClaudeAgentsConfigured } from "@/lib/pro/agents/anthropic-client";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -33,7 +34,10 @@ export async function POST(
 
   if (!isClaudeAgentsConfigured()) {
     return NextResponse.json(
-      { error: "Native agents require ANTHROPIC_API_KEY in server env." },
+      {
+        error:
+          "Native agents are off. Set PRO_AGENTS_ENABLED=1 and ANTHROPIC_API_KEY, or use local quick prep.",
+      },
       { status: 503 }
     );
   }
@@ -79,6 +83,9 @@ export async function POST(
   if (!directorPrep.screenplay.rawText.trim()) {
     return NextResponse.json({ error: "Paste your screenplay first." }, { status: 400 });
   }
+
+  const quota = await consumeAiQuotaOrReject(user.id, "agent/run", projectId);
+  if (!quota.ok) return quota.response;
 
   const agents =
     body.agents ??

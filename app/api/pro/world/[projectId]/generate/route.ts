@@ -6,6 +6,7 @@ import {
   generateWorldFromScript,
 } from "@/lib/pro/apply-world-bible";
 import { mergeLocationLists } from "@/lib/pro/locations-from-scenes";
+import { consumeAiQuotaOrReject } from "@/lib/pro/ai-quota";
 import { isProEntitled } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
@@ -63,6 +64,9 @@ export async function POST(
 
   try {
     if (isClaudeAgentsConfigured() && raw) {
+      const quota = await consumeAiQuotaOrReject(user.id, "world/generate", projectId);
+      if (!quota.ok) return quota.response;
+
       const { text: screenplayRaw } = scriptTextForAnalysis(dp.screenplay, dp.prepRunSettings);
       const generated = await runWorldBibleAgent({
         rules: dp.directorRules,
