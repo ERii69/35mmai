@@ -7,25 +7,26 @@ import { ProMarketingTrustStrip } from "@/components/pro/ProMarketingTrustStrip"
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 import { proBtn } from "@/components/pro/ux/pro-surfaces";
 import { BRAND_NAME } from "@/lib/brand/brand-identity";
-import { PRO_MARKETING_CTA_TRIAL, PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
+import {
+  PRO_INVITE_UNLOCKED_NO_CHECKOUT,
+  PRO_MARKETING_CTA_TRIAL,
+  PRO_MARKETING_PRICE,
+} from "@/lib/pro/marketing-copy";
 import { PRO_CONTINUE_STUDIO_LABEL } from "@/lib/pro/pro-nav-labels";
 
 type Props = {
   stackReady: boolean;
   signedIn: boolean;
   entitled: boolean;
-  /** Soft launch: require invite cookie for trial CTAs. */
   inviteOnly?: boolean;
   inviteUnlocked?: boolean;
+  /** PRO_PUBLIC_CHECKOUT — when false, hide Subscribe / Start trial. */
+  checkoutEnabled?: boolean;
   invalidInvite?: boolean;
   className?: string;
-  /** Show trust bullets under pricing. */
   showTrustStrip?: boolean;
-  /** Suppress in-card warning when page-level banner is shown. */
   hideStackWarning?: boolean;
-  /** Anchor id for in-page section nav. */
   sectionId?: string;
-  /** Post-login return path for Sign in link. */
   loginNext?: string;
 };
 
@@ -35,6 +36,7 @@ export function ProMarketingSubscribeCard({
   entitled,
   inviteOnly = false,
   inviteUnlocked = true,
+  checkoutEnabled = true,
   invalidInvite = false,
   className,
   showTrustStrip = false,
@@ -42,13 +44,59 @@ export function ProMarketingSubscribeCard({
   sectionId,
   loginNext = "/pro",
 }: Props) {
-  if (inviteOnly && !inviteUnlocked && !entitled) {
+  /** Public / no invite → waitlist (Join waitlist), never Start trial. */
+  if ((inviteOnly && !inviteUnlocked && !entitled) || (!checkoutEnabled && !inviteUnlocked && !entitled)) {
     return (
       <ProInviteOnlyPanel
         invalidInvite={invalidInvite}
         className={className}
         sectionId={sectionId}
       />
+    );
+  }
+
+  /** Invited, but Checkout kill switch on — no Subscribe button. */
+  if (!checkoutEnabled && !entitled) {
+    return (
+      <div className={cn("space-y-6", className)}>
+        <section
+          id={sectionId}
+          className={proMarketing.proPanel}
+          aria-labelledby="pro-subscribe-heading"
+        >
+          <p className="text-xs font-semibold uppercase tracking-wide text-pro-text-secondary">
+            Private beta
+          </p>
+          <h2 id="pro-subscribe-heading" className="mt-2 text-2xl font-bold tracking-tight text-pro-text">
+            You’re on the invite list
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">
+            {PRO_INVITE_UNLOCKED_NO_CHECKOUT}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {stackReady && !signedIn ? (
+              <Link
+                href="/pro/invite/accept?next=/pro/app"
+                className={`${proBtn.secondary} h-11 justify-center px-5`}
+              >
+                Get sign-in link
+              </Link>
+            ) : null}
+            {signedIn ? (
+              <Link href="/pro/app" className={`${proBtn.secondary} h-11 justify-center px-5`}>
+                {PRO_CONTINUE_STUDIO_LABEL}
+              </Link>
+            ) : null}
+            {signedIn ? (
+              <Link href="/account" className={`${proBtn.outline} inline-flex h-11 items-center px-5`}>
+                Account
+              </Link>
+            ) : null}
+          </div>
+        </section>
+
+        <ProInviteOnlyPanel sectionId="pro-waitlist" />
+      </div>
     );
   }
 
@@ -60,7 +108,7 @@ export function ProMarketingSubscribeCard({
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-pro-accent/90">Built for directors</p>
       <p className="mt-1.5 text-base font-semibold text-pro-text">
-        Stop rewriting the same AI prompts for every new scene.
+        {PRO_MARKETING_PRICE.valueProp} — not unlimited AI.
       </p>
 
       {!stackReady && !hideStackWarning ? (

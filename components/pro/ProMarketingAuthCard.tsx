@@ -47,7 +47,7 @@ export function ProMarketingAuthCard({
 
   if (signedIn) {
     return (
-      <section className={cn(proMarketing.proPanel, className)} aria-label="Start trial">
+      <section className={cn(proMarketing.proPanel, className)} aria-label="Billing">
         <p className="text-sm font-semibold text-pro-text">{PRO_ABOUT_SIGNED_IN_TRIAL_TITLE}</p>
         <p className="mt-1.5 text-sm leading-relaxed text-pro-text-secondary">
           {PRO_ABOUT_SIGNED_IN_TRIAL_BODY}

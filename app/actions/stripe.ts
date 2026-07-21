@@ -3,9 +3,10 @@
 import type Stripe from "stripe";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { hasProInviteAccess } from "@/lib/pro/invite-gate";
+import { canStartProCheckout } from "@/lib/pro/invite-gate";
+import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
 import { getAppUrl, getProMonthlyPriceId, getStripe } from "@/lib/stripe";
-import { PRO_SUBSCRIPTION_TRIAL_DAYS } from "@/lib/pro/subscription-trial";
+import { getProSubscriptionTrialDays } from "@/lib/pro/subscription-trial";
 
 export async function startProCheckout() {
   const supabase = await createClient();
@@ -16,7 +17,11 @@ export async function startProCheckout() {
     redirect("/login?next=/account");
   }
 
-  if (!(await hasProInviteAccess())) {
+  if (!isProPublicCheckoutEnabled()) {
+    redirect("/account?checkout=disabled");
+  }
+
+  if (!(await canStartProCheckout())) {
     redirect("/account?invite=required");
   }
 
@@ -49,14 +54,19 @@ export async function startProCheckout() {
 
   const existingCustomerId = existing?.stripe_customer_id as string | undefined;
 
+  const trialDays = getProSubscriptionTrialDays();
+  const subscriptionData: Stripe.Checkout.SessionCreateParams.SubscriptionData = {
+    metadata: { supabase_user_id: user.id },
+  };
+  if (trialDays > 0) {
+    subscriptionData.trial_period_days = trialDays;
+  }
+
   const sessionParams: Stripe.Checkout.SessionCreateParams = {
     mode: "subscription",
     client_reference_id: user.id,
     metadata: { supabase_user_id: user.id },
-    subscription_data: {
-      metadata: { supabase_user_id: user.id },
-      trial_period_days: PRO_SUBSCRIPTION_TRIAL_DAYS,
-    },
+    subscription_data: subscriptionData,
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${base}/account?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${base}/account?checkout=cancel`,

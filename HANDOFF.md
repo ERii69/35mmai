@@ -45,10 +45,12 @@ Use this file when opening a new chat so context is not “from zero.”
 ## Soft launch (invite link only)
 
 - **Doc:** [`docs/soft-launch-invite.md`](docs/soft-launch-invite.md)
-- **Env:** `PRO_INVITE_ONLY=1` + `PRO_INVITE_CODES=…` (see `.env.example`)
+- **Phase 1 ops:** [`docs/soft-launch-phase1-ops.md`](docs/soft-launch-phase1-ops.md) — allowlist SQL, kill switches, Preview smoke
+- **Env:** `PRO_INVITE_ONLY=1`, `PRO_PUBLIC_CHECKOUT=0`, `PRO_INVITE_CODES=…` (see `.env.example`)
 - **Generate 10 links:** `node scripts/generate-pro-invite-codes.mjs https://YOUR_DOMAIN`
-- **Entry URL:** `/pro/invite/[code]` → cookie → sign-up → Account checkout
-- **AI:** leave `ANTHROPIC_API_KEY` unset for local Script→Prompt ($0)
+- **Entry URL:** `/pro/invite/[code]` → magic link → auto-entitle → **`/pro/app`** (Open projects on Account / header if needed)
+- **AI:** leave `ANTHROPIC_API_KEY` unset / `PRO_AGENTS_ENABLED=0` for local Script→Prompt ($0). **Phase 5 (quotas, Anthropic ceiling, Preview AI smoke) is not required for soft launch** — only before you turn the key on (`docs/soft-launch-phase1-ops.md`).
+- **Deploy order (locked):** **Local → Preview → Production.** Do not `vercel --prod` until the change is verified on `npm run dev:pro` and a Preview deploy.
 
 ## Live stack
 
@@ -61,7 +63,7 @@ Use this file when opening a new chat so context is not “from zero.”
 
 | Layer | Choice | Notes |
 |--------|--------|--------|
-| **Auth** | **Supabase Auth** (email + password) | Routes: `/login`, `/sign-up`, `/auth/callback`. Session refresh in `middleware.ts` when Supabase env is set. |
+| **Auth** | **Supabase Auth** (email + password; invite magic link) | Routes: `/login`, `/sign-up`, `/pro/invite/accept`, `/auth/callback`. Session refresh in `middleware.ts` when Supabase env is set. |
 | **Database** | **Supabase Postgres** + RLS | `profiles`, `projects`, `project_state`, `stripe_events_processed`. |
 | **Payments** | **Stripe** Checkout + Customer Portal + webhooks | USD monthly price `STRIPE_PRICE_ID_PRO_MONTHLY`. Entitlement: `active` / `trialing` on `profiles`. |
 | **Config probe** | **`lib/pro-stack-config.ts`** | `isSupabaseConfigured()`, `isStripeConfigured()`, `isProStackConfigured()`. |

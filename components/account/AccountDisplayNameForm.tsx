@@ -44,7 +44,7 @@ export function AccountDisplayNameForm({ initialName }: Props) {
         <button
           type="submit"
           disabled={pending || !name.trim()}
-          className={`${proBtn.primary} shrink-0 px-4 py-2.5 sm:w-auto`}
+          className={`${proBtn.secondary} shrink-0 px-4 py-2.5 sm:w-auto`}
         >
           {pending ? "Saving…" : "Save name"}
         </button>

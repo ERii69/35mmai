@@ -4,6 +4,16 @@ import { createClient } from "@/lib/supabase/server";
 
 const ENTITLED_STATUSES = new Set(["active", "trialing"]);
 
+/**
+ * What a Pro subscription unlocks (Phase 4).
+ * Cloud AI / Director agents are NOT included — gated by `areProAgentsEnabled()` + `lib/pro/ai-quota.ts`.
+ */
+export const PRO_SUBSCRIPTION_INCLUDES = [
+  "Private studio (/pro/app)",
+  "Cloud project save & sync",
+  "Prompt pack export",
+] as const;
+
 export type ProBillingSnapshot = {
   subscription_status: string | null;
   subscription_current_period_end: string | null;
@@ -34,8 +44,10 @@ export const getProBillingSnapshot = cache(async (): Promise<ProBillingSnapshot 
 });
 
 /**
- * True when the signed-in user has an active or trialing Stripe subscription on `profiles`.
- * Uses the user-scoped Supabase client (RLS); safe for Server Components / Server Actions.
+ * Studio access: signed-in user with `active` or `trialing` on `profiles`.
+ * Soft launch: invite allowlist grants `trialing` via `ensureInviteTrialEntitlement` (not a Stripe trial).
+ * Paid: Stripe Checkout / webhooks set `active` or Stripe `trialing`.
+ * Does not grant cloud AI — that is `areProAgentsEnabled()` + `consumeAiQuotaOrReject`.
  */
 export async function isProEntitled(): Promise<boolean> {
   const snap = await getProBillingSnapshot();

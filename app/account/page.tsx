@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { AccountDisplayNameForm } from "@/components/account/AccountDisplayNameForm";
 import { ManageBillingButton } from "@/components/account/ManageBillingButton";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,9 @@ import { proAuth, proBtn, proWebShell } from "@/components/pro/ux/pro-surfaces";
 import { headerDisplayName } from "@/lib/pro/header-user-display";
 import { bootstrapDefaultProject, listProjectsForUser } from "@/lib/pro/bootstrap-default-project";
 import { pickWorkspaceRedirectProject } from "@/lib/pro/pick-continue-project";
+import { ensureInviteTrialEntitlement } from "@/lib/pro/entitle-invite-user";
 import {
+  PRO_CHECKOUT_DISABLED_ACCOUNT,
   PRO_INVITE_REQUIRED_ACCOUNT,
   PRO_MARKETING_CTA_TRIAL,
   PRO_MARKETING_PRICE,
@@ -17,7 +20,8 @@ import {
   PRO_CANCEL_RETENTION_SUMMARY,
   PRO_DATA_RETENTION_DAYS,
 } from "@/lib/pro/membership-policy";
-import { hasProInviteAccess } from "@/lib/pro/invite-gate";
+import { canStartProCheckout, hasProInviteAccess } from "@/lib/pro/invite-gate";
+import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
 import { isSupabaseConfigured } from "@/lib/pro-stack-config";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "@/app/actions/auth";
@@ -69,6 +73,9 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     redirect("/account");
   }
 
+  // Soft launch: invite cookie → auto-trial so Account always shows “Open projects”.
+  await ensureInviteTrialEntitlement(user.id);
+
   const { data: profile } = await supabase
     .from("profiles")
     .select(
@@ -90,7 +97,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
     row?.subscription_status === "active" || row?.subscription_status === "trialing";
   const hasCustomer = Boolean(row?.stripe_customer_id);
 
-  let workspaceHref: string | undefined;
+  let workspaceHref = "/pro/app";
   if (subscribed) {
     await bootstrapDefaultProject(supabase, user.id);
     const { projects } = await listProjectsForUser(supabase, user.id);
@@ -107,14 +114,22 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       ? "Subscribe first — we need a Stripe customer before opening the billing portal."
       : null;
   const inviteUnlocked = await hasProInviteAccess();
+  const checkoutEnabled = isProPublicCheckoutEnabled();
+  const canCheckout = await canStartProCheckout();
   const inviteRequiredMsg =
     sp.invite === "required" || (!subscribed && !inviteUnlocked)
       ? PRO_INVITE_REQUIRED_ACCOUNT
       : null;
+  const checkoutDisabledMsg =
+    !subscribed &&
+    inviteUnlocked &&
+    (!checkoutEnabled || sp.checkout === "disabled")
+      ? PRO_CHECKOUT_DISABLED_ACCOUNT
+      : null;
 
   return (
     <div className={proAuth.page}>
-      <div className={`${proAuth.shellWide} mx-auto w-full max-w-pro`}>
+      <div className={`${proAuth.shellWide} mx-auto w-full max-w-pro space-y-4`}>
         {cancelMsg ? (
           <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
             {cancelMsg}
@@ -135,6 +150,33 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             {inviteRequiredMsg}
           </p>
         ) : null}
+        {checkoutDisabledMsg ? (
+          <p className="rounded-xl border border-pro-warning/40 bg-pro-warning/10 px-3 py-2 text-sm text-pro-warning">
+            {checkoutDisabledMsg}
+          </p>
+        ) : null}
+
+        {subscribed ? (
+          <div className="rounded-2xl border border-pro-primary/35 bg-pro-primary/10 px-5 py-5 sm:px-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-pro-primary">
+              Your studio
+            </p>
+            <h2 className="mt-1 text-lg font-semibold text-pro-text sm:text-xl">
+              Projects &amp; dashboard
+            </h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-pro-text-secondary">
+              Open the app to create projects, run Script → Prompt, and manage your workspace.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+              <Link href={workspaceHref} className={`${proBtn.secondary} inline-flex h-11 px-5`}>
+                Open projects dashboard
+              </Link>
+              <Link href="/pro/app" className={`${proBtn.outline} inline-flex h-11 px-5`}>
+                All projects
+              </Link>
+            </div>
+          </div>
+        ) : null}
 
         <div className={proAuth.card}>
           <h1 className={proWebShell.pageTitle}>Account</h1>
@@ -153,8 +195,10 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             <h2 className="text-sm font-semibold text-pro-text">35mmAiPro billing</h2>
             <p className="mt-1 text-xs text-pro-text-secondary">
               {subscribed
-                ? "Subscription is active (sandbox or live, depending on your Stripe keys)."
-                : `${PRO_MARKETING_PRICE.trialThenLabel}. ${PRO_MARKETING_PRICE.checkoutNote} Use test card 4242… in Checkout when in Stripe test/sandbox.`}
+                ? "Studio access is on — cloud projects, save, and prompt pack export. AI assist is separate (flag + quota)."
+                : checkoutEnabled
+                  ? `${PRO_MARKETING_PRICE.valueProp}. ${PRO_MARKETING_PRICE.trialThenLabel}. ${PRO_MARKETING_PRICE.checkoutNote} Use test card 4242… in Checkout when in Stripe test/sandbox.`
+                  : "Soft launch: card Checkout is off. Studio access is granted from the invite allowlist — not a Stripe trial."}
             </p>
             {row?.subscription_status ? (
               <p className="mt-2 text-xs text-pro-text-secondary">
@@ -172,9 +216,9 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             ) : null}
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-              {!subscribed && inviteUnlocked ? (
+              {!subscribed && canCheckout ? (
                 <form action={startProCheckout}>
-                  <Button type="submit" className={proBtn.primary}>
+                  <Button type="submit" variant="secondary" className={proBtn.secondary}>
                     {PRO_MARKETING_CTA_TRIAL}
                   </Button>
                 </form>

@@ -33,6 +33,7 @@
 |-----|------|
 | [`35mmpro-local-prototype.md`](./35mmpro-local-prototype.md) | Local Pro dev (`dev:pro` localhost; **LAN on hold**) |
 | [`soft-launch-invite.md`](./soft-launch-invite.md) | **Invite-link soft launch** for ~10 filmmakers (`PRO_INVITE_ONLY`) |
+| [`soft-launch-phase1-ops.md`](./soft-launch-phase1-ops.md) | Phase 1: allowlist SQL, `PRO_PUBLIC_CHECKOUT`, kill switches, Preview |
 | [`35mmpro-next-steps-api-free.md`](./35mmpro-next-steps-api-free.md) | Older next-steps notes (superseded by implementation guide for agents) |
 
 ## Ideas archive (not build specs)
