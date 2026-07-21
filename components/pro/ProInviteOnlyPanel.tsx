@@ -32,7 +32,7 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
         Request private beta access
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">
-        Email{" "}
+        We&apos;re opening 35mmAiPro to a small group of filmmakers first. Email{" "}
         <a
           href={`mailto:${SITE_CONTACT_EMAIL}`}
           className="font-medium text-pro-text underline underline-offset-4"
