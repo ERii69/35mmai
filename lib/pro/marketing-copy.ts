@@ -88,10 +88,10 @@ export const PRO_INVITE_ONLY_EYEBROW = "Private beta · invite only";
 export const PRO_INVITE_ONLY_HEADLINE = "Invite-only soft launch";
 
 export const PRO_INVITE_ONLY_BODY =
-  "We’re opening 35mmAiPro to a small group of filmmakers first. If you received an invite link, open it and we’ll email you a one-click sign-in link. Everyone else can join the waitlist.";
+  "We’re opening 35mmAiPro to a small group of filmmakers first. If you received an invite link, open it to create your account. Everyone else can request access.";
 
 export const PRO_INVITE_INVALID =
-  "That invite link isn’t valid or has been revoked. Ask for a fresh link, or join the waitlist below.";
+  "That invite link isn’t valid or has been revoked. Ask for a fresh link, or request access below.";
 
 export const PRO_INVITE_REQUIRED_ACCOUNT =
   "Studio access is invite-only right now. Open the invite link we emailed you, then return here.";
@@ -100,11 +100,14 @@ export const PRO_CHECKOUT_DISABLED_ACCOUNT =
   "Checkout is paused for soft launch. If you used your invite link, we’ll enable your studio from the allowlist — no card needed yet.";
 
 export const PRO_INVITE_UNLOCKED_NO_CHECKOUT =
-  "Email yourself a one-click sign-in link. No card is required during the soft launch.";
+  "Create your password to open the studio. No card is required during the soft launch.";
 
-/** Invite accept page — magic link. */
-export const PRO_INVITE_MAGIC_LEAD =
-  "Enter the email you’ll use for this soft launch. We’ll send a one-click sign-in link — no password needed.";
+/** Invite accept page — password create (soft launch). */
+export const PRO_INVITE_PASSWORD_LEAD =
+  "Create a password for this soft launch. You’ll land in your projects dashboard — no email link needed.";
+
+/** @deprecated Kept for older copy references; soft launch uses password accept. */
+export const PRO_INVITE_MAGIC_LEAD = PRO_INVITE_PASSWORD_LEAD;
 
 export const PRO_INVITE_MAGIC_SENT =
   "Sign-in link sent to";

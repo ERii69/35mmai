@@ -31,7 +31,7 @@ With `PRO_PUBLIC_CHECKOUT=0`, `/pro` and `/account` hide **Start trial / Subscri
 
 ## Allowlist playbook (SQL)
 
-Run in **Supabase → SQL Editor** (production project). User must already exist in Auth (they opened invite → magic link / signed up).
+Run in **Supabase → SQL Editor** (production project). User must already exist in Auth (they opened invite → created password / signed up).
 
 ### Entitle one filmmaker (7-day window)
 
@@ -176,7 +176,7 @@ Before touching Production:
 3. Stripe webhook (test): forward to `https://PREVIEW_URL/api/webhooks/stripe` **or** rely on Account `session_id` finalize when checkout is later enabled.
 4. Smoke (from HANDOFF, adapted for allowlist):
    - [ ] Open `/pro` → see invite-only + **Join waitlist**
-   - [ ] Valid `/pro/invite/CODE` → magic-link accept (`/pro/invite/accept`)
+   - [ ] Valid `/pro/invite/CODE` → password accept (`/pro/invite/accept`) → `/pro/app`
    - [ ] Email OTP → `/auth/callback` → Account
    - [ ] SQL entitle email → `/pro/app` opens
    - [ ] Cancel/revoke SQL → studio locks
