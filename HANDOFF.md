@@ -63,7 +63,7 @@ Use this file when opening a new chat so context is not “from zero.”
 
 | Layer | Choice | Notes |
 |--------|--------|--------|
-| **Auth** | **Supabase Auth** (email + password; invite magic link) | Routes: `/login`, `/sign-up`, `/pro/invite/accept`, `/auth/callback`. Session refresh in `middleware.ts` when Supabase env is set. |
+| **Auth** | **Supabase Auth** (email + password; invite cookie unlock) | Routes: `/login`, `/sign-up`, `/pro/invite/[code]` → `/pro/invite/accept`, `/auth/callback`. Session refresh in `middleware.ts` when Supabase env is set. |
 | **Database** | **Supabase Postgres** + RLS | `profiles`, `projects`, `project_state`, `stripe_events_processed`. |
 | **Payments** | **Stripe** Checkout + Customer Portal + webhooks | USD monthly price `STRIPE_PRICE_ID_PRO_MONTHLY`. Entitlement: `active` / `trialing` on `profiles`. |
 | **Config probe** | **`lib/pro-stack-config.ts`** | `isSupabaseConfigured()`, `isStripeConfigured()`, `isProStackConfigured()`. |

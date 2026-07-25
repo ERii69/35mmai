@@ -35,43 +35,23 @@ Copy `PRO_INVITE_CODES=...` into env. Email **one unique link** per filmmaker:
 
 ## Filmmaker flow (Phase 1 — checkout off)
 
-1. Open invite link → cookie → **`/pro/invite/accept`** (email + magic link)
-2. Click link in email → signed in → **auto-entitled** (`trialing`) → **`/pro/app`** (projects dashboard)
-3. If they land on Account instead: **Open projects dashboard** / header **Open projects**
+1. Open invite link → cookie set → **`/pro/invite/accept`**
+2. Create email + password (or **Sign in** if they already have an account)
+3. Land in **`/pro/app`** — auto-entitled (`trialing`) while invite cookie is valid
+4. No magic-link email step
 
-Password sign-up/sign-in still available as a fallback on the accept page.
-
-Without an invite: `/pro` shows **invite-only + Join waitlist**. Checkout is blocked (`PRO_PUBLIC_CHECKOUT=0` + server gate).
+Without an invite: `/pro` shows **request access**. Checkout stays blocked (`PRO_PUBLIC_CHECKOUT=0`).
 
 Manual SQL allowlist is optional backup (see Phase 1 ops) if service role / auto-entitle fails.
 
-### Supabase (magic link)
+### Supabase (password invite)
 
-**1. URL configuration** (`Authentication → URL Configuration`):
+In **Authentication → Providers → Email**:
 
-- **Site URL:** `https://www.35mmai.com`
-- **Redirect URLs:**
-  - `https://www.35mmai.com/auth/callback`
-  - `https://www.35mmai.com/auth/confirm`
-  - `https://35mmai.com/auth/callback`
-  - `https://35mmai.com/auth/confirm`
-  - `http://127.0.0.1:3001/auth/callback` (local Pro)
-  - `http://127.0.0.1:3001/auth/confirm`
-  - `http://localhost:3001/auth/callback`
-  - `http://localhost:3001/auth/confirm`
+- Enable Email
+- **Turn off Confirm email** for soft launch so filmmakers reach the studio immediately after create account
 
-**2. Magic Link email template** (`Authentication → Email Templates → Magic Link`):
-
-Use the token-hash confirm link (more reliable than PKCE when Gmail opens the message):
-
-```html
-<h2>Sign in to 35mmAiPro</h2>
-<p>Follow this link to finish signing in:</p>
-<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/pro/app">Log In</a></p>
-```
-
-Enable **Email** provider and magic-link / OTP emails (default Supabase Auth).
-
+Keep **Site URL** as `https://www.35mmai.com` for any residual auth emails.
 ## When you turn Checkout on later
 
 ```bash

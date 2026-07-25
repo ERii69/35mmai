@@ -70,5 +70,5 @@ export async function setProInviteCookie(code: string): Promise<void> {
   });
 }
 
-/** After invite: magic-link email → studio dashboard (auto-entitled when invite cookie valid). */
+/** After invite: password create/sign-in → studio (auto-entitled when invite cookie valid). */
 export const PRO_INVITE_POST_ACCEPT_HREF = "/pro/invite/accept?next=/pro/app";

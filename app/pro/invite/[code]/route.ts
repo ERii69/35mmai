@@ -15,7 +15,7 @@ type Ctx = { params: Promise<{ code: string }> };
 
 /**
  * Invite link entry: /pro/invite/YOUR-CODE
- * Validates against PRO_INVITE_CODES, sets httpOnly cookie, sends filmmaker to magic-link accept.
+ * Validates against PRO_INVITE_CODES, sets httpOnly cookie, sends filmmaker to password accept.
  */
 export async function GET(request: Request, context: Ctx) {
   const { code: raw } = await context.params;
