@@ -84,7 +84,9 @@ Use this file when opening a new chat so context is not “from zero.”
 | `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Optional client Stripe UI | Not required for current server Checkout flow |
 | `ANTHROPIC_API_KEY` | Phase 2 native Director's Agent | Server-only; unset = copy/paste fallback |
 | `ANTHROPIC_MODEL` | Optional agent model override | Default `claude-sonnet-4-20250514` |
-| `PRO_WAITLIST_WEBHOOK_URL` | Optional | Waitlist on marketing page only |
+| `RESEND_API_KEY` | Private-beta notifications | Server-only Resend key |
+| `PRO_WAITLIST_NOTIFY_EMAIL` | Private-beta notifications | Hidden recipient inbox |
+| `PRO_WAITLIST_FROM_EMAIL` | Private-beta notifications | Verified Resend sender |
 
 ### Stripe webhooks (local)
 

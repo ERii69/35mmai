@@ -15,7 +15,9 @@
 | `ANTHROPIC_MODEL` | n/a | `claude-3-5-haiku-20241022` (beta default) |
 | `PRO_AI_QUOTA_DAILY` | `3` | tune after Preview |
 | `PRO_AI_QUOTA_MONTHLY` | `20` | tune after Preview |
-| `PRO_WAITLIST_WEBHOOK_URL` | optional Zapier/Make/Slack | optional |
+| `RESEND_API_KEY` | required for request notifications | required |
+| `PRO_WAITLIST_NOTIFY_EMAIL` | private notification inbox | private notification inbox |
+| `PRO_WAITLIST_FROM_EMAIL` | verified Resend sender | verified Resend sender |
 
 **Phase 4 billing:** Subscription = studio + save + export (prompt packs). AI = `PRO_AGENTS_ENABLED` + quota — not “unlimited AI”. Soft launch ignores Stripe trial; invite allowlist grants `trialing` on profiles.
 
@@ -88,15 +90,17 @@ Spreadsheet columns: name · email · invite code · link sent · signed up? · 
 
 ---
 
-## Waitlist (Mode B)
+## Private-beta access requests
 
-1. Create a Zapier / Make / Slack incoming webhook.
-2. Set `PRO_WAITLIST_WEBHOOK_URL=https://…` in env.
-3. On `/pro` without an invite, CTA is **Join waitlist** (not Start trial).
-4. Submissions POST JSON: `{ email, note?, source: "35mmAiPro-waitlist", submittedAt }`.
-5. If webhook unset, UI still succeeds and can offer mailto fallback.
+1. Apply `supabase/migrations/20260721000008_pro_waitlist_requests.sql`.
+2. In Resend, verify the sending domain used by `PRO_WAITLIST_FROM_EMAIL`.
+3. Set `RESEND_API_KEY`, `PRO_WAITLIST_NOTIFY_EMAIL`, and `PRO_WAITLIST_FROM_EMAIL` in Vercel.
+4. Submit the one-line form on `/pro`.
+5. Confirm the request appears in Supabase → Table Editor → `pro_waitlist_requests`.
+6. Confirm the private notification arrives at `PRO_WAITLIST_NOTIFY_EMAIL`.
 
-Confirm: submit a test email from `/pro` and see it in Zapier/Slack.
+The request is committed to Supabase before notification is attempted. If Resend is unavailable,
+the request remains in the table with `notified_at = null` and can be handled manually.
 
 ---
 
