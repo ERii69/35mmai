@@ -47,11 +47,28 @@ Manual SQL allowlist is optional backup (see Phase 1 ops) if service role / auto
 
 ### Supabase (magic link)
 
-In **Authentication → URL configuration**, allow redirect URLs for each environment:
+**1. URL configuration** (`Authentication → URL Configuration`):
 
-- `http://127.0.0.1:3001/auth/callback` (local Pro)
-- Preview: `https://YOUR-PREVIEW.vercel.app/auth/callback`
-- Production: `https://www.35mmai.com/auth/callback`
+- **Site URL:** `https://www.35mmai.com`
+- **Redirect URLs:**
+  - `https://www.35mmai.com/auth/callback`
+  - `https://www.35mmai.com/auth/confirm`
+  - `https://35mmai.com/auth/callback`
+  - `https://35mmai.com/auth/confirm`
+  - `http://127.0.0.1:3001/auth/callback` (local Pro)
+  - `http://127.0.0.1:3001/auth/confirm`
+  - `http://localhost:3001/auth/callback`
+  - `http://localhost:3001/auth/confirm`
+
+**2. Magic Link email template** (`Authentication → Email Templates → Magic Link`):
+
+Use the token-hash confirm link (more reliable than PKCE when Gmail opens the message):
+
+```html
+<h2>Sign in to 35mmAiPro</h2>
+<p>Follow this link to finish signing in:</p>
+<p><a href="{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=email&next=/pro/app">Log In</a></p>
+```
 
 Enable **Email** provider and magic-link / OTP emails (default Supabase Auth).
 
