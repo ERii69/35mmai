@@ -23,13 +23,13 @@ Next.js app for the 35mm AI directory, workflow builder, budget templates, and M
    - All Tools (step 9): search, filters, open a tool card
    - Budget: preset + currency; Reset to Default vs saved `localStorage`
    - My Kit: add/remove; refresh still shows tools (rehydration from `app/data.ts`)
-   - Pro waitlist: valid email; with/without `PRO_WAITLIST_WEBHOOK_URL`
+   - Pro access request: valid email persists; duplicate email remains successful
    - Mobile width: nav, workflow menus, sticky outline where applicable
 
 ## Deploy
 
 1. Connect the repo to your host (e.g. [Vercel](https://vercel.com)) with the default Next.js settings.
-2. Set environment variables in the project dashboard (see `.env.example`). `PRO_WAITLIST_WEBHOOK_URL` is optional.
+2. Set environment variables in the project dashboard (see `.env.example`). Resend variables enable private access-request notifications.
 3. Trigger a deployment; confirm the build log matches `npm run ci`.
 
 ## Updating the catalog

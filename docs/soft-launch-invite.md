@@ -18,7 +18,9 @@ PRO_SUBSCRIPTION_TRIAL_DAYS=7 # Live only (ignored while Checkout is off). Set 0
 # Prefer NEXT_PUBLIC_PRO_SUBSCRIPTION_TRIAL_DAYS=7 (or 0) so marketing CTAs match Checkout
 PRO_AGENTS_ENABLED=0          # Soft launch: local quick prep only (even if a key exists)
 # Leave ANTHROPIC_API_KEY unset for $0 AI
-# Optional: PRO_WAITLIST_WEBHOOK_URL=https://hooks.zapier.com/...
+RESEND_API_KEY=...            # Server-only; private-beta request notifications
+PRO_WAITLIST_NOTIFY_EMAIL=... # Hidden notification inbox
+PRO_WAITLIST_FROM_EMAIL=...   # Verified Resend sender
 ```
 
 Generate 10 codes + links:

@@ -1,7 +1,10 @@
-import { Mail } from "lucide-react";
-import { SITE_CONTACT_EMAIL } from "@/app/data";
+"use client";
+
+import { useActionState } from "react";
+import { Check, Loader2 } from "lucide-react";
+import { submitProWaitlist, type ProWaitlistState } from "@/app/actions/waitlist";
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
-import { proBtn } from "@/components/pro/ux/pro-surfaces";
+import { proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
 import {
   PRO_INVITE_INVALID,
   PRO_INVITE_ONLY_EYEBROW,
@@ -13,12 +16,12 @@ type Props = {
   sectionId?: string;
 };
 
-const requestAccessHref = `mailto:${SITE_CONTACT_EMAIL}?subject=${encodeURIComponent(
-  "35mmAiPro — access request"
-)}&body=${encodeURIComponent("Hi, I’d like to request access to the 35mmAiPro private beta.")}`;
+const initialState: ProWaitlistState = { status: "idle" };
 
-/** Soft-launch gate — direct email request while public checkout is off. */
+/** Soft-launch gate — one-line request stored privately in Supabase. */
 export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId }: Props) {
+  const [state, formAction, isPending] = useActionState(submitProWaitlist, initialState);
+
   return (
     <section
       id={sectionId}
@@ -32,14 +35,8 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
         Request private beta access
       </h2>
       <p className="mt-2 text-sm leading-relaxed text-pro-text-secondary">
-        We&apos;re opening 35mmAiPro to a small group of filmmakers first. Email{" "}
-        <a
-          href={`mailto:${SITE_CONTACT_EMAIL}`}
-          className="font-medium text-pro-text underline underline-offset-4"
-        >
-          {SITE_CONTACT_EMAIL}
-        </a>{" "}
-        to request access. We&apos;ll reply when a place opens.
+        We&apos;re opening 35mmAiPro to a small group of filmmakers first. Enter your email to
+        request access.
       </p>
       {invalidInvite ? (
         <p
@@ -50,10 +47,53 @@ export function ProInviteOnlyPanel({ invalidInvite = false, className, sectionId
         </p>
       ) : null}
 
-      <a href={requestAccessHref} className={`${proBtn.primaryFull} mt-5`}>
-        <Mail className="size-4" aria-hidden />
-        Email to request access
-      </a>
+      {state.status === "success" ? (
+        <div
+          className="mt-5 flex items-center gap-2 rounded-xl bg-pro-success/10 px-4 py-3 text-sm text-pro-text ring-1 ring-pro-success/25"
+          role="status"
+        >
+          <Check className="size-4 text-pro-success" aria-hidden />
+          Request received. We&apos;ll contact you when a place opens.
+        </div>
+      ) : (
+        <form action={formAction} className="mt-5 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+          <label htmlFor="pro-access-request-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="pro-access-request-email"
+            name="email"
+            type="email"
+            required
+            autoComplete="email"
+            placeholder="you@example.com"
+            className={`${proSurface.field} min-w-0 flex-1`}
+          />
+          <div className="hidden" aria-hidden>
+            <label htmlFor="pro-access-request-website">Website</label>
+            <input
+              id="pro-access-request-website"
+              name="website"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={isPending}
+            className={`${proBtn.primaryFull} sm:w-auto sm:min-w-40`}
+          >
+            {isPending ? <Loader2 className="size-4 animate-spin" aria-hidden /> : null}
+            {isPending ? "Sending…" : "Request access"}
+          </button>
+          {state.status === "error" ? (
+            <p className="text-sm text-pro-warning sm:basis-full" role="alert">
+              {state.message}
+            </p>
+          ) : null}
+        </form>
+      )}
     </section>
   );
 }

@@ -40,8 +40,3 @@ export function areProAgentsEnabled(): boolean {
   if (!envFlagTrue("PRO_AGENTS_ENABLED")) return false;
   return isAnthropicKeyConfigured();
 }
-
-/** Waitlist webhook configured (Zapier / Make / Slack). */
-export function isProWaitlistWebhookConfigured(): boolean {
-  return Boolean(process.env.PRO_WAITLIST_WEBHOOK_URL?.trim());
-}
