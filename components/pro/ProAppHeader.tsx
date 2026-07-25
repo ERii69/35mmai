@@ -38,8 +38,8 @@ export function ProAppHeader({
       leading={
         <Logo35mmAI
           className={FREE_CATALOG_LOGO_CLASS}
-          href="/pro/app"
-          aria-label={`${BRAND_NAME} Pro studio`}
+          href="/"
+          aria-label={`${BRAND_NAME} free catalog`}
         />
       }
       mobileCenter={
