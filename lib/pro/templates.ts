@@ -230,7 +230,7 @@ function buildClassicalLocationPassState(): ProjectStatePayload {
   return {
     ...base,
     workflow: { stageIndex: 0 },
-    kit: kitFromRanks([6, 18, 21, 7, 19, 1]),
+    kit: kitFromRanks([6, 18, 5, 7, 13, 21]),
     budget: {
       microTools: budgetLinesFromPreset(BUDGET_DEFAULT_MICRO_ROWS),
       lowTools: [],
@@ -565,7 +565,7 @@ function buildTemplateStateBody(id: ProTemplateId): ProjectStatePayload {
       return {
         ...base,
         workflow: { stageIndex: 0 },
-        kit: kitFromRanks([1, 4, 6, 12, 18, 52]),
+        kit: kitFromRanks([1, 5, 6, 8, 10, 11]),
         budget: {
           microTools: budgetLinesFromPreset(BUDGET_DEFAULT_MICRO_ROWS),
           lowTools: [],
@@ -602,7 +602,7 @@ function buildTemplateStateBody(id: ProTemplateId): ProjectStatePayload {
       return {
         ...base,
         workflow: { stageIndex: 1 },
-        kit: kitFromRanks([1, 12, 15, 54, 55]),
+        kit: kitFromRanks([21, 26, 30, 55, 56]),
         budget: {
           microTools: budgetLinesFromPreset(BUDGET_DEFAULT_MICRO_ROWS),
           lowTools: budgetLinesFromPreset(BUDGET_DEFAULT_LOW_ROWS),
@@ -655,7 +655,7 @@ function buildTemplateStateBody(id: ProTemplateId): ProjectStatePayload {
     case "director-prep-documentary":
       return buildDirectorPrepTemplateState({
         templateId: "director-prep-documentary",
-        kitRanks: [1, 12, 15, 52, 55],
+        kitRanks: [21, 26, 30, 53, 55],
         selectedRole: "Producer / Line Producer",
         budgetTier: "indie",
         rules: {
@@ -670,7 +670,7 @@ function buildTemplateStateBody(id: ProTemplateId): ProjectStatePayload {
     case "director-prep-commercial":
       return buildDirectorPrepTemplateState({
         templateId: "director-prep-commercial",
-        kitRanks: [6, 1, 4, 18],
+        kitRanks: [6, 21, 4, 18],
         selectedRole: "Director",
         budgetTier: "mid",
         rules: {
@@ -685,7 +685,7 @@ function buildTemplateStateBody(id: ProTemplateId): ProjectStatePayload {
     case "director-prep-music-video":
       return buildDirectorPrepTemplateState({
         templateId: "director-prep-music-video",
-        kitRanks: [6, 18, 1, 7],
+        kitRanks: [6, 18, 21, 24],
         selectedRole: "Director",
         budgetTier: "mid",
         rules: {
@@ -715,7 +715,7 @@ function buildTemplateStateBody(id: ProTemplateId): ProjectStatePayload {
     case "director-prep-script-to-prompt":
       return buildDirectorPrepTemplateState({
         templateId: "director-prep-script-to-prompt",
-        kitRanks: [6, 18, 21, 4, 1],
+        kitRanks: [6, 18, 5, 4, 21],
         selectedRole: "Director",
         budgetTier: "indie",
         rules: {

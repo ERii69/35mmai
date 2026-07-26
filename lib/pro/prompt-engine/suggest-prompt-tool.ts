@@ -3,9 +3,9 @@ import type { Phase4PromptToolRank, ToolSuggestion } from "@/lib/pro/prompt-engi
 
 const MJ = 6 as const;
 const NANO = 18 as const;
-const KLING = 21 as const;
+const KLING = 5 as const;
 const LTX = 4 as const;
-const HIGGS = 1 as const;
+const HIGGS = 21 as const;
 
 function isDetailBeat(shotType: ShotType, label: string): boolean {
   const t = `${shotType} ${label}`.toLowerCase();
@@ -67,9 +67,9 @@ export function phase4ToolLabel(rank: Phase4PromptToolRank): string {
   const map: Record<Phase4PromptToolRank, string> = {
     6: "Midjourney",
     18: "Nano Banana Pro",
-    21: "Kling",
+    5: "Kling",
     4: "LTX Studio",
-    1: "Higgsfield Cinema Studio",
+    21: "Higgsfield Cinema Studio",
   };
   return map[rank];
 }

@@ -82,12 +82,12 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
   console.log("\nPhase 4 prompt engine\n");
 
   ok("PHASE4_PROMPT_TOOL_RANKS is five tools", () => {
-    assert.deepEqual([...PHASE4_PROMPT_TOOL_RANKS], [6, 18, 21, 4, 1]);
+    assert.deepEqual([...PHASE4_PROMPT_TOOL_RANKS], [6, 18, 5, 4, 21]);
   });
 
   ok("suggestToolForBeat routes motion to Kling", () => {
     const s = suggestToolForBeat("dolly", "slow dolly approach");
-    assert.equal(s.rank, 21);
+    assert.equal(s.rank, 5);
   });
 
   ok("suggestToolForBeat routes establishing to Midjourney", () => {
@@ -125,7 +125,7 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     const state = fixtureState();
     const shot = fixtureShot("dolly", "Dolly push");
     const seq = { id: "seq-1", title: "Scene 1", notes: "", sceneNumber: 1, shots: [shot] };
-    const built = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 21 });
+    const built = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 5 });
     assert.equal(built.syntax, "kling-motion");
     assert.ok(/dolly|motion|clip/i.test(built.prompt));
     assert.ok(!built.prompt.includes("--ar"));
@@ -144,7 +144,7 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     const state = fixtureState();
     const shot = fixtureShot("wide", "Master");
     const seq = { id: "seq-1", title: "Scene 1", notes: "", sceneNumber: 1, shots: [shot] };
-    const built = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 1 });
+    const built = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 21 });
     assert.equal(built.syntax, "higgsfield-grade");
     assert.ok(/ARRI|Alexa/i.test(built.prompt));
   });
@@ -154,7 +154,7 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     const shot = fixtureShot("establishing", "Exterior approach");
     const seq = { id: "seq-1", title: "Scene 1", notes: "", sceneNumber: 1, shots: [shot] };
     const mj = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 6 }).prompt;
-    const kling = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 21 }).prompt;
+    const kling = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 5 }).prompt;
     const ltx = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 4 }).prompt;
     assert.ok(tokenOverlapRatio(mj, kling) < 0.8);
     assert.ok(tokenOverlapRatio(mj, ltx) < 0.8);
@@ -162,7 +162,7 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
 
   ok("resolvePromptToolRank applies routing when no override", () => {
     const shot = fixtureShot("dolly", "tracking");
-    assert.equal(resolvePromptToolRank(shot, { forceRouting: false }), 21);
+    assert.equal(resolvePromptToolRank(shot, { forceRouting: false }), 5);
   });
 
   ok("5-scene drama produces routed prompt pack", () => {
@@ -188,7 +188,7 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
 
     const motionShots = shots.filter((s) => s.shotType === "dolly");
     if (motionShots.length > 0) {
-      assert.equal(motionShots[0]!.recommendedToolRank, 21);
+      assert.equal(motionShots[0]!.recommendedToolRank, 5);
     }
 
     const avgLen =

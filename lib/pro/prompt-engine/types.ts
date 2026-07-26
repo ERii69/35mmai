@@ -1,7 +1,8 @@
 import type { ShotType } from "@/lib/pro/types";
 
 /** Phase 4 script-to-prompt kit — five generation tools only. */
-export const PHASE4_PROMPT_TOOL_RANKS = [6, 18, 21, 4, 1] as const;
+/** Midjourney, Nano, Kling, LTX, Higgsfield — ranks follow 2026 catalog Wave 1. */
+export const PHASE4_PROMPT_TOOL_RANKS = [6, 18, 5, 4, 21] as const;
 
 export type Phase4PromptToolRank = (typeof PHASE4_PROMPT_TOOL_RANKS)[number];
 

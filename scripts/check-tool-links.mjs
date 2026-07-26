@@ -28,16 +28,22 @@ function effectiveHref(link, affiliateLink) {
 
 const dataPath = path.join(__dirname, "..", "app", "data.ts");
 const text = fs.readFileSync(dataPath, "utf8");
-const start = text.indexOf("export const allTools = [");
-const end = text.indexOf("\n];", start);
-if (start === -1 || end === -1) {
+const startTyped = text.indexOf("export const allTools: Tool[] = [");
+const start = startTyped >= 0 ? startTyped : text.indexOf("export const allTools = [");
+const endMarker = "\n];\n\n/**\n * Catalog kind for UI badges:";
+let end = text.indexOf(endMarker, start);
+if (end < 0) {
+  const fallback = text.indexOf("export function getCatalogKind", start);
+  end = fallback >= 0 ? text.lastIndexOf("\n];", fallback) : text.indexOf("\n];", start);
+}
+if (start < 0 || end < 0) {
   console.error("Could not find allTools array in app/data.ts");
   process.exit(1);
 }
 const body = text.slice(start, end);
 
 const toolRe =
-  /\{\s*rank:\s*(\d+),\s*\n\s*name:\s*"([^"]+)"[\s\S]*?\n\s*link:\s*"([^"]+)"([\s\S]*?)\n\s*\},/g;
+  /\{\s*rank:\s*(\d+),\s*\n\s*name:\s*"([^"]+)"[\s\S]*?\n\s*link:\s*"([^"]+)"([\s\S]*?)\n\s*\},?/g;
 
 const tools = [];
 let m;

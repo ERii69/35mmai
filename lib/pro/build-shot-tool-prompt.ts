@@ -28,9 +28,9 @@ export type BuiltShotPrompt = FormattedToolPrompt;
 const SYNTAX_BY_RANK: Record<number, PromptSyntaxKind> = {
   6: "mj-params",
   18: "nano-composite",
-  21: "kling-motion",
+  5: "kling-motion",
   4: "ltx-scene",
-  1: "higgsfield-grade",
+  21: "higgsfield-grade",
 };
 
 function formatForRank(
@@ -42,11 +42,11 @@ function formatForRank(
       return formatMidjourneyPrompt(ctx);
     case 18:
       return formatNanoPrompt(ctx);
-    case 21:
+    case 5:
       return formatKlingPrompt(ctx);
     case 4:
       return formatLtxPrompt(ctx);
-    case 1:
+    case 21:
       return formatHiggsfieldPrompt(ctx);
     default:
       return formatMidjourneyPrompt(ctx);

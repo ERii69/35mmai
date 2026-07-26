@@ -107,7 +107,7 @@ const CLASSICAL_LOCATION_PASS_PLAYBOOK: StructuredPlaybook = {
       title: "7. Most of the look lives in stills",
       workspaceTab: "visual",
       body: "Decide color and atmosphere while everything is frozen — steam, neon spill, damp pavement, cramped stalls — so motion inherits the grade. Final color work should mostly match shots and lift quiet areas, not reinvent the film.",
-      tools: [{ rank: 1, why: "Lens and contrast language on stills before motion." }],
+      tools: [{ rank: 21, why: "Lens and contrast language on stills before motion." }],
     },
     {
       id: "world-texture",
@@ -129,7 +129,7 @@ const CLASSICAL_LOCATION_PASS_PLAYBOOK: StructuredPlaybook = {
       workspaceTab: "kit",
       body: "Animate from stills you trust. When you need every pixel accounted for, work in smaller chunks. Lip sync tools can help but often need careful audio alignment.",
       tools: [
-        { rank: 21, why: "Primary motion from image plates (Kling in catalog)." },
+        { rank: 5, why: "Primary motion from image plates (Kling in catalog)." },
         { rank: 7, why: "Dialogue and performance touch-ups when needed." },
         { rank: 2, why: "Alternate motion tool if a scene needs different control." },
       ],
@@ -146,7 +146,7 @@ const CLASSICAL_LOCATION_PASS_PLAYBOOK: StructuredPlaybook = {
       title: "12. The edit is the real set",
       workspaceTab: "post",
       body: "There is no physical stage to walk on. You write, plan, and note shots — but the film becomes watchable in the edit. Someone who knows where AI breaks (faces, hands, continuity) is worth their weight here.",
-      tools: [{ rank: 19, why: "Assembly, grade polish, and sound in an NLE workflow." }],
+      tools: [{ rank: 13, why: "Assembly, grade polish, and sound in an NLE workflow." }],
     },
     {
       id: "grain-not-upscale",
@@ -155,7 +155,7 @@ const CLASSICAL_LOCATION_PASS_PLAYBOOK: StructuredPlaybook = {
       body: "Heavy upscaling can sharpen skin oddly and smooth away surface detail you fought for in stills. Many teams skip it. A light grain pass can make digital frames feel less sterile.",
       tools: [
         { rank: 9, why: "Understand upscale impact before you depend on it." },
-        { rank: 1, why: "Re-check grade if you must upscale." },
+        { rank: 21, why: "Re-check grade if you must upscale." },
       ],
     },
     {
@@ -184,7 +184,7 @@ const VISUAL_LOOK_BIBLE_STEPS: StructuredPlaybook = {
       tools: [
         { rank: 6, why: "Master stills for palette and costume silhouette." },
         { rank: 18, why: "Fast lighting and layout iterations." },
-        { rank: 1, why: "Lens character on approved stills." },
+        { rank: 21, why: "Lens character on approved stills." },
       ],
     },
   ],
@@ -292,7 +292,7 @@ const SCRIPT_TO_PROMPT_PLAYBOOK: StructuredPlaybook = {
       title: "Build the shot plan",
       workspaceTab: "shots",
       body: "Each planned shot becomes one external generation prompt.",
-      tools: [{ rank: 1, why: "Motion tests after stills are approved." }],
+      tools: [{ rank: 21, why: "Motion tests after stills are approved." }],
     },
     {
       id: "prompts",
@@ -301,7 +301,7 @@ const SCRIPT_TO_PROMPT_PLAYBOOK: StructuredPlaybook = {
       body: "Finish → Prompts: build empty or refresh all, pick tool per shot, copy into Midjourney, Higgsfield, or LTX.",
       tools: [
         { rank: 6, why: "Midjourney still prompts." },
-        { rank: 1, why: "Higgsfield motion prompts." },
+        { rank: 21, why: "Higgsfield motion prompts." },
         { rank: 4, why: "LTX video prompts." },
       ],
     },
