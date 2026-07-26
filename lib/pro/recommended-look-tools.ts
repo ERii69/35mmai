@@ -11,10 +11,10 @@ import { buildLookToolPrompt } from "@/lib/pro/build-look-tool-prompt";
 
 /** Primary catalog picks per look section (first match wins after budget filter). */
 const SECTION_TOOL_RANKS: Record<LookToolSection, number[]> = {
-  mood: [75, 6, 40],
-  lens: [1, 2, 4],
-  grain: [1, 9],
-  palette: [1, 19],
+  mood: [76, 6, 41, 8],
+  lens: [21, 1, 2, 4],
+  grain: [21, 9],
+  palette: [21, 13],
 };
 
 function matchesBudget(tool: Tool, tier: DirectorRulesState["budgetTier"]): boolean {

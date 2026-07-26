@@ -11,10 +11,10 @@ export const SCRIPT_TO_PROMPT_DEFAULT_AGENTS: PrepPipelineAgentId[] = [
 ];
 
 /** Default kit picks for Script to prompt template (Phase 4 five tools). */
-export const SCRIPT_TO_PROMPT_KIT_RANKS = [6, 18, 21, 4, 1] as const;
+export const SCRIPT_TO_PROMPT_KIT_RANKS = [6, 18, 5, 4, 21] as const;
 
 /** Primary image / video tools for per-shot prompt formatting. */
-export const SCRIPT_TO_PROMPT_DEFAULT_TOOL_RANKS = [6, 18, 21, 4, 1] as const;
+export const SCRIPT_TO_PROMPT_DEFAULT_TOOL_RANKS = [6, 18, 5, 4, 21] as const;
 
 export function isScriptToPromptTemplate(templateId: string | null | undefined): boolean {
   return templateId === SCRIPT_TO_PROMPT_TEMPLATE_ID;

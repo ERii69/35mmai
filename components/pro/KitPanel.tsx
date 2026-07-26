@@ -22,9 +22,9 @@ import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
 import type { ProjectStatePayload } from "@/lib/pro/types";
 
 const KIT_BULK_PRESETS: { id: string; label: string; ranks: number[] }[] = [
-  { id: "indie-starter", label: "Indie kit (6 tools)", ranks: [1, 4, 6, 12, 18, 52] },
-  { id: "classical-ai", label: "Classical AI kit (6 tools)", ranks: [6, 18, 21, 7, 19, 1] },
-  { id: "documentary", label: "Interview kit (5 tools)", ranks: [1, 12, 15, 54, 55] },
+  { id: "indie-starter", label: "Indie kit (6 tools)", ranks: [1, 5, 6, 8, 10, 11] },
+  { id: "classical-ai", label: "Classical AI kit (6 tools)", ranks: [6, 18, 5, 7, 13, 21] },
+  { id: "documentary", label: "Interview kit (5 tools)", ranks: [21, 26, 30, 55, 56] },
   { id: "prep-narrative", label: "Narrative kit (3 tools)", ranks: [4, 6, 52] },
 ];
 

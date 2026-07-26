@@ -47,13 +47,13 @@ function buildMoodPrompt(state: ProjectStatePayload, rank: number): string {
   const palette = paletteLine(state);
   const avoid = avoidLine(state);
 
-  if (rank === 75) {
+  if (rank === 76) {
     const attrs = [mood, lensLine(state), palette].filter(Boolean).join("; ");
     const filmBit = films ? ` Film references: ${films}.` : "";
     return `Search look deck — ${attrs}.${filmBit} Tag by lighting, lens, composition, and mood.`;
   }
 
-  if (rank === 40) {
+  if (rank === 41) {
     const parts = [
       mood,
       films ? `inspired by ${films}` : "",
@@ -82,12 +82,23 @@ function buildLensPrompt(state: ProjectStatePayload, rank: number): string {
   const palette = paletteLine(state);
   const avoid = avoidLine(state);
 
-  if (rank === 2) {
+  if (rank === 1) {
     const parts = [
       mood || "Cinematic scene",
       lens,
       palette,
       "slow motion, highly detailed, 4K",
+      avoid,
+    ].filter(Boolean);
+    return parts.join(", ");
+  }
+
+  if (rank === 2) {
+    const parts = [
+      mood || "Cinematic scene",
+      lens,
+      palette,
+      "native audio ambience, photoreal, 4K cinematic",
       avoid,
     ].filter(Boolean);
     return parts.join(", ");
@@ -104,7 +115,7 @@ function buildLensPrompt(state: ProjectStatePayload, rank: number): string {
     return parts.join(", ");
   }
 
-  // Higgsfield (1) — matches catalog examplePrompt shape
+  // Higgsfield (21) — matches catalog examplePrompt shape
   const parts = [
     mood || "Cinematic scene",
     lens.includes("shot on") ? lens : `shot on ${lens}`,
@@ -147,7 +158,7 @@ function buildPalettePrompt(state: ProjectStatePayload, rank: number): string {
   const grain = grainLine(state);
   const avoid = avoidLine(state);
 
-  if (rank === 19) {
+  if (rank === 13) {
     const parts = [
       "Color grade toward",
       palette.replace(/^Palette: /, ""),
