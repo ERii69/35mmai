@@ -375,9 +375,14 @@ export default function Home() {
   ]);
 
   const spotlightToolForRole = useMemo(() => {
+    // Prefer the top match in the current list (search/filters), so spotlight
+    // follows what the filmmaker is browsing — e.g. "VEO" → Google Veo 3.1.
+    if (isToolListingStep && filteredTools.length > 0) {
+      return filteredTools[0];
+    }
     if (!selectedRole) return null;
     return getSpotlightToolForRole(selectedRole);
-  }, [selectedRole]);
+  }, [isToolListingStep, filteredTools, selectedRole]);
 // === CURRENCY HELPERS ===
   const currencySymbol = useMemo(() => {
     switch (currency) {

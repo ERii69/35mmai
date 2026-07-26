@@ -1579,16 +1579,12 @@ export function hasPartnerLink(tool: Tool): boolean {
 }
 
 /**
- * Role spotlight: prefer accepted Partner tools (lowest rank among partners), else top catalog rank.
- * Aligns SPOTLIGHT with affiliate partners without overriding roles that have no partner fit.
+ * Role spotlight: top editorial catalog rank for that role (lowest `rank`).
+ * Partner tools stay labeled in the list; they no longer force the spotlight.
  */
 export function getSpotlightToolForRole(role: string): Tool | null {
   const matches = allTools.filter((t) => t.roles.includes(role));
   if (matches.length === 0) return null;
-
-  const partners = matches.filter(hasPartnerLink).sort((a, b) => a.rank - b.rank);
-  if (partners.length > 0) return partners[0];
-
   return matches.sort((a, b) => a.rank - b.rank)[0];
 }
 
