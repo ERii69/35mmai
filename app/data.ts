@@ -43,6 +43,26 @@ export const rolesList = [
 export const allTools: Tool[] = [
   {
     rank: 1,
+    name: "Grok Imagine",
+    category: "Production",
+    helps: "xAI image + video generation with native audio — text/image-to-video up to ~15s, multi-ref edits, and fast iteration on grok.com/imagine (Video 1.5)",
+    price: "via SuperGrok / X Premium (subscription)",
+    budgetFit: "both",
+    link: "grok.com/imagine",
+    roles: ["Director","DOP (Director of Photography)","Editor"],
+    shortDescription: "2026 breakout AI video + stills stack from xAI — native audio, strong image-to-video, and the catalog's top new highlight for filmmakers",
+    howToUse: [
+      "Step 1: Open grok.com/imagine (or the Grok app → Imagine)",
+      "Step 2: Generate a locked still, or upload a Midjourney/Flux plate",
+      "Step 3: Animate with image-to-video — set aspect (prefer 16:9 / 2.39-friendly), duration, and motion",
+      "Step 4: Use references when available for character/wardrobe continuity",
+      "Step 5: Download clips and assemble in CapCut, DaVinci, or Premiere",
+    ],
+    examplePrompt: "Slow cinematic push-in on a detective at a rainy window, neon bounce, anamorphic bokeh, locked wardrobe from reference still, subtle city hum, 8s, 16:9",
+  },
+  
+  {
+    rank: 2,
     name: "Runway Gen-4.5",
     category: "Production",
     helps: "Pro filmmaker control surface for text/image/video gen — motion brush, camera paths, and reference consistency (Gen-4.5)",
@@ -50,7 +70,7 @@ export const allTools: Tool[] = [
     budgetFit: "hollywood",
     link: "runwayml.com",
     roles: ["Editor","DOP (Director of Photography)","Director"],
-    shortDescription: "Industry control standard for AI video after Sora — best when you need precise motion and multi-shot craft",
+    shortDescription: "Pro control surface for AI video — motion brush and camera paths when you need craft beyond one-click Grok/Veo clips",
     howToUse: [
       "Step 1: Sign in at runwayml.com",
       "Step 2: Prefer image-to-video from a Midjourney/Flux plate for consistency",
@@ -61,7 +81,7 @@ export const allTools: Tool[] = [
     examplePrompt: "Slow dolly-in on a detective at a rainy window, neon bounce, anamorphic bokeh, locked wardrobe from reference still, 10s",
   },
   {
-    rank: 2,
+    rank: 3,
     name: "Google Veo 3.1",
     category: "Production",
     helps: "Cinematic text-to-video and image-to-video with native audio, strong prompt adherence, and 4K-oriented output for narrative scenes",
@@ -69,7 +89,7 @@ export const allTools: Tool[] = [
     budgetFit: "both",
     link: "aistudio.google.com",
     roles: ["Director","DOP (Director of Photography)","Editor"],
-    shortDescription: "Post-Sora cinematic video model — native audio and photoreal scenes for filmmakers",
+    shortDescription: "Google cinematic video with native audio — pair with Grok Imagine for speed and Runway when you need finer motion control",
     howToUse: [
       "Step 1: Open Google AI Studio (or Gemini apps with Veo access)",
       "Step 2: Choose text-to-video or image-to-video from a locked still",
@@ -80,7 +100,7 @@ export const allTools: Tool[] = [
     examplePrompt: "INT. diner booth, night — medium two-shot, 35mm spherical, soft practical tungsten, rain on window, quiet dialogue, slow push-in, cinematic 2.39:1",
   },
   {
-    rank: 3,
+    rank: 80,
     name: "ElevenLabs Voice Cloning",
     category: "Post-Prod",
     helps: "Industry-leading voice cloning, emotional voiceovers, and multi-language dubbing",
@@ -1602,7 +1622,8 @@ export const BUDGET_DEFAULT_MICRO_ROWS = [
   { rank: 8, qty: 1 },
   { rank: 5, qty: 1 },
   { rank: 7, qty: 1 },
-  { rank: 3, qty: 1 },
+  { rank: 1, qty: 1 },
+  { rank: 80, qty: 1 },
   { rank: 10, qty: 1 },
   { rank: 11, qty: 1 },
   { rank: 4, qty: 1 },
@@ -1611,10 +1632,11 @@ export const BUDGET_DEFAULT_MICRO_ROWS = [
 export const BUDGET_DEFAULT_LOW_ROWS = [
   { rank: 1, qty: 1 },
   { rank: 2, qty: 1 },
+  { rank: 3, qty: 1 },
   { rank: 5, qty: 1 },
   { rank: 6, qty: 1 },
   { rank: 8, qty: 1 },
-  { rank: 3, qty: 2 },
+  { rank: 80, qty: 2 },
   { rank: 13, qty: 1 },
   { rank: 14, qty: 1 },
   { rank: 9, qty: 1 },
@@ -1699,7 +1721,7 @@ export const workflowStages = [
         description: "Build detailed budget, shooting schedule, and assemble crew.",
         tools: [14, 11, 12],
         proTip:
-          "After Sora shut down, budget for Kling / Veo / Runway / Seedance (often via CapCut) — not a single video vendor.",
+          "Budget for Grok Imagine / Kling / Veo / Runway / Seedance (often via CapCut) — not a single video vendor.",
       },
     ],
   },
@@ -1710,28 +1732,28 @@ export const workflowStages = [
       {
         step: "2.1 Shooting & Cinematic Look",
         description: "Capture or generate cinematic coverage.",
-        tools: [1, 2, 5],
+        tools: [1, 2, 3, 5],
         proTip:
-          "Pick the model for the job: Runway for control, Veo for cinematic audio scenes, Kling for volume and motion.",
+          "Start with Grok Imagine for fast native-audio clips; Runway for control, Veo for Google cinematic scenes, Kling for volume.",
       },
       {
         step: "2.2 On-set Creative Support",
         description: "Generate quick VFX previews and reference clips.",
-        tools: [5, 7, 15],
+        tools: [1, 5, 7],
         proTip:
           "Image-to-video from your still board beats pure text prompts for consistency on set.",
       },
       {
         step: "2.3 Lighting, Grip & Camera",
         description: "Execute lighting design and camera movement.",
-        tools: [21, 1],
+        tools: [21, 1, 2],
         proTip:
           "Use Higgsfield when you need camera-profile language; use Runway when you need motion control.",
       },
       {
         step: "2.4 Sound Recording",
         description: "Capture clean production audio.",
-        tools: [3],
+        tools: [80],
         proTip:
           "Always record room tone. Pair production audio with ElevenLabs only for ADR / missing lines.",
       },
@@ -1750,20 +1772,20 @@ export const workflowStages = [
       {
         step: "3.1 Editing & Assembly",
         description: "Rough cut → Director’s cut.",
-        tools: [10, 13, 3],
+        tools: [10, 13, 80],
         proTip:
           "Many indie teams now assemble Kling/Seedance/Veo clips in CapCut, then finish grade in DaVinci.",
       },
       {
         step: "3.2 Visual Effects & Enhancement",
         description: "Add VFX, clean plates, upscale.",
-        tools: [1, 9, 5],
+        tools: [1, 2, 9],
         proTip: "Upscale late. Fix story and motion first — Topaz last.",
       },
       {
         step: "3.3 Sound Design & Dubbing",
         description: "Foley, ADR, voiceovers, multi-language dubbing.",
-        tools: [3],
+        tools: [80],
         proTip: "Record ADR while emotion is fresh; clone only when you must.",
       },
       {
@@ -1788,7 +1810,7 @@ export const workflowStages = [
       {
         step: "4.2 Localization & Dubbing",
         description: "Dub into other languages for global reach.",
-        tools: [3],
+        tools: [80],
         proTip: "Start with Spanish and Mandarin for festivals and streaming reach.",
       },
       {
