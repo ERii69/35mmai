@@ -123,13 +123,7 @@ function actionLine(
   shot: PlannedShot,
   sequence: ShotSequence
 ): string {
-  // Prefer the per-shot generation label — never collapse every beat to scene.oneLine.
-  const label = stripLookInstructions(shot.label.trim());
-  if (label && isFullGenerationPrompt(label)) return stripGenerationBoilerplate(label);
-  if (label && label.length >= 24) {
-    return stripGenerationBoilerplate(label);
-  }
-
+  // Prefer the beat's own notes line (unique per establishing/medium/close-up).
   const matchingLine = sequence.notes
     .split("\n")
     .map((line) => parseScriptToPromptShotLine(line.replace(/^[-*]\s*/, "").trim()))
@@ -140,20 +134,18 @@ function actionLine(
     });
   if (matchingLine?.label) {
     const cleaned = stripLookInstructions(matchingLine.label);
-    if (isFullGenerationPrompt(cleaned)) return stripGenerationBoilerplate(cleaned);
-    if (cleaned.length >= 24) return stripGenerationBoilerplate(cleaned);
+    if (cleaned) {
+      // Pull a short visual core — drop trailing style boilerplate if present.
+      const core = stripGenerationBoilerplate(cleaned);
+      if (core.length >= 24) return core.slice(0, 220);
+    }
   }
 
-  if (scene?.oneLine?.trim()) return scene.oneLine.trim();
-  if (label) return label;
-  const firstLine = sequence.notes
-    .split("\n")
-    .map((line) => line.replace(/^[-*]\s*/, "").trim())
-    .find(Boolean);
-  if (!firstLine) return "";
-  const parsed = stripLookInstructions(parseScriptToPromptShotLine(firstLine).label);
-  if (!parsed) return scene?.oneLine?.trim() || "";
-  return stripGenerationBoilerplate(parsed);
+  if (scene?.oneLine?.trim()) return scene.oneLine.trim().slice(0, 220);
+
+  const label = stripLookInstructions(shot.label.trim());
+  if (label) return stripGenerationBoilerplate(label).slice(0, 220);
+  return "";
 }
 
 export function buildPromptBeatContext(
@@ -167,10 +159,9 @@ export function buildPromptBeatContext(
   );
   const action = actionLine(scene, shot, sequence);
   const typePhrase = SHOT_TYPE_PHRASE[shot.shotType] ?? "cinematic shot";
-  // When action is already a full generation prompt, don't re-prefix shot type + heading.
-  const subject = isFullGenerationPrompt(action)
-    ? action
-    : action && heading
+  // Always short subject so tool formatters (MJ params, ARRI, LTX Scene:) stay visible.
+  const subject =
+    action && heading
       ? `${typePhrase}, ${heading}: ${action}`
       : action
         ? `${typePhrase}, ${action}`
@@ -225,7 +216,10 @@ export function imageNegativePrompt(ctx: PromptBeatContext): string {
   return [custom, defaults, shotExtra].filter(Boolean).join(", ");
 }
 
+/** Motion tools — lead with temporal artifacts so the negative visibly differs from stills. */
 export function motionNegativePrompt(ctx: PromptBeatContext): string {
+  const motionLead =
+    "morphing faces, jitter, warp, flicker, stutter, rubber limbs, sliding feet";
   const base = imageNegativePrompt(ctx);
-  return `${base}, morphing faces, jitter, warp, flicker, stutter, rubber limbs, sliding feet`;
+  return `${motionLead}, ${base}`;
 }

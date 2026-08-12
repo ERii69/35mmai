@@ -26,7 +26,8 @@ export function formatKlingPrompt(ctx: PromptBeatContext): {
     : "text-to-video";
 
   const parts = [
-    `${motion}, ${ctx.heading}`,
+    `Kling video · ${motion}`,
+    ctx.heading,
     ctx.action,
     ctx.mood,
     ctx.palette ? `palette ${ctx.palette}` : "",
