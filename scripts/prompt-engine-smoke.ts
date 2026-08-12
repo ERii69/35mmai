@@ -96,10 +96,29 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     assert.equal(s.rank, 6);
   });
 
+  ok("suggestToolForBeat diversify spreads medium to LTX and close-up to Nano", () => {
+    assert.equal(suggestToolForBeat("medium", "two-shot", { diversify: true }).rank, 4);
+    assert.equal(suggestToolForBeat("close_up", "hands", { diversify: true }).rank, 18);
+    assert.equal(suggestToolForBeat("establishing", "wide", { diversify: true }).rank, 6);
+  });
+
   ok("suggestToolForBeat offers Nano alt on close-up detail", () => {
     const s = suggestToolForBeat("close_up", "hands on letter");
     assert.equal(s.rank, 6);
     assert.equal(s.altRank, 18);
+  });
+
+  ok("forceRouting diversify does not keep Midjourney on every still", () => {
+    const med = resolvePromptToolRank(
+      { ...fixtureShot("medium", "character beat"), recommendedToolRank: 6 },
+      { forceRouting: true }
+    );
+    const cu = resolvePromptToolRank(
+      { ...fixtureShot("close_up", "detail"), recommendedToolRank: 6 },
+      { forceRouting: true }
+    );
+    assert.equal(med, 4);
+    assert.equal(cu, 18);
   });
 
   ok("Midjourney formatter uses native --ar params", () => {
