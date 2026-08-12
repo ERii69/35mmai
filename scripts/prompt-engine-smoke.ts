@@ -147,6 +147,34 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     assert.ok(!mj.negativePrompt.trimStart().startsWith("morphing faces"));
   });
 
+  ok("negatives lead with shot-specific avoid terms", () => {
+    const state = fixtureState();
+    const seqBase = { id: "seq-1", title: "EXT. FIELDS - DAY", notes: "", sceneNumber: 1, shots: [] as ReturnType<typeof fixtureShot>[] };
+    const est = buildShotToolPrompt({
+      state,
+      shot: fixtureShot("establishing", "wide"),
+      sequence: { ...seqBase, shots: [fixtureShot("establishing", "wide")] },
+      toolRank: 6,
+    });
+    const med = buildShotToolPrompt({
+      state,
+      shot: fixtureShot("medium", "two-shot"),
+      sequence: { ...seqBase, shots: [fixtureShot("medium", "two-shot")] },
+      toolRank: 6,
+    });
+    const cu = buildShotToolPrompt({
+      state,
+      shot: fixtureShot("close_up", "detail"),
+      sequence: { ...seqBase, shots: [fixtureShot("close_up", "detail")] },
+      toolRank: 6,
+    });
+    assert.ok(est.negativePrompt.startsWith("no tight portrait"));
+    assert.ok(med.negativePrompt.startsWith("no extreme wide"));
+    assert.ok(cu.negativePrompt.startsWith("no busy wide"));
+    assert.notEqual(est.negativePrompt.slice(0, 30), med.negativePrompt.slice(0, 30));
+    assert.notEqual(med.negativePrompt.slice(0, 30), cu.negativePrompt.slice(0, 30));
+  });
+
   ok("LTX formatter uses Scene block syntax", () => {
     const state = fixtureState();
     const shot = fixtureShot("medium", "Two-shot");

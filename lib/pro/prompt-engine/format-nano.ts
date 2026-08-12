@@ -30,6 +30,7 @@ export function formatNanoPrompt(ctx: PromptBeatContext): {
 
   return {
     prompt: parts.join(", ").slice(0, 2000),
-    negativePrompt: `plastic skin, CGI sheen, floating props, ${imageNegativePrompt(ctx)}`,
+    // Nano-specific defects first so the negative differs from Midjourney at a glance.
+    negativePrompt: `plastic skin, CGI sheen, floating props, seam lines, ${imageNegativePrompt(ctx)}`,
   };
 }
