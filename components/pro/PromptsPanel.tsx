@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PromptSceneSection } from "@/components/pro/PromptSceneSection";
 import { PromptStickyActions } from "@/components/pro/PromptStickyActions";
+import { PromptsHowToTip } from "@/components/pro/PromptsHowToTip";
 import { ProEmptyState } from "@/components/pro/ux/ProEmptyState";
 import { useProToast } from "@/components/pro/ux/ProToastProvider";
 import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
@@ -157,6 +158,8 @@ export function PromptsPanel({
           Kling, LTX, or Higgsfield. Nothing generates inside 35mmPRO.
         </p>
       </header>
+
+      <PromptsHowToTip projectId={projectId} />
 
       <PromptStickyActions
         withPrompt={withPrompt}
