@@ -16,6 +16,7 @@ import {
   countShotsWithPrompts,
   promptToolOptions,
   rebuildShotPromptInState,
+  syncShotPromptsInState,
 } from "@/lib/pro/sync-shot-prompts";
 import type { ProductionTabId } from "@/lib/pro/workspace-modes";
 import type { ProjectStatePayload } from "@/lib/pro/types";
@@ -42,24 +43,22 @@ export function PromptsPanel({
 
   const usingScriptToPrompt = isScriptToPromptTemplate(state.directorPrep.appliedTemplateId);
 
+  // Trust saved shot plan + tool overrides. Only auto-build when there are no beats yet.
+  // Regenerating on every render was resetting manual tool picks (e.g. LTX) back to Midjourney.
   const displayState = useMemo(() => {
-    const built = buildScriptToPromptPackState(state);
-    const sequences = built.shotPlan.sequences.map((seq, si) => ({
-      ...seq,
-      shots: seq.shots.map((shot, shi) => {
-        const saved = state.shotPlan.sequences[si]?.shots[shi];
-        if (saved?.aiGenerationPrompt?.trim()) {
-          return {
-            ...shot,
-            aiGenerationPrompt: saved.aiGenerationPrompt,
-            aiNegativePrompt: saved.aiNegativePrompt ?? shot.aiNegativePrompt,
-            recommendedToolRank: saved.recommendedToolRank ?? shot.recommendedToolRank,
-          };
-        }
-        return shot;
-      }),
-    }));
-    return { ...built, shotPlan: { sequences } };
+    const existingTotal = state.shotPlan.sequences.reduce((n, seq) => n + seq.shots.length, 0);
+    if (existingTotal > 0) {
+      const { withPrompt, total } = countShotsWithPrompts(state);
+      if (withPrompt < total) {
+        return syncShotPromptsInState(state, {
+          onlyEmpty: true,
+          applyRouting: true,
+          forceRouting: false,
+        });
+      }
+      return state;
+    }
+    return buildScriptToPromptPackState(state);
   }, [state]);
 
   const toolOptions = useMemo(() => promptToolOptions(displayState), [displayState]);
@@ -92,7 +91,7 @@ export function PromptsPanel({
   function rerouteAll() {
     updateState((p) => rebuildAllPromptsInState(p, { forceRouting: true }));
     showToast({
-      message: "Re-routed tools and rebuilt unique prompts per beat.",
+      message: "Spread tools by beat: Midjourney · LTX · Nano · Kling (motion).",
       variant: "success",
     });
   }

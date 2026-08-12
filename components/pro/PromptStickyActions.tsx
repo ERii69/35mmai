@@ -42,7 +42,7 @@ export function PromptStickyActions({
             className="border-white/10 text-pro-text"
             onClick={onRefreshAll}
           >
-            Re-route tools
+            Spread tools
           </Button>
           <Button
             type="button"

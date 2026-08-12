@@ -28,7 +28,13 @@ function isMotionBeat(shotType: ShotType, label: string): boolean {
 }
 
 /** Deterministic tool pick per visual beat — no AI. */
-export function suggestToolForBeat(shotType: ShotType, label = ""): ToolSuggestion {
+export function suggestToolForBeat(
+  shotType: ShotType,
+  label = "",
+  opts?: { diversify?: boolean }
+): ToolSuggestion {
+  const diversify = opts?.diversify === true;
+
   if (shotType === "aerial") {
     return {
       rank: KLING,
@@ -48,6 +54,14 @@ export function suggestToolForBeat(shotType: ShotType, label = ""): ToolSuggesti
   }
 
   if (isDetailBeat(shotType, label)) {
+    if (diversify) {
+      return {
+        rank: NANO,
+        reason: "Composite insert",
+        altRank: MJ,
+        altReason: "Detail still",
+      };
+    }
     return {
       rank: MJ,
       reason: "Detail still",
@@ -56,8 +70,42 @@ export function suggestToolForBeat(shotType: ShotType, label = ""): ToolSuggesti
     };
   }
 
-  if (shotType === "establishing" || shotType === "wide" || shotType === "medium") {
-    return { rank: MJ, reason: "Exploration still" };
+  if (shotType === "medium") {
+    if (diversify) {
+      return {
+        rank: LTX,
+        reason: "Scene video block",
+        altRank: MJ,
+        altReason: "Exploration still",
+      };
+    }
+    return {
+      rank: MJ,
+      reason: "Exploration still",
+      altRank: LTX,
+      altReason: "Scene video block",
+    };
+  }
+
+  if (shotType === "wide") {
+    if (diversify) {
+      return {
+        rank: HIGGS,
+        reason: "Cinema grade wide",
+        altRank: MJ,
+        altReason: "Exploration still",
+      };
+    }
+    return { rank: MJ, reason: "Exploration still", altRank: HIGGS, altReason: "Cinema grade" };
+  }
+
+  if (shotType === "establishing") {
+    return {
+      rank: MJ,
+      reason: "Exploration still",
+      altRank: HIGGS,
+      altReason: "Cinema grade",
+    };
   }
 
   return { rank: MJ, reason: "Default still" };

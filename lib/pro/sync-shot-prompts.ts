@@ -56,7 +56,9 @@ export function resolvePromptToolRank(
   if (shot.recommendedToolRank && !opts?.forceRouting) {
     return shot.recommendedToolRank;
   }
-  const suggested = suggestToolForBeat(shot.shotType, shot.label);
+  const suggested = suggestToolForBeat(shot.shotType, shot.label, {
+    diversify: opts?.forceRouting === true,
+  });
   return suggested.rank;
 }
 
