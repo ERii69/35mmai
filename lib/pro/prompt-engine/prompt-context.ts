@@ -29,18 +29,23 @@ const SHOT_TYPE_PHRASE: Record<string, string> = {
   other: "cinematic shot",
 };
 
+const SHARED_STILL_NEGATIVE =
+  "vertical framing, watermark, text overlay, logo, social media crop, stock photo look, waxy skin, oversaturated";
+
+/** Shot-specific avoid list — leads the negative so beats don't look identical. */
 const SHOT_TYPE_NEGATIVE: Record<string, string> = {
-  establishing: "tight portrait crop, missing geography, faces filling frame",
-  wide: "tight portrait crop, missing geography",
-  medium: "extreme wide empty frame, lost character presence",
-  close_up: "busy wide background, soft unfocused subject",
-  extreme_close_up: "wide establishing frame, busy environment",
-  dolly: "static locked-off frame, jump cuts",
-  pan: "static locked-off frame",
-  tilt: "static locked-off frame",
-  handheld: "tripod-locked sterile framing",
-  aerial: "ground-level eyeline only",
-  other: "",
+  establishing:
+    "no tight portrait, no faces filling frame, no missing geography, no cropped horizon",
+  wide: "no tight portrait crop, no missing geography, no closed-in framing",
+  medium: "no extreme wide empty frame, no lost character presence, no epic landscape only",
+  close_up: "no busy wide background, no soft unfocused subject, no establishing vista",
+  extreme_close_up: "no wide establishing frame, no busy environment, no full-body framing",
+  dolly: "no static locked-off frame, no jump cuts, no whip-pan chaos",
+  pan: "no static locked-off frame, no vertical tilt only",
+  tilt: "no static locked-off frame, no horizontal pan only",
+  handheld: "no tripod-locked sterile framing, no steadicam gloss",
+  aerial: "no ground-level eyeline only, no handheld shake",
+  other: "no off-beat framing",
 };
 
 export function stripGenerationBoilerplate(text: string): string {
@@ -207,19 +212,23 @@ export function buildPromptBeatContext(
 }
 
 export function imageNegativePrompt(ctx: PromptBeatContext): string {
-  const defaults =
-    "vertical framing, watermark, text overlay, logo, social media crop, stock photo look, waxy skin, oversaturated";
-  const shotExtra = SHOT_TYPE_NEGATIVE[ctx.shotType] ?? "";
-  const custom = ctx.customNegative && !isLookInstructionPollution(ctx.customNegative)
-    ? ctx.customNegative
-    : "";
-  return [custom, defaults, shotExtra].filter(Boolean).join(", ");
+  const shotLead = SHOT_TYPE_NEGATIVE[ctx.shotType] ?? SHOT_TYPE_NEGATIVE.other!;
+  const custom =
+    ctx.customNegative && !isLookInstructionPollution(ctx.customNegative)
+      ? ctx.customNegative
+      : "";
+  // Shot-specific terms first — shared boilerplate last — so beats read differently.
+  return [shotLead, custom, SHARED_STILL_NEGATIVE].filter(Boolean).join(", ");
 }
 
-/** Motion tools — lead with temporal artifacts so the negative visibly differs from stills. */
+/** Motion tools — temporal artifacts first, then beat-specific, then shared stills. */
 export function motionNegativePrompt(ctx: PromptBeatContext): string {
   const motionLead =
     "morphing faces, jitter, warp, flicker, stutter, rubber limbs, sliding feet";
-  const base = imageNegativePrompt(ctx);
-  return `${motionLead}, ${base}`;
+  const shotLead = SHOT_TYPE_NEGATIVE[ctx.shotType] ?? "";
+  const custom =
+    ctx.customNegative && !isLookInstructionPollution(ctx.customNegative)
+      ? ctx.customNegative
+      : "";
+  return [motionLead, shotLead, custom, SHARED_STILL_NEGATIVE].filter(Boolean).join(", ");
 }
