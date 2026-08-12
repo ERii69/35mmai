@@ -342,9 +342,10 @@ export function ProWorkspace({
 
     setSaveStatus("saving");
     setSaveError(null);
-    let slimmed = stateRef.current;
+    const uiState = stateRef.current;
+    let slimmed = uiState;
     try {
-      slimmed = await prepareProjectStateForCloudSave(stateRef.current);
+      slimmed = await prepareProjectStateForCloudSave(uiState);
     } catch {
       /* save with best-effort slim; server validates size */
     }
@@ -359,8 +360,19 @@ export function ProWorkspace({
     if (scheduledGeneration !== persistGenerationRef.current) return;
 
     skipNextAutosaveRef.current = true;
-    stateRef.current = slimmed;
-    setState(slimmed);
+    // Cloud save strips prompt text for size — do NOT push that slim payload into the UI
+    // or tools snap back to Midjourney ~1.5s later when prompts rebuild. Keep UI picks;
+    // only adopt compressed reference photos from the slimmed save.
+    const mergedUi: ProjectStatePayload = {
+      ...uiState,
+      visualBible: {
+        ...uiState.visualBible,
+        referenceUrls: slimmed.visualBible.referenceUrls,
+        designSheetNotes: slimmed.visualBible.designSheetNotes,
+      },
+    };
+    stateRef.current = mergedUi;
+    setState(mergedUi);
     setSaveStatus("saved");
     setLastSavedAt(res.data.updated_at);
   }, [projectId]);
