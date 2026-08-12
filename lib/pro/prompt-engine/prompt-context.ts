@@ -11,6 +11,10 @@ import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
 const GENERATION_BOILERPLATE =
   /,?\s*(2\.39:1[^,]*|shallow depth of field|film grain|no text|no watermark|high detail|dramatic motivated lighting|cinematic film still|photorealistic film still|natural lighting|cinematic lighting|naturalistic film still)/gi;
 
+/** Look-bible / prep notes that must never appear inside generation prompts. */
+const LOOK_INSTRUCTION_POLLUTION =
+  /modular ai|look bible|prompt pack|one shot,? one|no vertical|copy-ready|external tools|midjourney,\s*kling|\*\*scene rhythm|\*\*genre:|\*\*shot preference|\*\*coverage mix|\*\*texture:|palette and mood feed|_palette and mood|genre:\s*ai-native|establishing first,? then medium/i;
+
 const SHOT_TYPE_PHRASE: Record<string, string> = {
   establishing: "establishing wide shot",
   wide: "wide master shot",
@@ -25,6 +29,20 @@ const SHOT_TYPE_PHRASE: Record<string, string> = {
   other: "cinematic shot",
 };
 
+const SHOT_TYPE_NEGATIVE: Record<string, string> = {
+  establishing: "tight portrait crop, missing geography, faces filling frame",
+  wide: "tight portrait crop, missing geography",
+  medium: "extreme wide empty frame, lost character presence",
+  close_up: "busy wide background, soft unfocused subject",
+  extreme_close_up: "wide establishing frame, busy environment",
+  dolly: "static locked-off frame, jump cuts",
+  pan: "static locked-off frame",
+  tilt: "static locked-off frame",
+  handheld: "tripod-locked sterile framing",
+  aerial: "ground-level eyeline only",
+  other: "",
+};
+
 export function stripGenerationBoilerplate(text: string): string {
   return text
     .replace(GENERATION_BOILERPLATE, "")
@@ -34,12 +52,55 @@ export function stripGenerationBoilerplate(text: string): string {
     .trim();
 }
 
+export function isLookInstructionPollution(text: string): boolean {
+  return LOOK_INSTRUCTION_POLLUTION.test(text);
+}
+
+/** Remove look-bible / process sentences so a polluted shot label can still be used. */
+export function stripLookInstructions(text: string): string {
+  return text
+    .replace(/\*\*[^*]+\*\*:?/g, " ")
+    .replace(
+      /Modular AI generation[^.]*\.?/gi,
+      " "
+    )
+    .replace(/One shot,? one self-contained prompt[^.]*\.?/gi, " ")
+    .replace(/Match the look bible[^.]*\.?/gi, " ")
+    .replace(/Midjourney,\s*Kling,\s*LTX[^.]*(?:crops?\.)?/gi, " ")
+    .replace(/2\.39:1 film still discipline[^.]*(?:crops?\.)?/gi, " ")
+    .replace(/Genre:\s*ai-native(?:,\s*prompt pack)?/gi, " ")
+    .replace(/Scene rhythm:[^.·\n]*/gi, " ")
+    .replace(/Shot preference:[^.·\n]*/gi, " ")
+    .replace(/No vertical(?:\/social)? crops?;?/gi, " ")
+    .replace(/,\s*,/g, ",")
+    .replace(/\s+/g, " ")
+    .replace(/^,\s*|,\s*$/g, "")
+    .trim();
+}
+
 function isFullGenerationPrompt(text: string): boolean {
-  const t = text.trim();
+  const t = stripLookInstructions(text.trim());
+  if (!t || isLookInstructionPollution(t)) return false;
   return (
     t.length >= 80 &&
-    /cinematic|film still|2\.39|lighting|depth of field|no watermark/i.test(t)
+    /cinematic|film still|2\.39|lighting|depth of field|no watermark|establishing|medium shot|close-up|wide (?:master|shot)/i.test(
+      t
+    )
   );
+}
+
+function cleanMoodLine(text: string): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (!t || isLookInstructionPollution(t)) return "";
+  // Keep short cinematic mood; drop long prep essays.
+  if (t.length > 140) return t.slice(0, 137).trimEnd() + "…";
+  return t;
+}
+
+function cleanLookField(text: string, fallback = ""): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (!t || isLookInstructionPollution(t)) return fallback;
+  return t.slice(0, 160);
 }
 
 export function sceneForShot(
@@ -62,16 +123,37 @@ function actionLine(
   shot: PlannedShot,
   sequence: ShotSequence
 ): string {
-  if (scene?.oneLine?.trim()) return scene.oneLine.trim();
-  const label = shot.label.trim();
+  // Prefer the per-shot generation label — never collapse every beat to scene.oneLine.
+  const label = stripLookInstructions(shot.label.trim());
   if (label && isFullGenerationPrompt(label)) return stripGenerationBoilerplate(label);
+  if (label && label.length >= 24) {
+    return stripGenerationBoilerplate(label);
+  }
+
+  const matchingLine = sequence.notes
+    .split("\n")
+    .map((line) => parseScriptToPromptShotLine(line.replace(/^[-*]\s*/, "").trim()))
+    .find((line) => {
+      if (line.skip || !line.label.trim()) return false;
+      if (line.shotType && line.shotType === shot.shotType) return true;
+      return false;
+    });
+  if (matchingLine?.label) {
+    const cleaned = stripLookInstructions(matchingLine.label);
+    if (isFullGenerationPrompt(cleaned)) return stripGenerationBoilerplate(cleaned);
+    if (cleaned.length >= 24) return stripGenerationBoilerplate(cleaned);
+  }
+
+  if (scene?.oneLine?.trim()) return scene.oneLine.trim();
   if (label) return label;
   const firstLine = sequence.notes
     .split("\n")
     .map((line) => line.replace(/^[-*]\s*/, "").trim())
     .find(Boolean);
   if (!firstLine) return "";
-  return stripGenerationBoilerplate(parseScriptToPromptShotLine(firstLine).label);
+  const parsed = stripLookInstructions(parseScriptToPromptShotLine(firstLine).label);
+  if (!parsed) return scene?.oneLine?.trim() || "";
+  return stripGenerationBoilerplate(parsed);
 }
 
 export function buildPromptBeatContext(
@@ -85,27 +167,28 @@ export function buildPromptBeatContext(
   );
   const action = actionLine(scene, shot, sequence);
   const typePhrase = SHOT_TYPE_PHRASE[shot.shotType] ?? "cinematic shot";
-  const subject =
-    action && heading
+  // When action is already a full generation prompt, don't re-prefix shot type + heading.
+  const subject = isFullGenerationPrompt(action)
+    ? action
+    : action && heading
       ? `${typePhrase}, ${heading}: ${action}`
       : action
         ? `${typePhrase}, ${action}`
         : typePhrase;
 
-  const moodParts = [
-    state.directorPrep.agentMeta.visualMood.trim(),
-    state.directorPrep.directorRules.toneAndRefs.trim(),
-    state.directorPrep.directorRules.styleNotes.trim(),
-  ].filter(Boolean);
-  const mood = moodParts[0] ?? "Cinematic, naturalistic film still";
+  const mood =
+    cleanMoodLine(state.directorPrep.agentMeta.visualMood) ||
+    cleanMoodLine(state.directorPrep.directorRules.toneAndRefs) ||
+    cleanMoodLine(state.directorPrep.directorRules.styleNotes) ||
+    "Cinematic, naturalistic film still";
 
   const palette = state.visualBible.palette.filter(Boolean).slice(0, 5).join(", ");
-  const lens = state.visualBible.lensAndFraming.trim();
-  const grain = state.visualBible.grainAndTexture.trim();
+  const lens = cleanLookField(state.visualBible.lensAndFraming);
+  const grain = cleanLookField(state.visualBible.grainAndTexture);
   const films =
     state.visualBible.moodBoardReferences
       .map((r) => r.title?.trim())
-      .filter(Boolean)
+      .filter((t): t is string => Boolean(t) && !isLookInstructionPollution(t))
       .slice(0, 2)
       .join(", ") ||
     state.directorPrep.scenes
@@ -119,14 +202,14 @@ export function buildPromptBeatContext(
     heading,
     action,
     shotType: shot.shotType,
-    shotLabel: shot.label.trim(),
+    shotLabel: isLookInstructionPollution(shot.label) ? typePhrase : shot.label.trim(),
     mood,
     palette,
     lens,
     grain,
     films,
-    camera: shot.cameraNotes.trim() || lens,
-    light: shot.lightingNotes.trim() || grain,
+    camera: cleanLookField(shot.cameraNotes, lens),
+    light: cleanLookField(shot.lightingNotes, grain),
     hasVisualRef: Boolean(shot.visualRefUrl?.trim()),
     customNegative: state.visualBible.negativePromptNotes.trim(),
   };
@@ -135,7 +218,11 @@ export function buildPromptBeatContext(
 export function imageNegativePrompt(ctx: PromptBeatContext): string {
   const defaults =
     "vertical framing, watermark, text overlay, logo, social media crop, stock photo look, waxy skin, oversaturated";
-  return ctx.customNegative ? `${ctx.customNegative}, ${defaults}` : defaults;
+  const shotExtra = SHOT_TYPE_NEGATIVE[ctx.shotType] ?? "";
+  const custom = ctx.customNegative && !isLookInstructionPollution(ctx.customNegative)
+    ? ctx.customNegative
+    : "";
+  return [custom, defaults, shotExtra].filter(Boolean).join(", ");
 }
 
 export function motionNegativePrompt(ctx: PromptBeatContext): string {

@@ -84,6 +84,22 @@ function pickPalette(rules: DirectorRulesState): string[] {
   return PALETTE_BY_MOOD.default;
 }
 
+/** Template / process instructions — keep in design notes, not mood (mood feeds every prompt). */
+function isInstructionalLookText(text: string): boolean {
+  return /modular ai|look bible|prompt pack|one shot,? one|no vertical|copy-ready|external tools|midjourney,\s*kling|establishing first|one modular prompt/i.test(
+    text
+  );
+}
+
+function shortMoodFromRules(rules: DirectorRulesState): string {
+  for (const raw of [rules.styleNotes, rules.toneAndRefs]) {
+    const t = raw.trim();
+    if (!t || isInstructionalLookText(t)) continue;
+    return t.slice(0, 160);
+  }
+  return "Cinematic, naturalistic film still";
+}
+
 export function buildLocalVisualPackage(
   rules: DirectorRulesState,
   scenes: SceneRow[],
@@ -98,14 +114,7 @@ export function buildLocalVisualPackage(
   const extCount = scenes.filter((s) => s.intExt === "EXT" || s.intExt === "INT/EXT").length;
   const nightCount = scenes.filter((s) => s.dayNight === "NIGHT").length;
 
-  const moodParts = [
-    rules.styleNotes.trim(),
-    rules.toneAndRefs.trim(),
-  ].filter(Boolean);
-
-  const mood =
-    moodParts.join(" · ").slice(0, 280) ||
-    "Ground the look in your Script tab vision — add style and reference films for sharper notes.";
+  const mood = shortMoodFromRules(rules);
 
   const palette = pickPalette(rules);
   const promptPack = options?.promptPack === true;

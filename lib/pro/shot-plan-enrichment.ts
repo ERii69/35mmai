@@ -45,11 +45,9 @@ export function enrichPlannedShot(
   const visualNote = visualBibleContextLine(state);
   const parsed = parseDurationFromLabel(shot.label);
   const lens = state.visualBible.lensAndFraming.trim();
-  const lighting = [state.visualBible.grainAndTexture, state.visualBible.designSheetNotes]
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(" · ")
-    .slice(0, 200);
+  // Never copy designSheetNotes into lighting — those are prep essays (scene rhythm,
+  // genre tags) and pollute every Finish → Prompts field via the prompt engine.
+  const lighting = state.visualBible.grainAndTexture.trim().slice(0, 200);
 
   const ref =
     shot.visualRefUrl.trim() ||
@@ -76,11 +74,7 @@ export function enrichPlannedShot(
 export function matchVisualBibleToShotPlan(state: ProjectStatePayload): ProjectStatePayload {
   const visualNote = visualBibleContextLine(state);
   const lens = state.visualBible.lensAndFraming.trim();
-  const lighting = [state.visualBible.grainAndTexture, state.visualBible.designSheetNotes]
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(" · ")
-    .slice(0, 200);
+  const lighting = state.visualBible.grainAndTexture.trim().slice(0, 200);
   const defaultRef = state.visualBible.referenceUrls[0] ?? "";
 
   const sequences = state.shotPlan.sequences.map((seq) => {

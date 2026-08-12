@@ -31,13 +31,23 @@ function actionVisual(scene: SceneRow): string {
   return raw.replace(/\s+/g, " ").slice(0, 220);
 }
 
+function isInstructionalLookText(text: string): boolean {
+  return /modular ai|look bible|prompt pack|one shot,? one|no vertical|copy-ready|external tools|midjourney,\s*kling/i.test(
+    text
+  );
+}
+
 function styleTail(rules: DirectorRulesState, visual?: VisualHints): string {
-  const mood =
-    visual?.mood?.trim() ||
-    [rules.styleNotes, rules.toneAndRefs].filter(Boolean).join(". ").trim() ||
-    "Cinematic, naturalistic film still";
+  const fromRules = [rules.styleNotes, rules.toneAndRefs]
+    .map((s) => s.trim())
+    .find((s) => s && !isInstructionalLookText(s));
+  const moodRaw = visual?.mood?.trim() || fromRules || "Cinematic, naturalistic film still";
+  const mood = isInstructionalLookText(moodRaw)
+    ? "Cinematic, naturalistic film still"
+    : moodRaw.slice(0, 120);
   const palette = visual?.palette?.filter(Boolean).slice(0, 4).join(", ") || "";
-  const lens = visual?.lens?.trim() || "35mm cinematic lens feel";
+  const lensRaw = visual?.lens?.trim() || "35mm cinematic lens feel";
+  const lens = isInstructionalLookText(lensRaw) ? "35mm cinematic lens feel" : lensRaw.slice(0, 80);
   const parts = [
     mood,
     palette ? `color palette ${palette}` : "",
