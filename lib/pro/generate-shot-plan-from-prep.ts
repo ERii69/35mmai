@@ -32,7 +32,10 @@ export function inferShotsFromNotes(notes: string, visualNote: string): ReturnTy
 }
 
 /** One-click shot plan from approved prep scenes + staging shot lists. */
-export function generateShotPlanFromPrep(state: ProjectStatePayload): ProjectStatePayload {
+export function generateShotPlanFromPrep(
+  state: ProjectStatePayload,
+  opts?: { forceFreshNotes?: boolean }
+): ProjectStatePayload {
   const visualNote = visualBibleContextLine(state);
   const approved = state.directorPrep.scenes.filter((s) => s.status === "approved");
   const draftOrApproved =
@@ -46,10 +49,11 @@ export function generateShotPlanFromPrep(state: ProjectStatePayload): ProjectSta
 
   const promptPack = isScriptToPromptTemplate(state.directorPrep.appliedTemplateId);
   const rules = state.directorPrep.directorRules;
+  const forceFresh = opts?.forceFreshNotes === true;
 
   for (const scene of draftOrApproved) {
     const staged = stagingShots.find((s) => s.sceneNumber === scene.number);
-    let notes = staged?.notes || scene.shotNotes || "";
+    let notes = forceFresh ? "" : staged?.notes || scene.shotNotes || "";
     if (!promptPack) {
       if (!notes.trim() || isPromptStyleSequenceNotes(notes)) {
         notes = buildLocalShotCoverageNotes(scene, rules);
@@ -65,7 +69,9 @@ export function generateShotPlanFromPrep(state: ProjectStatePayload): ProjectSta
         notes.trim().length > 0 &&
         !isLegacyCoverageShotNotes(notes) &&
         /\[(establishing|wide|medium|close_up|dolly)\]/i.test(notes);
-      if (!hasBeatNotes) {
+      const notesPolluted =
+        /modular ai|look bible|scene rhythm|genre:\s*ai-native|shot preference/i.test(notes);
+      if (!hasBeatNotes || notesPolluted || forceFresh) {
         notes = buildScriptToPromptShotNotes(scene, rules, visual);
       }
     }

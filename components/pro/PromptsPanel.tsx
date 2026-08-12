@@ -8,12 +8,14 @@ import { PromptStickyActions } from "@/components/pro/PromptStickyActions";
 import { ProEmptyState } from "@/components/pro/ux/ProEmptyState";
 import { useProToast } from "@/components/pro/ux/ProToastProvider";
 import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
-import { buildScriptToPromptPackState } from "@/lib/pro/build-script-to-prompt-pack";
+import {
+  buildScriptToPromptPackState,
+  rebuildAllPromptsInState,
+} from "@/lib/pro/build-script-to-prompt-pack";
 import {
   countShotsWithPrompts,
   promptToolOptions,
   rebuildShotPromptInState,
-  syncShotPromptsInState,
 } from "@/lib/pro/sync-shot-prompts";
 import type { ProductionTabId } from "@/lib/pro/workspace-modes";
 import type { ProjectStatePayload } from "@/lib/pro/types";
@@ -80,21 +82,17 @@ export function PromptsPanel({
   }
 
   function buildAll() {
-    updateState((p) =>
-      syncShotPromptsInState(p, { onlyEmpty: false, applyRouting: true, forceRouting: false })
-    );
+    updateState((p) => rebuildAllPromptsInState(p));
     showToast({
-      message: "Built all prompts with tool routing from beat type.",
+      message: "Rebuilt every prompt from script + look (cleared look-bible clutter).",
       variant: "success",
     });
   }
 
   function rerouteAll() {
-    updateState((p) =>
-      syncShotPromptsInState(p, { onlyEmpty: false, applyRouting: true, forceRouting: true })
-    );
+    updateState((p) => rebuildAllPromptsInState(p, { forceRouting: true }));
     showToast({
-      message: "Re-routed every beat to suggested tools and rebuilt prompts.",
+      message: "Re-routed tools and rebuilt unique prompts per beat.",
       variant: "success",
     });
   }

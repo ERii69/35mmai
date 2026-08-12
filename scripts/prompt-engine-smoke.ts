@@ -3,6 +3,7 @@
  */
 import assert from "node:assert/strict";
 import { buildShotToolPrompt } from "../lib/pro/build-shot-tool-prompt";
+import { rebuildAllPromptsInState } from "../lib/pro/build-script-to-prompt-pack";
 import { buildScriptToPromptPackState } from "../lib/pro/build-script-to-prompt-pack";
 import { DEMO_SCRIPT_FIVE_SCENES } from "../lib/pro/demo-script-five-scenes";
 import { parseScenesFromScreenplayText } from "../lib/pro/parse-scene-headings";
@@ -158,6 +159,125 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     const ltx = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 4 }).prompt;
     assert.ok(tokenOverlapRatio(mj, kling) < 0.8);
     assert.ok(tokenOverlapRatio(mj, ltx) < 0.8);
+  });
+
+  ok("look-bible instructions do not leak into every prompt", () => {
+    const state = fixtureState();
+    state.directorPrep.agentMeta.visualMood =
+      "Modular AI generation. One shot, one self-contained prompt. Match the look bible on every pass.";
+    state.directorPrep.directorRules.styleNotes =
+      "Modular AI generation. One shot, one self-contained prompt. Match the look bible on every pass.";
+    state.directorPrep.directorRules.toneAndRefs =
+      "Midjourney, Kling, LTX, Nano, Higgsfield. 2.39:1 film still discipline; no vertical or social crops.";
+    state.directorPrep.directorRules.preferredShots =
+      "Establishing first, then medium and detail beats";
+    state.visualBible.designSheetNotes =
+      "**Scene rhythm:** 2 exterior / 2 interior · 0 night scenes\n**Genre:** ai-native, prompt pack\n**Shot preference:** Establishing first, then medium and detail beats";
+    state.directorPrep.scenes[0]!.oneLine =
+      "Yellow harvest fields stretch to the horizon under soft daylight.";
+
+    const estLabel =
+      "Cinematic establishing wide shot, exterior FIELDS in daylight, natural motivated light, Yellow harvest fields stretch to the horizon under soft daylight, geography and scale, Cinematic naturalistic film still, 2.39:1 film still, shallow depth of field, film grain, no text, no watermark";
+    const medLabel =
+      "Cinematic medium shot, FIELDS in daylight, natural motivated light, Yellow harvest fields stretch to the horizon under soft daylight, character and environment in frame, 35mm lens feel, Cinematic naturalistic film still, 2.39:1 film still, shallow depth of field, film grain, no text, no watermark";
+    const cuLabel =
+      "Cinematic close-up, stone wall with climbing green vines, organic texture, FIELDS, in daylight, natural motivated light, tactile texture and story detail, Cinematic naturalistic film still, 2.39:1 film still, shallow depth of field, film grain, no text, no watermark";
+
+    const notes = [
+      `- [establishing] ${estLabel}`,
+      `- [medium] ${medLabel}`,
+      `- [close_up] ${cuLabel}`,
+    ].join("\n");
+
+    const shots = [
+      { ...fixtureShot("establishing", estLabel), lightingNotes: state.visualBible.designSheetNotes },
+      { ...fixtureShot("medium", medLabel), lightingNotes: state.visualBible.designSheetNotes },
+      { ...fixtureShot("close_up", cuLabel), lightingNotes: state.visualBible.designSheetNotes },
+    ];
+    const seq = { id: "seq-1", title: "EXT. FIELDS - DAY", notes, sceneNumber: 1, shots };
+
+    const prompts = shots.map((shot) =>
+      buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 6 })
+    );
+
+    for (const built of prompts) {
+      assert.ok(!/Scene rhythm/i.test(built.prompt), built.prompt.slice(0, 200));
+      assert.ok(!/look bible/i.test(built.prompt), built.prompt.slice(0, 200));
+      assert.ok(!/Modular AI/i.test(built.prompt), built.prompt.slice(0, 200));
+      assert.ok(!/Genre:\s*ai-native/i.test(built.prompt), built.prompt.slice(0, 200));
+      assert.ok(!/Shot preference/i.test(built.prompt), built.prompt.slice(0, 200));
+    }
+
+    assert.ok(tokenOverlapRatio(prompts[0]!.prompt, prompts[2]!.prompt) < 0.92);
+    assert.notEqual(prompts[0]!.negativePrompt, prompts[2]!.negativePrompt);
+    assert.ok(/geography|portrait crop/i.test(prompts[0]!.negativePrompt));
+    assert.ok(/busy wide|unfocused/i.test(prompts[2]!.negativePrompt));
+  });
+
+  ok("rebuildAllPromptsInState clears Modular AI clutter", () => {
+    const state = buildTemplateState(DEFAULT_DIRECTOR_PREP_TEMPLATE_ID);
+    state.directorPrep.screenplay.rawText =
+      "EXT. FIELDS - DAY\n\nYellow harvest fields stretch to the horizon.\n\nINT. STONE HOUSE - DAY\n\nA door opens into the dim room.";
+    state.directorPrep.scenes = [
+      {
+        id: "s1",
+        number: 1,
+        heading: "EXT. FIELDS - DAY",
+        oneLine: "Yellow harvest fields stretch to the horizon.",
+        intExt: "EXT",
+        dayNight: "DAY",
+        visualRefs: [],
+        shotNotes:
+          "- [establishing] Modular AI generation. One shot, one self-contained prompt. Match the look bible.",
+        status: "approved",
+        linkedSequenceId: null,
+      },
+      {
+        id: "s2",
+        number: 2,
+        heading: "INT. STONE HOUSE - DAY",
+        oneLine: "A door opens into the dim room.",
+        intExt: "INT",
+        dayNight: "DAY",
+        visualRefs: [],
+        shotNotes: "",
+        status: "approved",
+        linkedSequenceId: null,
+      },
+    ];
+    state.directorPrep.agentMeta.visualMood =
+      "Modular AI generation. One shot, one self-contained prompt. Match the look bible on every pass.";
+    state.visualBible.palette = ["#1C1917", "#44403C"];
+    state.shotPlan.sequences = [
+      {
+        id: "seq-1",
+        title: "EXT. FIELDS - DAY",
+        notes: "",
+        sceneNumber: 1,
+        shots: [
+          {
+            ...fixtureShot("establishing", "Establishing"),
+            aiGenerationPrompt:
+              "establishing wide shot, EXT. FIELDS · DAY: Yellow harvest fields., Modular AI generation. One shot, one self-contained prompt.",
+            aiNegativePrompt: "vertical framing, watermark",
+          },
+        ],
+      },
+    ];
+
+    const rebuilt = rebuildAllPromptsInState(state);
+    const prompts = rebuilt.shotPlan.sequences.flatMap((s) =>
+      s.shots.map((sh) => sh.aiGenerationPrompt ?? "")
+    );
+    assert.ok(prompts.length >= 4);
+    for (const p of prompts) {
+      assert.ok(p.trim().length > 40);
+      assert.ok(!/Modular AI/i.test(p), p.slice(0, 180));
+      assert.ok(!/look bible/i.test(p), p.slice(0, 180));
+    }
+    const negatives = rebuilt.shotPlan.sequences[0]!.shots.map((s) => s.aiNegativePrompt ?? "");
+    assert.ok(negatives.length >= 2);
+    assert.ok(negatives.some((n) => n !== negatives[0]));
   });
 
   ok("resolvePromptToolRank applies routing when no override", () => {
