@@ -12,8 +12,8 @@ export function formatNanoPrompt(ctx: PromptBeatContext): {
     ctx.shotType === "extreme_close_up";
 
   const lead = isDetail
-    ? `Photorealistic composite insert: ${ctx.action || ctx.subject}`
-    : `Photorealistic film still: ${ctx.subject}`;
+    ? `Nano composite insert · ${ctx.action || ctx.subject}`
+    : `Nano photoreal still · ${ctx.subject}`;
 
   const parts = [
     lead,
@@ -30,6 +30,6 @@ export function formatNanoPrompt(ctx: PromptBeatContext): {
 
   return {
     prompt: parts.join(", ").slice(0, 2000),
-    negativePrompt: `${imageNegativePrompt(ctx)}, plastic skin, CGI sheen, floating props`,
+    negativePrompt: `plastic skin, CGI sheen, floating props, ${imageNegativePrompt(ctx)}`,
   };
 }

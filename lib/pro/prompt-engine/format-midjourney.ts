@@ -1,7 +1,7 @@
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
 import { imageNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
 
-/** Midjourney v6 — weighted tags + parameter tail. */
+/** Midjourney v6 — weighted tags + parameter tail (params first so tool switch is obvious). */
 export function formatMidjourneyPrompt(ctx: PromptBeatContext): {
   prompt: string;
   negativePrompt: string;
@@ -22,7 +22,8 @@ export function formatMidjourneyPrompt(ctx: PromptBeatContext): {
 
   const body = tags.join(", ");
   const params = "--ar 21:9 --style raw --no text, watermark, logo, vertical crop";
-  const prompt = `${body} ${params}`.trim().slice(0, 2000);
+  // Lead with MJ params so switching tools visibly changes the first line.
+  const prompt = `${params} ${body}`.trim().slice(0, 2000);
 
   return {
     prompt,

@@ -129,6 +129,22 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     assert.equal(built.syntax, "mj-params");
     assert.ok(built.prompt.includes("--ar 21:9"));
     assert.ok(built.prompt.includes("--style raw"));
+    assert.ok(built.prompt.trimStart().startsWith("--ar"), "MJ params should lead the prompt");
+  });
+
+  ok("tool switch changes first line and negative lead", () => {
+    const state = fixtureState();
+    const shot = fixtureShot("establishing", "Exterior fields");
+    const seq = { id: "seq-1", title: "EXT. FIELDS - DAY", notes: "", sceneNumber: 1, shots: [shot] };
+    const mj = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 6 });
+    const higgs = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 21 });
+    const ltx = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 4 });
+    assert.ok(mj.prompt.trimStart().startsWith("--ar"));
+    assert.ok(/^Shot on ARRI/i.test(higgs.prompt.trimStart()));
+    assert.ok(/^Scene:/i.test(ltx.prompt.trimStart()));
+    assert.notEqual(mj.prompt.slice(0, 40), higgs.prompt.slice(0, 40));
+    assert.ok(higgs.negativePrompt.trimStart().startsWith("morphing faces"));
+    assert.ok(!mj.negativePrompt.trimStart().startsWith("morphing faces"));
   });
 
   ok("LTX formatter uses Scene block syntax", () => {
