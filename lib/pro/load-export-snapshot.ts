@@ -1,3 +1,4 @@
+import { createUserDataClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { normalizeProjectState } from "@/lib/pro/validate-project-state";
 import type { ProjectStatePayload } from "@/lib/pro/types";
@@ -13,7 +14,7 @@ export async function loadExportSnapshot(
   projectId: string,
   userId: string
 ): Promise<ExportSnapshot | null> {
-  const supabase = await createClient();
+  const supabase = createUserDataClient(await createClient());
 
   const { data: project, error: projectError } = await supabase
     .from("projects")

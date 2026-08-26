@@ -1,5 +1,6 @@
 import { cache } from "react";
 import { isSupabaseConfigured } from "@/lib/pro-stack-config";
+import { createUserDataClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 const ENTITLED_STATUSES = new Set(["active", "trialing"]);
@@ -29,7 +30,7 @@ export const getProBillingSnapshot = cache(async (): Promise<ProBillingSnapshot 
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data } = await supabase
+  const { data } = await createUserDataClient(supabase)
     .from("profiles")
     .select("subscription_status, subscription_current_period_end, stripe_customer_id")
     .eq("id", user.id)

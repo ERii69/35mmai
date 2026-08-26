@@ -1,5 +1,8 @@
 import { formatDisplayHeading } from "@/lib/pro/format-display-heading";
-import { parseScriptToPromptShotLine } from "@/lib/pro/build-script-to-prompt-shots";
+import {
+  beatSpecificVisual,
+  parseScriptToPromptShotLine,
+} from "@/lib/pro/build-script-to-prompt-shots";
 import type {
   PlannedShot,
   ProjectStatePayload,
@@ -51,10 +54,27 @@ const SHOT_TYPE_NEGATIVE: Record<string, string> = {
 export function stripGenerationBoilerplate(text: string): string {
   return text
     .replace(GENERATION_BOILERPLATE, "")
+    .replace(/color palette\s*(?:#[0-9A-Fa-f]{3,8}\s*,\s*)+/gi, "")
+    .replace(/(?:#[0-9A-Fa-f]{3,8}\s*,\s*){2,}#[0-9A-Fa-f]{3,8}/g, "")
     .replace(/,\s*,/g, ",")
     .replace(/\s+/g, " ")
     .replace(/^,\s*|,\s*$/g, "")
     .trim();
+}
+
+/** Hex dumps make every beat look identical — keep named colors only, or drop. */
+export function compactPaletteClause(palette: string): string {
+  const trimmed = palette.trim();
+  if (!trimmed) return "";
+  const hexes = trimmed.match(/#[0-9A-Fa-f]{3,8}/g) ?? [];
+  const named = trimmed
+    .replace(/#[0-9A-Fa-f]{3,8}/g, " ")
+    .replace(/,/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (named.length >= 4) return named.slice(0, 80);
+  if (hexes.length >= 3) return "";
+  return hexes.slice(0, 2).join(" ");
 }
 
 export function isLookInstructionPollution(text: string): boolean {
@@ -128,7 +148,11 @@ function actionLine(
   shot: PlannedShot,
   sequence: ShotSequence
 ): string {
-  // Prefer the beat's own notes line (unique per establishing/medium/close-up).
+  if (scene) {
+    const derived = beatSpecificVisual(scene, shot.shotType).replace(/\s+/g, " ").trim();
+    if (derived.length >= 16) return derived.slice(0, 220);
+  }
+
   const matchingLine = sequence.notes
     .split("\n")
     .map((line) => parseScriptToPromptShotLine(line.replace(/^[-*]\s*/, "").trim()))
@@ -140,13 +164,10 @@ function actionLine(
   if (matchingLine?.label) {
     const cleaned = stripLookInstructions(matchingLine.label);
     if (cleaned) {
-      // Pull a short visual core — drop trailing style boilerplate if present.
       const core = stripGenerationBoilerplate(cleaned);
       if (core.length >= 24) return core.slice(0, 220);
     }
   }
-
-  if (scene?.oneLine?.trim()) return scene.oneLine.trim().slice(0, 220);
 
   const label = stripLookInstructions(shot.label.trim());
   if (label) return stripGenerationBoilerplate(label).slice(0, 220);
@@ -178,7 +199,9 @@ export function buildPromptBeatContext(
     cleanMoodLine(state.directorPrep.directorRules.styleNotes) ||
     "Cinematic, naturalistic film still";
 
-  const palette = state.visualBible.palette.filter(Boolean).slice(0, 5).join(", ");
+  const palette = compactPaletteClause(
+    state.visualBible.palette.filter(Boolean).slice(0, 5).join(", ")
+  );
   const lens = cleanLookField(state.visualBible.lensAndFraming);
   const grain = cleanLookField(state.visualBible.grainAndTexture);
   const films =

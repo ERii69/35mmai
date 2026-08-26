@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { createEmptyProjectState } from "@/lib/pro/project-state-defaults";
 import { buildTemplateState, DEFAULT_DIRECTOR_PREP_TEMPLATE_ID } from "@/lib/pro/templates";
 import { PROJECT_STATE_SCHEMA_VERSION, type ProjectRow } from "@/lib/pro/types";
+import { createUserDataClient } from "@/lib/supabase/admin";
 
 const DEFAULT_PROJECT_NAME = "My first project";
 
@@ -66,6 +67,7 @@ export async function ensureDefaultProjectFlag(
   supabase: SupabaseClient,
   userId: string
 ): Promise<void> {
+  supabase = createUserDataClient(supabase);
   const { data: projects, error } = await supabase
     .from("projects")
     .select("id, is_default")
@@ -91,6 +93,7 @@ export async function bootstrapDefaultProject(
   supabase: SupabaseClient,
   userId: string
 ): Promise<BootstrapResult> {
+  supabase = createUserDataClient(supabase);
   const { data: existing, error: listError } = await supabase
     .from("projects")
     .select("*")
@@ -125,6 +128,7 @@ export async function listProjectsForUser(
   supabase: SupabaseClient,
   userId: string
 ): Promise<{ projects: ProjectRow[]; error: string | null }> {
+  supabase = createUserDataClient(supabase);
   const { data, error } = await supabase
     .from("projects")
     .select("*")
@@ -147,6 +151,7 @@ export async function countArchivedProjectsForUser(
   supabase: SupabaseClient,
   userId: string
 ): Promise<number> {
+  supabase = createUserDataClient(supabase);
   const { count, error } = await supabase
     .from("projects")
     .select("id", { count: "exact", head: true })

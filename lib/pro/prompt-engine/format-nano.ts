@@ -1,5 +1,5 @@
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
-import { imageNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
+import { compactPaletteClause, imageNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
 
 /** Nano Banana Pro — photoreal composite / insert detail. */
 export function formatNanoPrompt(ctx: PromptBeatContext): {
@@ -20,7 +20,7 @@ export function formatNanoPrompt(ctx: PromptBeatContext): {
     "seamless integration with plate",
     "sharp focus on story detail",
     "natural material texture",
-    ctx.palette ? `palette ${ctx.palette}` : "",
+    ctx.palette ? `palette ${compactPaletteClause(ctx.palette)}` : "",
     ctx.camera,
     ctx.light,
     ctx.mood,

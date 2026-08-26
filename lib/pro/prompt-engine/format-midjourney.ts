@@ -1,29 +1,37 @@
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
-import { imageNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
+import { compactPaletteClause, imageNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
 
-/** Midjourney v6 — weighted tags + parameter tail (params first so tool switch is obvious). */
+const SHOT_FLAVOR: Record<string, string> = {
+  establishing: "establishing vista, readable geography",
+  wide: "wide master, architectural depth",
+  medium: "medium framing, face and gesture readable",
+  close_up: "tight close-up, tactile detail in focus",
+  extreme_close_up: "extreme close-up, micro texture",
+  dolly: "slow dolly, motivated camera move",
+  pan: "slow pan following action",
+  tilt: "tilt reveal",
+  handheld: "handheld energy, documentary realism",
+  aerial: "aerial geography",
+  other: "cinematic still",
+};
+
+/** Midjourney v6 — unique beat first; params first so tool switch is obvious. */
 export function formatMidjourneyPrompt(ctx: PromptBeatContext): {
   prompt: string;
   negativePrompt: string;
 } {
-  const tags = [
+  const flavor = SHOT_FLAVOR[ctx.shotType] ?? SHOT_FLAVOR.other!;
+  const palette = compactPaletteClause(ctx.palette);
+  const body = [
     ctx.subject,
-    ctx.mood,
-    ctx.palette ? `color palette ${ctx.palette}` : "",
-    ctx.films ? `film reference ${ctx.films}` : "",
-    ctx.camera,
-    ctx.light,
-    "cinematic film still",
-    "dramatic motivated lighting",
-    "photorealistic",
-    "shallow depth of field",
-    "fine film grain",
+    flavor,
+    ctx.mood && ctx.mood.length <= 90 ? ctx.mood : "",
+    ctx.films ? `refs ${ctx.films}` : "",
+    palette,
   ].filter(Boolean);
 
-  const body = tags.join(", ");
   const params = "--ar 21:9 --style raw --no text, watermark, logo, vertical crop";
-  // Lead with MJ params so switching tools visibly changes the first line.
-  const prompt = `${params} ${body}`.trim().slice(0, 2000);
+  const prompt = `${params} ${body.join(", ")}`.trim().slice(0, 2000);
 
   return {
     prompt,

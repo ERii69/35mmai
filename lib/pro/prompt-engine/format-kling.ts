@@ -1,5 +1,5 @@
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
-import { motionNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
+import { compactPaletteClause, motionNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
 
 const MOTION_BY_TYPE: Record<string, string> = {
   dolly: "slow dolly push toward subject",
@@ -30,7 +30,7 @@ export function formatKlingPrompt(ctx: PromptBeatContext): {
     ctx.heading,
     ctx.action,
     ctx.mood,
-    ctx.palette ? `palette ${ctx.palette}` : "",
+    ctx.palette ? `palette ${compactPaletteClause(ctx.palette) || ctx.palette}` : "",
     ctx.camera,
     ctx.light,
     plate,

@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { createUserDataClient } from "@/lib/supabase/admin";
 import { getProjectCoverFromState, type ProjectCover } from "@/lib/pro/project-cover";
 import { getProjectProgressStats } from "@/lib/pro/project-progress-stats";
 import { workflowDisplayName } from "@/lib/pro/workflow-choices";
@@ -25,6 +26,7 @@ export async function enrichProjectsWithStats(
   supabase: SupabaseClient,
   projects: ProjectRow[]
 ): Promise<DashboardProjectRow[]> {
+  supabase = createUserDataClient(supabase);
   return Promise.all(
     projects.map(async (p) => {
       const { data } = await supabase
