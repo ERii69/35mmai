@@ -1,4 +1,5 @@
 import { isProStackConfigured, PRO_STACK_ENV_HINT } from "@/lib/pro-stack-config";
+import { createUserDataClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { isProEntitled } from "@/lib/entitlements";
 import type { SupabaseClient, User } from "@supabase/supabase-js";
@@ -27,5 +28,5 @@ export async function requireProUser(): Promise<ProUserContext> {
     throw new Error("An active 35mmAiPro studio subscription is required (cloud projects + export).");
   }
 
-  return { supabase, user };
+  return { supabase: createUserDataClient(supabase), user };
 }

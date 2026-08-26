@@ -130,6 +130,39 @@ function closeDetail(scene: SceneRow, rules: DirectorRulesState, visual?: Visual
   );
 }
 
+/** Unique visual sentence per beat — used by shot notes and the prompt engine. */
+export function beatSpecificVisual(scene: SceneRow, shotType: ShotType): string {
+  const loc = locationLabel(scene);
+  const action = actionVisual(scene);
+  const time = timePhrase(scene);
+  switch (shotType) {
+    case "establishing":
+      return `exterior ${loc} ${time}, ${action}, geography and scale of the space`;
+    case "wide":
+      return scene.intExt === "EXT" || scene.intExt === "INT/EXT"
+        ? `wide view of ${loc} ${time}, ${action}, full environment readable`
+        : `interior ${loc} ${time}, ${action}, full room geography and blocking`;
+    case "medium":
+      return `${loc} ${time}, ${action}, waist-up character presence in the environment`;
+    case "close_up":
+      return `${inferDetailSubject(action, scene)}, ${time}, tactile texture and story detail`;
+    case "extreme_close_up":
+      return `extreme close-up of ${inferDetailSubject(action, scene)}, ${time}`;
+    case "dolly":
+      return `slow dolly through ${loc} ${time}, ${action}`;
+    case "handheld":
+      return `handheld in ${loc} ${time}, ${action}`;
+    case "pan":
+      return `slow pan across ${loc} ${time}, ${action}`;
+    case "tilt":
+      return `tilt reveal in ${loc} ${time}, ${action}`;
+    case "aerial":
+      return `aerial of ${loc} ${time}, ${action}`;
+    default:
+      return `${loc} ${time}, ${action}`;
+  }
+}
+
 function inferDetailSubject(action: string, scene: SceneRow): string {
   const lower = action.toLowerCase();
   if (/\b(door|opens|opening)\b/.test(lower)) {

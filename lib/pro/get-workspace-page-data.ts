@@ -1,4 +1,5 @@
 import { areProAgentsEnabled } from "@/lib/pro/launch-flags";
+import { createUserDataClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { normalizeProjectState } from "@/lib/pro/validate-project-state";
 import { createEmptyProjectState } from "@/lib/pro/project-state-defaults";
@@ -33,7 +34,9 @@ export async function getWorkspacePageData(
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: project, error: projectError } = await supabase
+  const db = createUserDataClient(supabase);
+
+  const { data: project, error: projectError } = await db
     .from("projects")
     .select("*")
     .eq("id", projectId)
@@ -43,13 +46,13 @@ export async function getWorkspacePageData(
 
   if (projectError || !project) return null;
 
-  await supabase
+  await db
     .from("projects")
     .update({ last_opened_at: new Date().toISOString() })
     .eq("id", projectId)
     .eq("user_id", user.id);
 
-  const { data: stateRow, error: stateError } = await supabase
+  const { data: stateRow, error: stateError } = await db
     .from("project_state")
     .select("state, updated_at, schema_version")
     .eq("project_id", projectId)
@@ -63,7 +66,7 @@ export async function getWorkspacePageData(
   if (!stateRow) {
     state = createEmptyProjectState();
     updatedAt = new Date().toISOString();
-    await supabase.from("project_state").insert({
+    await db.from("project_state").insert({
       project_id: projectId,
       schema_version: PROJECT_STATE_SCHEMA_VERSION,
       state,

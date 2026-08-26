@@ -271,10 +271,43 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
       assert.ok(!/Shot preference/i.test(built.prompt), built.prompt.slice(0, 200));
     }
 
-    assert.ok(tokenOverlapRatio(prompts[0]!.prompt, prompts[2]!.prompt) < 0.92);
+    assert.ok(tokenOverlapRatio(prompts[0]!.prompt, prompts[2]!.prompt) < 0.85);
+    assert.notEqual(prompts[0]!.prompt, prompts[1]!.prompt);
+    assert.notEqual(prompts[1]!.prompt, prompts[2]!.prompt);
     assert.notEqual(prompts[0]!.negativePrompt, prompts[2]!.negativePrompt);
     assert.ok(/geography|portrait crop/i.test(prompts[0]!.negativePrompt));
     assert.ok(/busy wide|unfocused/i.test(prompts[2]!.negativePrompt));
+  });
+
+  ok("same-scene beats are distinct — not a repeated look dump", () => {
+    const state = fixtureState();
+    state.visualBible.palette = ["#1C1917", "#44403C", "#78716C", "#D6D3D1", "#FAFAF9"];
+    state.directorPrep.scenes[0] = {
+      id: "scene-1",
+      number: 1,
+      heading: "INT. SMALL APARTMENT KITCHEN - EARLY MORNING",
+      oneLine: "She pours coffee; steam catches window light.",
+      intExt: "INT",
+      dayNight: "DAWN",
+      visualRefs: [],
+      shotNotes: "",
+      status: "approved",
+      linkedSequenceId: null,
+    };
+    const pack = buildScriptToPromptPackState(state);
+    const shots = pack.shotPlan.sequences[0]?.shots ?? [];
+    assert.ok(shots.length >= 3, "expect wide / medium / close-up");
+    const prompts = shots.map((s) => s.aiGenerationPrompt ?? "");
+    assert.notEqual(prompts[0], prompts[1]);
+    assert.notEqual(prompts[1], prompts[2]);
+    const bodies = prompts.map((p) => p.replace(/^--\S+(?:\s+--\S+)*\s*/, ""));
+    assert.ok(!/^#[0-9A-Fa-f]{3,8}/.test(bodies[0]!.trim()), bodies[0]!.slice(0, 80));
+    assert.ok(!/^#[0-9A-Fa-f]{3,8}/.test(bodies[1]!.trim()), bodies[1]!.slice(0, 80));
+    assert.ok(/kitchen|geography|room/i.test(prompts[0]!));
+    assert.ok(/waist-up|medium|character/i.test(prompts[1]!));
+    assert.ok(/close-up|detail|texture|coffee/i.test(prompts[2]!));
+    const hexHits = (prompts.join(" ").match(/#[0-9A-Fa-f]{6}/g) ?? []).length;
+    assert.ok(hexHits <= 4, `hex dump leaked into prompts (${hexHits})`);
   });
 
   ok("rebuildAllPromptsInState clears Modular AI clutter", () => {

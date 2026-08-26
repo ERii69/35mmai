@@ -21,3 +21,18 @@ export function createAdminClient(): SupabaseClient {
   }
   return adminSingleton;
 }
+
+/**
+ * PostgREST data client after `auth.getUser()`.
+ * Fresh user JWTs can be rejected with PGRST303 "JWT issued at future" when Auth's
+ * clock is slightly ahead of the REST gateway. Service role skips that check.
+ * Always filter by the verified `user.id` — this bypasses RLS.
+ */
+export function createUserDataClient(fallback: SupabaseClient): SupabaseClient {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) return fallback;
+  try {
+    return createAdminClient();
+  } catch {
+    return fallback;
+  }
+}
