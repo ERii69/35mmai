@@ -1,6 +1,6 @@
 import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 
-export type StudioHelpSectionId = "start" | "beats" | "budget" | "phases";
+export type StudioHelpSectionId = "start" | "export" | "beats" | "budget" | "phases";
 
 export type StudioHelpSection = {
   id: StudioHelpSectionId;
@@ -22,7 +22,19 @@ export const STUDIO_HELP_SECTIONS: StudioHelpSection[] = [
       "Look: add one palette swatch or a short mood line. Wait for Saved.",
       "Finish → Prompts. If you changed the script, tap Build all. Each beat is a different shot (wide / medium / close-up).",
       "Copy a prompt. Open tool. Paste into that app. Midjourney: shot text first, --ar flags at the end — if flags come first, Midjourney says the prompt is empty.",
-      "Finish → Export → Download prompt pack (.md or CSV). That file is the deliverable.",
+      "Then download the pack — tap Export next to Prompts (same Finish row, not More). Green box: Download prompt pack (.md). Open the Export tab in this guide if you cannot find it.",
+    ],
+  },
+  {
+    id: "export",
+    label: "Export",
+    why: "The file is not on the Prompts screen. Export is a tab next to Prompts, under Finish. The green box is the deliverable.",
+    steps: [
+      "Tap Finish at the top (after Script and Look). Under it you should see Prompts · Export · Sign-off. Export is not inside More.",
+      "Tap Export. Still on Prompts? Use the Export button at the bottom of the prompt list (arrow). Sign-off's Download prompt pack button jumps here too.",
+      "Wait until the nav says Saved. If the green buttons are locked, tap Save in the bar first, then try again.",
+      "Green box Download prompt pack: tap Download prompt pack (.md). That is the file you take away. CSV (prompt pack) is the same prompts as a spreadsheet. Copy all prompts puts them on the clipboard.",
+      "Optional extras are collapsed under the green box. Open Kit & planning for Budget CSV, Kit CSV, and Workflow CSV. Also export… has Fountain, Final Draft, and storyboard. Look & locations has the visual bible.",
     ],
   },
   {
@@ -44,7 +56,7 @@ export const STUDIO_HELP_SECTIONS: StudioHelpSection[] = [
       "Finish → More → Budget.",
       "Tap Suggest from shot plan (or Suggest from scenes). Review the modal → Apply to budget.",
       "Change a quantity if you need. Wait for Saved. Reload to confirm it stuck.",
-      "To download: Finish → Export → open Kit & planning (collapsed) → Budget CSV.",
+      "To download: Finish → Export (next to Prompts, not More) → open Kit & planning under the green box → Budget CSV.",
     ],
   },
   {
