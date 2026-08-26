@@ -7,6 +7,7 @@ import { ProAppHeaderChrome } from "@/components/pro/ProAppHeaderChrome";
 import { ProHeaderAccountMenu } from "@/components/pro/ProHeaderAccountMenu";
 import { ProProjectSwitcher } from "@/components/pro/ProProjectSwitcher";
 import { ProShellNav } from "@/components/pro/ProShellNav";
+import { ProStudioHelp } from "@/components/pro/ProStudioHelp";
 import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import type { ProBillingSnapshot } from "@/lib/entitlements";
 import type { ProjectRow } from "@/lib/pro/types";
@@ -52,6 +53,7 @@ export function ProAppHeader({
       }
       trailing={
         <>
+          <ProStudioHelp />
           <ProBadge
             variant="header"
             title="Pro workspace"
