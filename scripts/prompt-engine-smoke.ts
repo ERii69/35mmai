@@ -129,7 +129,8 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     assert.equal(built.syntax, "mj-params");
     assert.ok(built.prompt.includes("--ar 21:9"));
     assert.ok(built.prompt.includes("--style raw"));
-    assert.ok(built.prompt.trimStart().startsWith("--ar"), "MJ params should lead the prompt");
+    assert.ok(!built.prompt.trimStart().startsWith("--"), "MJ params after description (web rejects leading --ar)");
+    assert.ok(/ --ar 21:9/.test(built.prompt));
   });
 
   ok("tool switch changes first line and negative lead", () => {
@@ -139,7 +140,8 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     const mj = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 6 });
     const higgs = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 21 });
     const ltx = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 4 });
-    assert.ok(mj.prompt.trimStart().startsWith("--ar"));
+    assert.ok(!mj.prompt.trimStart().startsWith("--"));
+    assert.ok(/ --ar 21:9/.test(mj.prompt));
     assert.ok(/^Shot on ARRI/i.test(higgs.prompt.trimStart()));
     assert.ok(/^Scene:/i.test(ltx.prompt.trimStart()));
     assert.notEqual(mj.prompt.slice(0, 40), higgs.prompt.slice(0, 40));

@@ -15,7 +15,11 @@ const SHOT_FLAVOR: Record<string, string> = {
   other: "cinematic still",
 };
 
-/** Midjourney v6 — unique beat first; params first so tool switch is obvious. */
+/**
+ * Midjourney web treats a leading `--ar` / `--style` / `--no` as the whole
+ * prompt being parameters, then errors "Prompt can't be empty".
+ * Description first; native params last.
+ */
 export function formatMidjourneyPrompt(ctx: PromptBeatContext): {
   prompt: string;
   negativePrompt: string;
@@ -31,7 +35,7 @@ export function formatMidjourneyPrompt(ctx: PromptBeatContext): {
   ].filter(Boolean);
 
   const params = "--ar 21:9 --style raw --no text, watermark, logo, vertical crop";
-  const prompt = `${params} ${body.join(", ")}`.trim().slice(0, 2000);
+  const prompt = `${body.join(", ")} ${params}`.trim().slice(0, 2000);
 
   return {
     prompt,

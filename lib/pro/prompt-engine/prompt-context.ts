@@ -56,6 +56,7 @@ export function stripGenerationBoilerplate(text: string): string {
     .replace(GENERATION_BOILERPLATE, "")
     .replace(/color palette\s*(?:#[0-9A-Fa-f]{3,8}\s*,\s*)+/gi, "")
     .replace(/(?:#[0-9A-Fa-f]{3,8}\s*,\s*){2,}#[0-9A-Fa-f]{3,8}/g, "")
+    .replace(/-?\s*\[(?:establishing|wide|medium|close_up|dolly)\]\s*/gi, " ")
     .replace(/,\s*,/g, ",")
     .replace(/\s+/g, " ")
     .replace(/^,\s*|,\s*$/g, "")
@@ -149,7 +150,9 @@ function actionLine(
   sequence: ShotSequence
 ): string {
   if (scene) {
-    const derived = beatSpecificVisual(scene, shot.shotType).replace(/\s+/g, " ").trim();
+    const derived = stripGenerationBoilerplate(
+      beatSpecificVisual(scene, shot.shotType).replace(/\s+/g, " ").trim()
+    );
     if (derived.length >= 16) return derived.slice(0, 220);
   }
 
