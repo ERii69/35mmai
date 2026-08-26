@@ -72,10 +72,10 @@ export function PromptBeatRow({
             href={getToolOutboundUrlByRank(tool.rank) ?? "/"}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-1.5 inline-flex min-h-11 items-center gap-1 text-[10px] text-pro-primary hover:underline"
+            className="mt-1.5 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-pro-primary hover:underline"
           >
             Open tool
-            <ExternalLink className="size-3" aria-hidden />
+            <ExternalLink className="size-3.5" aria-hidden />
           </a>
         ) : null}
       </td>
