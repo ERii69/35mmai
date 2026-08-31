@@ -13,7 +13,7 @@ import { buildLookToolPrompt } from "@/lib/pro/build-look-tool-prompt";
 const SECTION_TOOL_RANKS: Record<LookToolSection, number[]> = {
   mood: [76, 6, 41, 8],
   lens: [21, 1, 2, 4],
-  grain: [21, 9],
+  grain: [21, 29],
   palette: [21, 13],
 };
 
