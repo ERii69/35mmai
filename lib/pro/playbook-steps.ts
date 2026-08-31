@@ -139,7 +139,7 @@ const CLASSICAL_LOCATION_PASS_PLAYBOOK: StructuredPlaybook = {
       title: "11. Prefer human voices",
       workspaceTab: "post",
       body: "When budget allows, record actors. Synthetic voice can cover pickups or dubs, but lead performances usually need a human timbre and breath.",
-      tools: [{ rank: 3, why: "Synthetic or dubbed lines when budget requires it." }],
+      tools: [{ rank: 16, why: "Synthetic or dubbed lines when budget requires it." }],
     },
     {
       id: "edit-cohesion",
@@ -154,7 +154,7 @@ const CLASSICAL_LOCATION_PASS_PLAYBOOK: StructuredPlaybook = {
       workspaceTab: "post",
       body: "Heavy upscaling can sharpen skin oddly and smooth away surface detail you fought for in stills. Many teams skip it. A light grain pass can make digital frames feel less sterile.",
       tools: [
-        { rank: 9, why: "Understand upscale impact before you depend on it." },
+        { rank: 29, why: "Understand upscale impact before you depend on it." },
         { rank: 21, why: "Re-check grade if you must upscale." },
       ],
     },

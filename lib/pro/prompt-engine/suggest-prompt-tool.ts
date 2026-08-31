@@ -114,7 +114,7 @@ export function suggestToolForBeat(
 export function phase4ToolLabel(rank: Phase4PromptToolRank): string {
   const map: Record<Phase4PromptToolRank, string> = {
     6: "Midjourney",
-    18: "Nano Banana Pro",
+    18: "Nano Banana 2",
     5: "Kling",
     4: "LTX Studio",
     21: "Higgsfield Cinema Studio",

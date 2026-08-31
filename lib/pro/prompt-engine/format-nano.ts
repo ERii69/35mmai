@@ -1,7 +1,7 @@
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
 import { compactPaletteClause, imageNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
 
-/** Nano Banana Pro — photoreal composite / insert detail. */
+/** Nano Banana 2 — photoreal composite / insert detail. */
 export function formatNanoPrompt(ctx: PromptBeatContext): {
   prompt: string;
   negativePrompt: string;

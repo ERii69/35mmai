@@ -19,6 +19,7 @@ import {
   resolvePartnerLogoForTool,
 } from "@/components/catalog/PartnerBadge";
 import { FreeCatalogProHandoff } from "@/components/catalog/FreeCatalogProHandoff";
+import { CatalogFreshnessNotice } from "@/components/catalog/CatalogFreshnessNotice";
 import { Logo35mmAI } from "@/components/brand/Logo35mmAI";
 import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { AboutPageContent } from "@/components/about/AboutPageContent";
@@ -892,10 +893,9 @@ useEffect(() => {
 
 {/* GLOBAL NAVIGATION + LOGO */}
 <header className="fixed inset-x-0 top-0 z-40 border-b border-[#333] bg-[#0f0f0f]/95 pt-[env(safe-area-inset-top)] backdrop-blur-sm">
-  <div className="flex items-center justify-between gap-3 px-4 py-2 sm:px-6 md:py-2.5">
-
-  {/* Left: Logo */}
-  <div className="flex min-w-0 items-center gap-2 md:gap-2.5">
+  <div className="flex items-center gap-3 px-4 py-2 sm:px-6 md:py-2.5">
+  {/* Left: Logo — shrink-0 so the flex menu cannot cover it */}
+  <div className="shrink-0">
     <Logo35mmAI
       className="h-[28px] text-[28px] md:h-[40px] md:text-[40px]"
       href="/"
@@ -904,75 +904,86 @@ useEffect(() => {
     />
   </div>
 
-  {/* Centered Navigation */}
-  <nav className="hidden md:flex items-center gap-8 text-sm mx-auto" aria-label="Primary">
+  {/* Flex menu fills leftover width; wraps instead of overlapping the logo */}
+  <nav
+    className="hidden min-w-0 flex-1 flex-wrap items-center justify-end gap-x-1 gap-y-1 text-sm lg:flex xl:justify-center xl:gap-x-3"
+    aria-label="Primary"
+  >
     <Button 
-      variant="ghost" 
+      variant="ghost"
+      size="sm"
       onClick={() => setStep(0)}
       aria-current={step === 0 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       Home
     </Button>
     <Button 
-      variant="ghost" 
+      variant="ghost"
+      size="sm"
       onClick={() => setStep(step === 10 ? 0 : 10)}
       aria-current={step === 10 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       How it works
     </Button>
     <Button 
-      variant="ghost" 
+      variant="ghost"
+      size="sm"
       onClick={() => setStep(9)}
       aria-current={step === 9 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       All Tools
     </Button>
     <Button
       variant="ghost"
+      size="sm"
       onClick={() => setStep(step === 4 ? 0 : 4)}
       aria-current={step === 4 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       Workflows
     </Button>
     <Button 
-      variant="ghost" 
+      variant="ghost"
+      size="sm"
       onClick={() => setStep(step === 5 ? 0 : 5)}
       aria-current={step === 5 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       Budget Templates
     </Button>
     <Button 
-      variant="ghost" 
+      variant="ghost"
+      size="sm"
       onClick={() => setStep(step === 7 ? 0 : 7)}
       aria-current={step === 7 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       My Kit
     </Button>
     <Button
       variant="ghost"
+      size="sm"
       asChild
-      className="flex items-center gap-1.5 border border-[#e11d48]/30 text-[#d1d5db] hover:border-[#e11d48] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="border border-[#e11d48]/30 text-[#d1d5db] hover:border-[#e11d48] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       <Link href="/pro">✨ {BRAND_NAME_PRO}</Link>
     </Button>
     <Button 
-      variant="ghost" 
+      variant="ghost"
+      size="sm"
       onClick={() => setStep(step === 3 ? 0 : 3)}
       aria-current={step === 3 ? "page" : undefined}
-      className="flex items-center gap-1.5 text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
+      className="text-[#d1d5db] hover:text-[#e11d48] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e11d48] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f0f0f]"
     >
       About
     </Button>
   </nav>
 
-  {/* Mobile: logo + sticky bar — hamburger only (no extra top buttons) */}
-  <div className="flex shrink-0 items-center md:hidden">
+  {/* Hamburger until lg — the full flex menu needs more than md width */}
+  <div className="ml-auto flex shrink-0 items-center lg:hidden">
     <button
       type="button"
       onClick={openMobileMenu}
@@ -1040,6 +1051,13 @@ useEffect(() => {
         <p className="text-sm md:text-xl text-[#d1d5db]">
           Plan gear and post with mostly AI-first tools and retailer picks built for indie budgets from script to screen.
         </p>
+        <CatalogFreshnessNotice
+          className="mx-auto mt-4 max-w-2xl"
+          onBrowseDirectory={() => {
+            dismissOnboarding();
+            setStep(9);
+          }}
+        />
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           <button
             type="button"
@@ -1112,6 +1130,7 @@ useEffect(() => {
           Browse all <span className="font-semibold text-white">{allTools.length}</span>{" "}
           picks for your production, <span className="text-white">not only AI</span>
         </p>
+        <CatalogFreshnessNotice className="mx-auto mb-4 max-w-2xl" />
         <FreeCatalogProHandoff variant="compact" className="mx-auto mb-4 max-w-xl" />
         <div className="mx-auto mb-4 grid max-w-4xl grid-cols-1 gap-2 rounded-2xl border border-[#2a2a2a] bg-[#111]/90 p-3 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3 lg:p-4">
           <button
@@ -1638,9 +1657,10 @@ useEffect(() => {
           <h2 className="text-2xl md:text-4xl font-bold mb-2">
             Tools for <span className="text-[#e11d48]">{selectedRole}</span>
           </h2>
-          <p className="text-[#888] mb-10">
+          <p className="text-[#888] mb-4">
             Catalog matched to your role (mostly AI-first; gear &amp; retail where listed)
           </p>
+          <CatalogFreshnessNotice className="mb-10 max-w-2xl" />
         </>
       )}
 
@@ -1999,6 +2019,7 @@ useEffect(() => {
               phase · Use the outline (desktop) or chips (mobile) to jump, or
               scroll through.
             </p>
+            <CatalogFreshnessNotice className="mt-4" />
             <div className="mt-4 flex flex-col sm:flex-row flex-wrap gap-3">
               <button
                 type="button"
@@ -2730,7 +2751,7 @@ useEffect(() => {
     {/* Improved Hamburger Menu (Step 8) - Mobile Only - Popup Style */}
 {step === 8 && (
   <div
-    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6 md:hidden"
+    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6 lg:hidden"
     onClick={closeMobileMenu}
   >
     <div
