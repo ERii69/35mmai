@@ -126,15 +126,15 @@ export async function bootstrapDefaultProject(
 /** List active projects for dashboard (same session). */
 export async function listProjectsForUser(
   supabase: SupabaseClient,
-  userId: string
+  userId: string,
+  opts?: { includeArchived?: boolean }
 ): Promise<{ projects: ProjectRow[]; error: string | null }> {
   supabase = createUserDataClient(supabase);
-  const { data, error } = await supabase
-    .from("projects")
-    .select("*")
-    .eq("user_id", userId)
-    .is("archived_at", null)
-    .order("last_opened_at", { ascending: false });
+  let query = supabase.from("projects").select("*").eq("user_id", userId);
+  if (!opts?.includeArchived) {
+    query = query.is("archived_at", null);
+  }
+  const { data, error } = await query.order("last_opened_at", { ascending: false });
 
   if (error) {
     return { projects: [], error: error.message };

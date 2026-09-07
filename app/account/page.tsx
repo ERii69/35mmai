@@ -20,6 +20,7 @@ import {
   PRO_CANCEL_RETENTION_SUMMARY,
   PRO_DATA_RETENTION_DAYS,
 } from "@/lib/pro/membership-policy";
+import { getProAccess } from "@/lib/entitlements";
 import { canStartProCheckout, hasProInviteAccess } from "@/lib/pro/invite-gate";
 import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
 import { isSupabaseConfigured } from "@/lib/pro-stack-config";
@@ -93,8 +94,8 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
       }
     | null;
 
-  const subscribed =
-    row?.subscription_status === "active" || row?.subscription_status === "trialing";
+  const access = await getProAccess();
+  const subscribed = access.entitled;
   const hasCustomer = Boolean(row?.stripe_customer_id);
 
   let workspaceHref = "/pro/app";
@@ -117,11 +118,12 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
   const checkoutEnabled = isProPublicCheckoutEnabled();
   const canCheckout = await canStartProCheckout();
   const inviteRequiredMsg =
-    sp.invite === "required" || (!subscribed && !inviteUnlocked)
+    sp.invite === "required" || (!subscribed && !access.retention && !inviteUnlocked)
       ? PRO_INVITE_REQUIRED_ACCOUNT
       : null;
   const checkoutDisabledMsg =
     !subscribed &&
+    !access.retention &&
     inviteUnlocked &&
     (!checkoutEnabled || sp.checkout === "disabled")
       ? PRO_CHECKOUT_DISABLED_ACCOUNT
@@ -156,7 +158,31 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
           </p>
         ) : null}
 
-        {subscribed ? (
+        {access.retention ? (
+          <div className="rounded-2xl border border-pro-warning/40 bg-pro-warning/10 px-5 py-5 sm:px-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-pro-warning">
+              Export window
+            </p>
+            <h2 className="mt-1 text-lg font-semibold text-pro-text sm:text-xl">
+              Subscription ended
+            </h2>
+            <p className="mt-1.5 text-sm leading-relaxed text-pro-text-secondary">
+              Download your projects before{" "}
+              {access.deleteAtIso
+                ? new Date(access.deleteAtIso).toLocaleString(undefined, {
+                    dateStyle: "medium",
+                    timeStyle: "short",
+                  })
+                : "the retention window ends"}
+              . Then we delete workspace data.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
+              <Link href="/pro/app" className={`${proBtn.secondary} inline-flex h-11 px-5`}>
+                Export projects
+              </Link>
+            </div>
+          </div>
+        ) : subscribed ? (
           <div className="rounded-2xl border border-pro-primary/35 bg-pro-primary/10 px-5 py-5 sm:px-6">
             <p className="text-xs font-semibold uppercase tracking-wide text-pro-primary">
               Your studio
@@ -196,6 +222,8 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             <p className="mt-1 text-xs text-pro-text-secondary">
               {subscribed
                 ? "Studio access is on — cloud projects, save, and prompt pack export. AI assist is separate (flag + quota)."
+                : access.retention
+                  ? `Your subscription ended. Export your projects for ${PRO_DATA_RETENTION_DAYS} days after access ended, then we delete them. Resubscribe to restore the studio.`
                 : checkoutEnabled
                   ? `${PRO_MARKETING_PRICE.valueProp}. ${PRO_MARKETING_PRICE.trialThenLabel}. ${PRO_MARKETING_PRICE.checkoutNote} Use test card 4242… in Checkout when in Stripe test/sandbox.`
                   : "Soft launch: card Checkout is off. Studio access is granted from the invite allowlist — not a Stripe trial."}

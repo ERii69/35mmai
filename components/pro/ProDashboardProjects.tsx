@@ -175,12 +175,19 @@ export function ProDashboardProjects({ projects }: Props) {
     if (!name) return;
     startTransition(async () => {
       const res = await renameProject(projectId, name);
-      if (!res.ok) return;
+      if (!res.ok) {
+        showToast({
+          variant: "error",
+          message: res.error || "Could not rename project.",
+        });
+        return;
+      }
       setRenameId(null);
       setRenameName("");
       setDisplayProjects((prev) =>
         prev.map((p) => (p.id === projectId ? { ...p, name: res.data.name } : p))
       );
+      showToast({ variant: "success", message: "Project renamed." });
       router.refresh();
     });
   }

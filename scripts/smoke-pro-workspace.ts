@@ -65,6 +65,11 @@ import { shotsFromNotes } from "../lib/pro/apply-agent-shot-list";
 import { reconcileShotPlanForTemplate } from "../lib/pro/reconcile-template-shot-plan";
 import { newPlannedShot } from "../lib/pro/shot-plan";
 import { runPromptEngineSmoke } from "./prompt-engine-smoke";
+import {
+  PRO_DATA_RETENTION_DAYS,
+  proAccessFromSnapshot,
+  shouldPurgeExpiredProjects,
+} from "../lib/pro/membership-policy";
 
 const SAMPLE_AGENT_JSON = `
 \`\`\`json
@@ -933,6 +938,51 @@ ok("getProjectProgressStats includes look and prompt fraction", () => {
   assert.equal(stats.hasLook, true);
   assert.ok(stats.totalPromptSlots > 0);
   assert.ok(stats.summaryLine.includes("/"));
+});
+
+ok("7-day retention is export-only then purge, never a free Pro month", () => {
+  assert.equal(PRO_DATA_RETENTION_DAYS, 7);
+  const periodEnd = "2026-09-01T00:00:00.000Z";
+  const duringPaid = new Date("2026-08-20T00:00:00.000Z");
+  const day1 = new Date("2026-09-02T00:00:00.000Z");
+  const day7 = new Date("2026-09-08T00:00:00.000Z");
+  const day8 = new Date("2026-09-08T00:00:00.001Z");
+  const snapCanceled = {
+    subscription_status: "canceled",
+    subscription_current_period_end: periodEnd,
+  };
+  const snapActive = {
+    subscription_status: "active",
+    subscription_current_period_end: periodEnd,
+  };
+  const snapUnknown = {
+    subscription_status: "canceled",
+    subscription_current_period_end: null,
+  };
+
+  const full = proAccessFromSnapshot(snapActive, duringPaid);
+  assert.equal(full.kind, "full");
+  assert.equal(full.entitled, true);
+  assert.equal(full.retention, false);
+  assert.equal(full.canWrite, true);
+  assert.equal(full.canExport, true);
+  assert.equal(shouldPurgeExpiredProjects(snapActive, duringPaid), false);
+
+  const retention = proAccessFromSnapshot(snapCanceled, day1);
+  assert.equal(retention.kind, "retention");
+  assert.equal(retention.canWrite, false);
+  assert.equal(retention.canExport, true);
+  assert.equal(retention.canOpenStudio, true);
+  assert.equal(shouldPurgeExpiredProjects(snapCanceled, day1), false);
+
+  const expired = proAccessFromSnapshot(snapCanceled, day7);
+  assert.equal(expired.kind, "none");
+  assert.equal(expired.canExport, false);
+  assert.equal(shouldPurgeExpiredProjects(snapCanceled, day7), true);
+  assert.equal(shouldPurgeExpiredProjects(snapCanceled, day8), true);
+
+  assert.equal(shouldPurgeExpiredProjects(snapActive, day8), false);
+  assert.equal(shouldPurgeExpiredProjects(snapUnknown, day8), false);
 });
 
 const phase4 = runPromptEngineSmoke();

@@ -9,8 +9,11 @@ import { proWebShell } from "@/components/pro/ux/pro-surfaces";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import { createClient } from "@/lib/supabase/server";
 import { bootstrapDefaultProject, countArchivedProjectsForUser, listProjectsForUser } from "@/lib/pro/bootstrap-default-project";
-import { getProBillingSnapshot, isProEntitled } from "@/lib/entitlements";
+import { getProAccess, getProBillingSnapshot } from "@/lib/entitlements";
 import { ensureInviteTrialEntitlement } from "@/lib/pro/entitle-invite-user";
+import { ProRetentionBanner } from "@/components/pro/ProRetentionBanner";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { purgeExpiredProjectsForUser } from "@/lib/pro/purge-expired-projects";
 
 export const metadata: Metadata = {
   title: "35mmAiPro — Workspace",
@@ -34,14 +37,27 @@ export default async function ProAppLayout({ children }: { children: React.React
   // Soft launch allowlist: invite cookie → studio access before the gate.
   await ensureInviteTrialEntitlement(user.id);
 
-  const entitled = await isProEntitled();
-  if (!entitled) {
+  const access = await getProAccess();
+  if (!access.canOpenStudio) {
+    const billing = await getProBillingSnapshot();
+    try {
+      const admin = createAdminClient();
+      await purgeExpiredProjectsForUser(admin, {
+        id: user.id,
+        subscription_status: billing?.subscription_status ?? null,
+        subscription_current_period_end: billing?.subscription_current_period_end ?? null,
+      });
+    } catch {
+      /* service role optional locally — cron still sweeps production */
+    }
     redirect("/pro?subscribe=required");
   }
 
-  await bootstrapDefaultProject(supabase, user.id);
+  if (access.canWrite) {
+    await bootstrapDefaultProject(supabase, user.id);
+  }
   const { projects } = await listProjectsForUser(supabase, user.id);
-  const archivedCount = await countArchivedProjectsForUser(supabase, user.id);
+  const archivedCount = access.canWrite ? await countArchivedProjectsForUser(supabase, user.id) : 0;
   const billing = await getProBillingSnapshot();
 
   return (
@@ -63,9 +79,15 @@ export default async function ProAppLayout({ children }: { children: React.React
           billing={billing}
           projects={projects}
           archivedCount={archivedCount}
+          retention={access.retention}
         />
         <main className={proWebShell.main}>
-          <ProAppMainShell projects={projects}>{children}</ProAppMainShell>
+          {access.retention && access.deleteAtIso ? (
+            <ProRetentionBanner deleteAtIso={access.deleteAtIso} />
+          ) : null}
+          <ProAppMainShell projects={projects} retention={access.retention}>
+            {children}
+          </ProAppMainShell>
         </main>
       </div>
     </ProAppNavProvider>

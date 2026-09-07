@@ -1,5 +1,6 @@
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
 import { motionNegativePrompt } from "@/lib/pro/prompt-engine/prompt-context";
+import { truncateAtWord } from "@/lib/pro/truncate-at-word";
 
 /** LTX Studio — structured scene block for script-to-visual. */
 export function formatLtxPrompt(ctx: PromptBeatContext): {
@@ -17,8 +18,9 @@ export function formatLtxPrompt(ctx: PromptBeatContext): {
     "Aspect: 2.39:1 cinematic",
   ].filter(Boolean);
 
+  const joined = lines.join("\n");
   return {
-    prompt: lines.join("\n").slice(0, 2000),
+    prompt: joined.length <= 2000 ? joined : truncateAtWord(joined, 2000),
     negativePrompt: motionNegativePrompt(ctx),
   };
 }

@@ -25,6 +25,8 @@ type Props = {
   userMetadata?: { full_name?: string; name?: string } | null;
   canManageBilling: boolean;
   entitled?: boolean;
+  /** Post-cancel export window — studio dashboard stays, archives/workspace do not. */
+  retention?: boolean;
   /** Legal links live in the account menu once the user has Pro access. */
   showLegalInMenu?: boolean;
   /** Free catalog in menu — subscribed users only (top nav covers pre-subscribe). */
@@ -49,8 +51,9 @@ export function ProHeaderAccountMenu({
   userMetadata,
   canManageBilling,
   entitled = false,
-  showLegalInMenu = entitled,
-  showFreeCatalogInMenu = entitled,
+  retention = false,
+  showLegalInMenu = entitled || retention,
+  showFreeCatalogInMenu = entitled || retention,
   mobileTrigger = "menu",
   archivedCount = 0,
 }: Props) {
@@ -176,14 +179,15 @@ export function ProHeaderAccountMenu({
 
   const menuLinks = (
     <>
-      {entitled ? (
+      {entitled || retention ? (
         <>
           <li role="none">
             <Link href="/pro/app" role="menuitem" className={menuItemClass} onClick={close}>
               <LayoutGrid className="size-4 text-pro-text-secondary" aria-hidden />
-              {PRO_STUDIO_NAV_LABEL}
+              {retention ? "Export projects" : PRO_STUDIO_NAV_LABEL}
             </Link>
           </li>
+          {retention ? null : (
           <li role="none">
             <Link
               href="/pro/app/archives"
@@ -200,6 +204,7 @@ export function ProHeaderAccountMenu({
               ) : null}
             </Link>
           </li>
+          )}
         </>
       ) : null}
       {showFreeCatalogInMenu ? (

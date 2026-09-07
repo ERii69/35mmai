@@ -3,6 +3,7 @@ import {
   beatSpecificVisual,
   parseScriptToPromptShotLine,
 } from "@/lib/pro/build-script-to-prompt-shots";
+import { truncateAtWord } from "@/lib/pro/truncate-at-word";
 import type {
   PlannedShot,
   ProjectStatePayload,
@@ -10,6 +11,9 @@ import type {
   ShotSequence,
 } from "@/lib/pro/types";
 import type { PromptBeatContext } from "@/lib/pro/prompt-engine/types";
+
+/** Full beat action for LTX/Kling — long enough for a complete sentence, never mid-word. */
+const ACTION_MAX_CHARS = 480;
 
 const GENERATION_BOILERPLATE =
   /,?\s*(2\.39:1[^,]*|shallow depth of field|film grain|no text|no watermark|high detail|dramatic motivated lighting|cinematic film still|photorealistic film still|natural lighting|cinematic lighting|naturalistic film still)/gi;
@@ -153,7 +157,7 @@ function actionLine(
     const derived = stripGenerationBoilerplate(
       beatSpecificVisual(scene, shot.shotType).replace(/\s+/g, " ").trim()
     );
-    if (derived.length >= 16) return derived.slice(0, 220);
+    if (derived.length >= 16) return truncateAtWord(derived, ACTION_MAX_CHARS);
   }
 
   const matchingLine = sequence.notes
@@ -168,13 +172,21 @@ function actionLine(
     const cleaned = stripLookInstructions(matchingLine.label);
     if (cleaned) {
       const core = stripGenerationBoilerplate(cleaned);
-      if (core.length >= 24) return core.slice(0, 220);
+      if (core.length >= 24) return truncateAtWord(core, ACTION_MAX_CHARS);
     }
   }
 
   const label = stripLookInstructions(shot.label.trim());
-  if (label) return stripGenerationBoilerplate(label).slice(0, 220);
+  if (label) return truncateAtWord(stripGenerationBoilerplate(label), ACTION_MAX_CHARS);
   return "";
+}
+
+function shortShotLabel(label: string, typePhrase: string): string {
+  const t = label.trim();
+  if (!t || isLookInstructionPollution(t) || isFullGenerationPrompt(t) || t.length > 90) {
+    return typePhrase.charAt(0).toUpperCase() + typePhrase.slice(1);
+  }
+  return t;
 }
 
 export function buildPromptBeatContext(
@@ -224,7 +236,7 @@ export function buildPromptBeatContext(
     heading,
     action,
     shotType: shot.shotType,
-    shotLabel: isLookInstructionPollution(shot.label) ? typePhrase : shot.label.trim(),
+    shotLabel: shortShotLabel(shot.label, typePhrase),
     mood,
     palette,
     lens,

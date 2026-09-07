@@ -18,6 +18,7 @@ type Props = {
   billing?: ProBillingSnapshot | null;
   projects: ProjectRow[];
   archivedCount: number;
+  retention?: boolean;
 };
 
 /** Tighter on mobile single-row header; matches free catalog scale from md+. */
@@ -29,6 +30,7 @@ export function ProAppHeader({
   billing,
   projects,
   archivedCount,
+  retention = false,
 }: Props) {
   const pathname = usePathname();
   const currentProjectId = pathname.match(/^\/pro\/app\/workspace\/([^/]+)/)?.[1] ?? null;
@@ -44,12 +46,16 @@ export function ProAppHeader({
         />
       }
       mobileCenter={
+        retention ? (
+          <p className="truncate text-sm font-medium text-pro-text">Export only</p>
+        ) : (
         <ProProjectSwitcher
           initialProjects={projects}
           currentProjectId={currentProjectId}
           compact
           className="w-full max-w-full justify-start"
         />
+        )
       }
       trailing={
         <>
@@ -65,7 +71,8 @@ export function ProAppHeader({
               email={email}
               userMetadata={userMetadata}
               canManageBilling={canManageBilling}
-              entitled
+              entitled={!retention}
+              retention={retention}
               archivedCount={archivedCount}
               mobileTrigger="user"
             />
@@ -74,7 +81,7 @@ export function ProAppHeader({
           )}
         </>
       }
-      nav={<ProShellNav projects={projects} archivedCount={archivedCount} />}
+      nav={<ProShellNav projects={projects} archivedCount={archivedCount} retention={retention} />}
     />
   );
 }

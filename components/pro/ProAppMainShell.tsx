@@ -12,21 +12,24 @@ import type { ProjectRow } from "@/lib/pro/types";
 type Props = {
   children: React.ReactNode;
   projects: ProjectRow[];
+  retention?: boolean;
 };
 
-export function ProAppMainShell({ children, projects }: Props) {
+export function ProAppMainShell({ children, projects, retention = false }: Props) {
   const defaultId = pickWorkspaceRedirectProject(projects);
   const defaultWorkspaceHref = resolveWorkspaceNavHref(null, defaultId);
   const defaultExportsHref = defaultId ? workspaceTemplatesExportsHref(defaultId) : null;
 
   return (
     <>
-      <ProDashboardNewProjectFab variant="host" />
-      <ProAppKeyboardNav
-        defaultWorkspaceHref={defaultWorkspaceHref}
-        defaultExportsHref={defaultExportsHref}
-      />
-      <ProOnboardingModal />
+      {retention ? null : <ProDashboardNewProjectFab variant="host" />}
+      {retention ? null : (
+        <ProAppKeyboardNav
+          defaultWorkspaceHref={defaultWorkspaceHref}
+          defaultExportsHref={defaultExportsHref}
+        />
+      )}
+      {retention ? null : <ProOnboardingModal />}
       <ProToastProvider>{children}</ProToastProvider>
     </>
   );

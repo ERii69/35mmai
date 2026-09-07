@@ -1,6 +1,7 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ProWorkspaceClientLoader } from "@/components/pro/ProWorkspaceClientLoader";
 import { getWorkspacePageData } from "@/lib/pro/get-workspace-page-data";
+import { getProAccess } from "@/lib/entitlements";
 
 type Props = {
   params: Promise<{ projectId: string }>;
@@ -8,6 +9,11 @@ type Props = {
 };
 
 export default async function ProWorkspacePage({ params, searchParams }: Props) {
+  const access = await getProAccess();
+  if (access.retention) {
+    redirect("/pro/app");
+  }
+
   const { projectId } = await params;
   const { openWorkflow } = await searchParams;
   const data = await getWorkspacePageData(projectId);

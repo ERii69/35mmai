@@ -30,6 +30,16 @@ export async function ensureInviteTrialEntitlement(userId: string): Promise<bool
   if (status === "active" || status === "trialing") {
     return true;
   }
+  // Paid/canceled lifecycle must follow Stripe + 7-day export window — don't revive as invite trial.
+  if (
+    status === "canceled" ||
+    status === "past_due" ||
+    status === "unpaid" ||
+    status === "incomplete_expired" ||
+    status === "paused"
+  ) {
+    return false;
+  }
 
   const periodEnd = new Date(
     Date.now() + ALLOWLIST_ACCESS_DAYS * 24 * 60 * 60 * 1000

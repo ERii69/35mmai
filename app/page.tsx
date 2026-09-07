@@ -294,6 +294,7 @@ export default function Home() {
   });
   const [workflowStageMenuOpen, setWorkflowStageMenuOpen] = useState(false);
   const [myKit, setMyKit] = useState<any[]>([]);
+  const [kitDrawerOpen, setKitDrawerOpen] = useState(true);
   const [currency, setCurrency] = useState("USD");
   /** Filter tools by catalog kind (legend on All Tools). */
   const [catalogKindFilter, setCatalogKindFilter] = useState<CatalogKind | null>(
@@ -429,6 +430,7 @@ const addToMyKit = (tool: any) => {
     qty: 1,
   };
   setMyKit([...myKit, toolWithPrice]);
+  setKitDrawerOpen(true);
   setToast({ message: `Added ${tool.name} to Kit`, tone: "ok" });
 };
 
@@ -457,6 +459,7 @@ const addToMyKit = (tool: any) => {
     }
     if (toAdd.length > 0) {
       setMyKit([...myKit, ...toAdd]);
+      setKitDrawerOpen(true);
     }
     if (toAdd.length === 0 && already === 0 && missing === unique.length) {
       setToast({ message: "No matching tools to add", tone: "info" });
@@ -563,16 +566,9 @@ useEffect(() => {
   }
 }, [step, myKit]);
 
+// Load My Kit from localStorage when the app starts. `/` always opens on the
+// landing page — do not restore lastStep (same URL was showing role/tools).
 useEffect(() => {
-  if (typeof window === "undefined") return;
-  if (step === 4) {
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }
-}, [step]);
-
-// Load My Kit and last step from localStorage when the app starts
-useEffect(() => {
-  // Load My Kit
   const savedKit = localStorage.getItem("myKit");
   if (savedKit) {
     try {
@@ -584,27 +580,11 @@ useEffect(() => {
       console.error("Failed to load My Kit from localStorage");
     }
   }
+}, []);
 
-  // Load last visited step
-  const savedStep = localStorage.getItem("lastStep");
-  if (savedStep) {
-    const stepNumber = parseInt(savedStep);
-    if (!isNaN(stepNumber) && stepNumber >= 0 && stepNumber <= 9) {
-      setStep(stepNumber);
-    }
-  }
-
-}, []); // Runs only once when component mounts
-
-// Save My Kit to localStorage whenever it changes
 useEffect(() => {
   localStorage.setItem("myKit", JSON.stringify(myKit));
 }, [myKit]);
-
-// Save current step whenever it changes
-useEffect(() => {
-  localStorage.setItem("lastStep", step.toString());
-}, [step]);
 
   const roleFilterRootRef = useRef<HTMLDivElement>(null);
   const budgetFilterRootRef = useRef<HTMLDivElement>(null);
@@ -617,6 +597,7 @@ useEffect(() => {
   const workflowStageFilterRootRef = useRef<HTMLDivElement>(null);
   const workflowStageTriggerRef = useRef<HTMLButtonElement>(null);
   const workflowStagePanelRef = useRef<HTMLDivElement>(null);
+  const wasOnWorkflowsRef = useRef(false);
   const workflowKeyboardRootRef = useRef<HTMLDivElement>(null);
   const toolModalRef = useRef<HTMLDivElement>(null);
   const toolModalCloseButtonRef = useRef<HTMLButtonElement>(null);
@@ -676,7 +657,18 @@ useEffect(() => {
   }, [currentWorkflowStage]);
 
   useEffect(() => {
-    if (step !== 4) return;
+    if (typeof window === "undefined") return;
+    const onWorkflows = step === 4;
+    const justEntered = onWorkflows && !wasOnWorkflowsRef.current;
+    wasOnWorkflowsRef.current = onWorkflows;
+
+    if (!onWorkflows) return;
+
+    if (justEntered) {
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return;
+    }
+
     const id = window.requestAnimationFrame(() => {
       workflowStagePanelRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -906,7 +898,7 @@ useEffect(() => {
 
   {/* Flex menu fills leftover width; wraps instead of overlapping the logo */}
   <nav
-    className="hidden min-w-0 flex-1 flex-wrap items-center justify-end gap-x-1 gap-y-1 text-sm lg:flex xl:justify-center xl:gap-x-3"
+    className="hidden min-w-0 flex-1 flex-nowrap items-center justify-end gap-x-1 text-sm xl:flex xl:justify-center xl:gap-x-3"
     aria-label="Primary"
   >
     <Button 
@@ -982,8 +974,8 @@ useEffect(() => {
     </Button>
   </nav>
 
-  {/* Hamburger until lg — the full flex menu needs more than md width */}
-  <div className="ml-auto flex shrink-0 items-center lg:hidden">
+  {/* Hamburger below xl — full nav needs more than tablet portrait width */}
+  <div className="ml-auto flex shrink-0 items-center xl:hidden">
     <button
       type="button"
       onClick={openMobileMenu}
@@ -997,16 +989,26 @@ useEffect(() => {
 </header>
 {/* Floating My Kit Sidebar (hidden on My Kit page — full list is already on screen) */}
         {myKit.length > 0 && step !== 7 && (
+          kitDrawerOpen ? (
           <div className="hidden md:block fixed right-6 top-[calc(4.75rem+env(safe-area-inset-top))] z-50 max-h-[70vh] w-80 overflow-auto rounded-3xl border border-[#333] bg-[#111] p-6 shadow-2xl">
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
               <span className="font-medium text-lg">My Kit ({myKit.length})</span>
-              <button 
-                onClick={() => setMyKit([])}
-                className="text-red-500 hover:text-red-600 text-sm font-medium transition-colors"
-              >
-                Clear
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setKitDrawerOpen(false)}
+                  className="text-sm font-medium text-[#a3a3a3] transition-colors hover:text-white"
+                >
+                  Hide
+                </button>
+                <button 
+                  onClick={() => setMyKit([])}
+                  className="text-red-500 hover:text-red-600 text-sm font-medium transition-colors"
+                >
+                  Clear
+                </button>
+              </div>
             </div>
 
             {/* Tool List */}
@@ -1030,6 +1032,15 @@ useEffect(() => {
               ))}
             </div>
           </div>
+          ) : (
+          <button
+            type="button"
+            onClick={() => setKitDrawerOpen(true)}
+            className="hidden md:flex fixed right-6 top-[calc(4.75rem+env(safe-area-inset-top))] z-50 items-center rounded-full border border-[#333] bg-[#111] px-4 py-2 text-sm font-medium text-white shadow-2xl hover:border-[#e11d48]/60"
+          >
+            My Kit ({myKit.length})
+          </button>
+          )
         )}
         {/* Main Content Area — flex column + min-h-0 so My Kit (empty) can flex between header and footer */}
         <div
@@ -2751,7 +2762,7 @@ useEffect(() => {
     {/* Improved Hamburger Menu (Step 8) - Mobile Only - Popup Style */}
 {step === 8 && (
   <div
-    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6 lg:hidden"
+    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 p-6 xl:hidden"
     onClick={closeMobileMenu}
   >
     <div

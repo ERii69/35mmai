@@ -187,6 +187,41 @@ export function runPromptEngineSmoke(): { passed: number; failed: number } {
     assert.ok(built.prompt.includes("Action:"));
   });
 
+  ok("LTX Action keeps a full beat sentence — no mid-word cutoff", () => {
+    const state = fixtureState();
+    state.directorPrep.scenes[0] = {
+      id: "scene-1",
+      number: 1,
+      heading: "EXT. SUNNY BEACH - DAY",
+      oneLine:
+        "A sleek female cheetah named CHEETAH (spotted, athletic, stylish sunglasses perched on her snout) trots onto the golden sand, tail swishing. She kicks off imaginary flip-flops and stretches in the warm sun.",
+      intExt: "EXT",
+      dayNight: "DAY",
+      visualRefs: [],
+      shotNotes: "",
+      status: "approved",
+      linkedSequenceId: null,
+    };
+    const shot = fixtureShot(
+      "establishing",
+      "Cinematic establishing wide shot, exterior Sunny Beach in daylight, natural motivated light, geography and scale, Cinematic naturalistic film still, 2.39:1 film still, shallow depth of field, film grain, no text, no watermark"
+    );
+    const seq = {
+      id: "seq-1",
+      title: "EXT. SUNNY BEACH - DAY",
+      notes: "",
+      sceneNumber: 1,
+      shots: [shot],
+    };
+    const built = buildShotToolPrompt({ state, shot, sequence: seq, toolRank: 4 });
+    const actionLine = built.prompt.split("\n").find((l) => l.startsWith("Action:")) ?? "";
+    assert.ok(actionLine.includes("imaginary flip-flops"), actionLine);
+    assert.ok(!/imagin$/.test(actionLine.trim()), actionLine);
+    assert.ok(!/war, geography/.test(built.prompt), built.prompt.slice(0, 400));
+    const shotLine = built.prompt.split("\n").find((l) => l.startsWith("Shot:")) ?? "";
+    assert.ok(shotLine.length < 80, shotLine);
+  });
+
   ok("Kling formatter is motion-first", () => {
     const state = fixtureState();
     const shot = fixtureShot("dolly", "Dolly push");

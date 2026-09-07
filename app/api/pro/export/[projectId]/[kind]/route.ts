@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { isProEntitled } from "@/lib/entitlements";
+import { getProAccess } from "@/lib/entitlements";
 import { isProStackConfigured } from "@/lib/pro-stack-config";
 import {
   buildExportCsv,
@@ -59,8 +59,8 @@ export async function GET(
     return NextResponse.json({ error: "Sign in required." }, { status: 401 });
   }
 
-  const entitled = await isProEntitled();
-  if (!entitled) {
+  const access = await getProAccess();
+  if (!access.canExport) {
     return NextResponse.json({ error: "Active 35mmAiPro subscription required." }, { status: 403 });
   }
 

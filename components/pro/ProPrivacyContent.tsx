@@ -14,7 +14,7 @@ export function ProPrivacyContent() {
         <p>
           35mmAiPro is a <strong>private workspace</strong> for your film prep — scripts, scene
           breakdowns, kit, budget, and exports. It is not a social feed, gallery, or collaboration
-          network in v1. There are <strong>no public project links</strong>, no team seats, and no
+          network. There are <strong>no public project links</strong>, no team seats, and no
           publish buttons. Only <strong>you</strong>, signed in to <strong>your account</strong>,
           can open your projects.
         </p>
@@ -64,7 +64,7 @@ export function ProPrivacyContent() {
           You, when signed in with an active membership (or during the post-cancel retention window
           below). Our infrastructure providers (hosting, database, payments) process data only to
           run the service — under their terms and our configuration. We do not offer a shared
-          workspace or producer view in v1.
+          workspace or producer view.
         </p>
       </section>
 

@@ -17,13 +17,14 @@ const navItem = "shrink-0 whitespace-nowrap touch-manipulation";
 type Props = {
   projects: ProjectRow[];
   archivedCount: number;
+  retention?: boolean;
 };
 
 /**
  * Desktop app chrome nav — Projects · Dashboard · Workspace · Archives.
  * Mobile uses a single header row (logo + project switcher + account); Studio/Archives live in the account menu.
  */
-export function ProShellNav({ projects, archivedCount }: Props) {
+export function ProShellNav({ projects, archivedCount, retention = false }: Props) {
   const pathname = usePathname();
   const onDashboard = pathname === "/pro/app";
   const onArchives = pathname === "/pro/app/archives";
@@ -39,10 +40,12 @@ export function ProShellNav({ projects, archivedCount }: Props) {
       aria-label="Pro workspace navigation"
     >
       <div className="flex flex-wrap items-center gap-2">
-        <ProProjectSwitcher
-          initialProjects={projects}
-          currentProjectId={currentProjectId}
-        />
+        {retention ? null : (
+          <ProProjectSwitcher
+            initialProjects={projects}
+            currentProjectId={currentProjectId}
+          />
+        )}
         <Link
           href="/pro/app"
           className={`${proNavPill(onDashboard)} ${navItem} inline-flex min-h-11 items-center`}
@@ -50,7 +53,7 @@ export function ProShellNav({ projects, archivedCount }: Props) {
         >
           Dashboard
         </Link>
-        {workspaceHref ? (
+        {workspaceHref && !retention ? (
           <ProHintTooltip
             label={
               currentProjectId
@@ -69,11 +72,19 @@ export function ProShellNav({ projects, archivedCount }: Props) {
         ) : (
           <span
             className={`${proNavPill(false, true)} ${navItem} inline-flex min-h-11 cursor-not-allowed items-center gap-1.5`}
-            title="Create a project first"
+            title={retention ? "Export only until you resubscribe" : "Create a project first"}
           >
             Workspace
           </span>
         )}
+        {retention ? (
+          <span
+            className={`${proNavPill(false, true)} ${navItem} inline-flex min-h-11 cursor-not-allowed items-center gap-1.5`}
+            title="Export only until you resubscribe"
+          >
+            Archives
+          </span>
+        ) : (
         <Link
           href="/pro/app/archives"
           className={`${proNavPill(onArchives, archivedCount === 0)} ${navItem} inline-flex min-h-11 items-center gap-1.5`}
@@ -84,6 +95,7 @@ export function ProShellNav({ projects, archivedCount }: Props) {
             <span className={proNavCountBadge}>{archivedCount}</span>
           ) : null}
         </Link>
+        )}
       </div>
     </nav>
   );

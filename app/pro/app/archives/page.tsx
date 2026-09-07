@@ -2,8 +2,14 @@ import { ProDashboardArchives } from "@/components/pro/ProDashboardArchives";
 import { listArchivedProjects } from "@/app/actions/pro/projects";
 import { enrichProjectsWithStats } from "@/lib/pro/load-dashboard-project-stats";
 import { createClient } from "@/lib/supabase/server";
+import { getProAccess } from "@/lib/entitlements";
+import { redirect } from "next/navigation";
 
 export default async function ProArchivesPage() {
+  const access = await getProAccess();
+  if (access.retention) {
+    redirect("/pro/app");
+  }
   const result = await listArchivedProjects();
   const supabase = await createClient();
 

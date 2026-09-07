@@ -21,7 +21,6 @@ export async function loadExportSnapshot(
     .select("id, name")
     .eq("id", projectId)
     .eq("user_id", userId)
-    .is("archived_at", null)
     .maybeSingle();
 
   if (projectError || !project) return null;

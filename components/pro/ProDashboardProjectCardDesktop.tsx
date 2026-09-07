@@ -77,7 +77,7 @@ export function ProDashboardProjectCardDesktop({
               <form
                 className="pointer-events-auto"
                 onSubmit={onRenameSubmit}
-                onClick={stopCardNav}
+                onClick={(e) => e.stopPropagation()}
               >
                 <input
                   value={renameName}
@@ -91,6 +91,7 @@ export function ProDashboardProjectCardDesktop({
                     type="submit"
                     disabled={pending || !renameName.trim()}
                     className={`${proBtn.cardAction} pointer-events-auto font-medium text-pro-text`}
+                    onClick={(e) => e.stopPropagation()}
                   >
                     Save
                   </button>

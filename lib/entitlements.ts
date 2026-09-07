@@ -2,8 +2,11 @@ import { cache } from "react";
 import { isSupabaseConfigured } from "@/lib/pro-stack-config";
 import { createUserDataClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
-
-const ENTITLED_STATUSES = new Set(["active", "trialing"]);
+import {
+  isEntitledSubscriptionStatus,
+  proAccessFromSnapshot,
+  type ProAccess,
+} from "@/lib/pro/membership-policy";
 
 /**
  * What a Pro subscription unlocks (Phase 4).
@@ -52,6 +55,11 @@ export const getProBillingSnapshot = cache(async (): Promise<ProBillingSnapshot 
  */
 export async function isProEntitled(): Promise<boolean> {
   const snap = await getProBillingSnapshot();
-  const status = snap?.subscription_status;
-  return typeof status === "string" && ENTITLED_STATUSES.has(status);
+  return isEntitledSubscriptionStatus(snap?.subscription_status);
 }
+
+/** Full Pro, 7-day export window, or neither. Cached per request with billing snapshot. */
+export const getProAccess = cache(async (): Promise<ProAccess> => {
+  const snap = await getProBillingSnapshot();
+  return proAccessFromSnapshot(snap);
+});

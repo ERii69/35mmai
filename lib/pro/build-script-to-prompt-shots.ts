@@ -1,5 +1,6 @@
 import { formatDisplayHeading } from "@/lib/pro/format-display-heading";
 import { parseLocationFromHeading } from "@/lib/pro/locations-from-scenes";
+import { truncateAtWord } from "@/lib/pro/truncate-at-word";
 import type { DirectorRulesState, SceneRow, ShotType, AgentStagingBundle } from "@/lib/pro/types";
 
 type VisualHints = {
@@ -28,7 +29,7 @@ function timePhrase(scene: SceneRow): string {
 function actionVisual(scene: SceneRow): string {
   const raw = [scene.oneLine, scene.shotNotes].filter(Boolean).join(" ").trim();
   if (!raw) return `${locationLabel(scene)} environment`;
-  return raw.replace(/\s+/g, " ").slice(0, 220);
+  return truncateAtWord(raw.replace(/\s+/g, " "), 480);
 }
 
 function isInstructionalLookText(text: string): boolean {

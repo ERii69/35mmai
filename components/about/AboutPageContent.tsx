@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -146,9 +146,11 @@ export function AboutPageContent({
           <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-[#2a2a2a] bg-[#111]/60 px-4 py-3 text-left text-sm leading-relaxed text-[#a3a3a3] md:text-center">
             35mmAI is an <span className="text-[#e5e5e5]">independent</span> directory. Some
             outbound links are affiliate links — we may earn a commission at no extra cost to you.
-            Listings marked <span className="text-amber-300/90">Partner</span> use tracked links;
-            picks stay editorial, not pay-for-placement. Always verify pricing and terms on the
-            vendor&apos;s site.
+            Listings with a{" "}
+            <span className="text-amber-300/90">Partner</span>
+            {" "}
+            badge use tracked links; picks stay editorial, not pay-for-placement. Always verify
+            pricing and terms on the vendor&apos;s site.
           </div>
           <div className="mt-6 hidden flex-row flex-wrap justify-center gap-3 md:flex">
             <Button
@@ -266,9 +268,10 @@ export function AboutPageContent({
               Why filmmakers use it
             </h2>
             <p className="mb-6 max-w-2xl text-sm text-[#888] md:mx-auto md:text-center md:text-base">
-              Three outcomes we optimize for when we write listings and organize the site.
+              We optimize listings for all three — save time, cut costs, and keep cinematic
+              results — not one at the expense of the others.
             </p>
-            <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid gap-4 md:grid-cols-3">
               <li className="flex flex-col rounded-2xl border border-[#333] bg-[#111] p-5 sm:p-6">
                 <div className="mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-[#e11d48]/10 text-[#e11d48]">
                   <Clock className="size-5" aria-hidden />
@@ -289,7 +292,7 @@ export function AboutPageContent({
                   pretending AI replaces human taste and supervision.
                 </p>
               </li>
-              <li className="flex flex-col rounded-2xl border border-[#333] bg-[#111] p-5 sm:p-6 sm:col-span-2 lg:col-span-1">
+              <li className="flex flex-col rounded-2xl border border-[#333] bg-[#111] p-5 sm:p-6">
                 <div className="mb-4 inline-flex size-11 items-center justify-center rounded-xl bg-amber-500/10 text-amber-400">
                   <Film className="size-5" aria-hidden />
                 </div>
@@ -387,7 +390,19 @@ export function AboutPageContent({
                   },
                   {
                     q: "How do I suggest a tool or report an error?",
-                    a: "Use Contact us below. Send the tool name, link, and what should change (pricing, category, description, or a better workflow note). We read every message.",
+                    a: (
+                      <>
+                        Use{" "}
+                        <a
+                          href="#about-contact"
+                          className="font-medium text-[#e11d48] underline-offset-2 hover:underline"
+                        >
+                          Contact us
+                        </a>{" "}
+                        below. Send the tool name, link, and what should change (pricing, category,
+                        description, or a better workflow note). We read every message.
+                      </>
+                    ),
                   },
                   {
                     q: "Are you affiliated with the products mentioned?",
@@ -397,7 +412,7 @@ export function AboutPageContent({
                     q: "Does AI replace crew?",
                     a: "No. AI can compress prep and expand options, but creative judgment, on-set leadership, and taste stay human. We write listings with that assumption.",
                   },
-                ] as const
+                ] satisfies { q: string; a: ReactNode }[]
               ).map(({ q, a }) => (
                 <details
                   key={q}
