@@ -170,12 +170,7 @@ export function ProHeaderAccountMenu({
       <CreditCard className="size-4 text-pro-text-secondary" aria-hidden />
       {billingPending ? "Opening billing…" : "Billing"}
     </button>
-  ) : (
-    <Link href="/account" role="menuitem" className={menuItemClass} onClick={close}>
-      <CreditCard className="size-4 text-pro-text-secondary" aria-hidden />
-      Billing
-    </Link>
-  );
+  ) : null;
 
   const menuLinks = (
     <>
@@ -221,7 +216,7 @@ export function ProHeaderAccountMenu({
           Account
         </Link>
       </li>
-      <li role="none">{billingItem}</li>
+      {billingItem ? <li role="none">{billingItem}</li> : null}
       {showLegalInMenu ? (
         <>
           <li role="none" className="my-1 border-t border-white/[0.06]" aria-hidden />
