@@ -1,4 +1,4 @@
-/** G-then-X navigation shortcuts — keep display and handler in sync. */
+/** G+X navigation shortcuts — keep display and handler in sync. */
 
 export type ProNavSequenceId = "dashboard" | "workspace" | "exports" | "archives";
 

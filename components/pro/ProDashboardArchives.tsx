@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { Archive } from "lucide-react";
+import { Archive, ArrowRight } from "lucide-react";
 import { deleteProject, unarchiveProject } from "@/app/actions/pro/projects";
 import { ProDashboardArchiveCardDesktop } from "@/components/pro/ProDashboardArchiveCardDesktop";
 import { ProDashboardArchiveRowMobile } from "@/components/pro/ProDashboardArchiveRowMobile";
@@ -132,8 +132,12 @@ export function ProDashboardArchives({ projects }: Props) {
             <p className="mt-2 max-w-md text-sm leading-relaxed text-pro-text-secondary">
               Archive a project from the dashboard to keep it here without deleting its data.
             </p>
-            <Link href="/pro/app" className={`${proBtn.outline} mt-5 inline-flex px-4 py-2 text-sm`}>
+            <Link
+              href="/pro/app"
+              className={`${proBtn.secondary} mt-5 h-11 self-start px-5 text-sm`}
+            >
               Go to dashboard
+              <ArrowRight className="size-4" aria-hidden />
             </Link>
           </section>
         ) : (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   PRO_NAV_SEQUENCE_PREFIX,
@@ -9,16 +9,17 @@ import {
 } from "@/lib/pro/nav-sequence-shortcuts";
 import { isProOverlayBlockingKeyboard } from "@/lib/pro/is-pro-overlay-blocking-keyboard";
 
-const SEQUENCE_MS = 900;
+const SEQUENCE_MS = 2000;
 
 type Props = {
   defaultWorkspaceHref: string | null;
   defaultExportsHref: string | null;
 };
 
-/** G then key → Dashboard, Workspace, Finish → Export, or Archives. */
+/** G+key → Dashboard, Workspace, Finish → Export, or Archives. */
 export function ProAppKeyboardNav({ defaultWorkspaceHref, defaultExportsHref }: Props) {
   const router = useRouter();
+  const [listening, setListening] = useState(false);
 
   useEffect(() => {
     let awaitingSecond = false;
@@ -26,14 +27,22 @@ export function ProAppKeyboardNav({ defaultWorkspaceHref, defaultExportsHref }: 
 
     function clearSequence() {
       awaitingSecond = false;
+      setListening(false);
       if (timer) {
         clearTimeout(timer);
         timer = null;
       }
     }
 
+    function armSequence() {
+      awaitingSecond = true;
+      setListening(true);
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(clearSequence, SEQUENCE_MS);
+    }
+
     function onKeyDown(e: KeyboardEvent) {
-      if (e.defaultPrevented) return;
+      if (e.repeat) return;
       if (isProOverlayBlockingKeyboard()) {
         clearSequence();
         return;
@@ -53,9 +62,8 @@ export function ProAppKeyboardNav({ defaultWorkspaceHref, defaultExportsHref }: 
       const key = e.key.toLowerCase();
 
       if (key === PRO_NAV_SEQUENCE_PREFIX) {
-        if (awaitingSecond) return;
-        awaitingSecond = true;
-        timer = setTimeout(clearSequence, SEQUENCE_MS);
+        e.preventDefault();
+        armSequence();
         return;
       }
 
@@ -64,8 +72,8 @@ export function ProAppKeyboardNav({ defaultWorkspaceHref, defaultExportsHref }: 
       const match = PRO_NAV_SEQUENCE_SHORTCUTS.find((item) => item.secondKey === key);
       if (match) {
         const href = resolveNavSequenceHref(match.id, {
-          workspace: defaultWorkspaceHref,
-          exports: defaultExportsHref,
+          workspace: defaultWorkspaceHref ?? "/pro/app/workspace",
+          exports: defaultExportsHref ?? "/pro/app/workspace",
         });
         if (href) {
           e.preventDefault();
@@ -78,12 +86,29 @@ export function ProAppKeyboardNav({ defaultWorkspaceHref, defaultExportsHref }: 
       clearSequence();
     }
 
-    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keydown", onKeyDown, true);
     return () => {
-      clearSequence();
-      window.removeEventListener("keydown", onKeyDown);
+      awaitingSecond = false;
+      if (timer) clearTimeout(timer);
+      window.removeEventListener("keydown", onKeyDown, true);
     };
   }, [router, defaultWorkspaceHref, defaultExportsHref]);
 
-  return null;
+  if (!listening) return null;
+
+  return (
+    <div
+      className="pointer-events-none fixed bottom-4 left-1/2 z-[80] -translate-x-1/2 rounded-xl border border-white/15 bg-pro-elevated/95 px-3 py-2 text-xs text-pro-text shadow-lg ring-1 ring-white/[0.08]"
+      role="status"
+    >
+      Go:{" "}
+      {PRO_NAV_SEQUENCE_SHORTCUTS.map((item, i) => (
+        <span key={item.id}>
+          {i > 0 ? " · " : null}
+          <span className="font-mono font-semibold">{item.secondKey.toUpperCase()}</span>{" "}
+          {item.label}
+        </span>
+      ))}
+    </div>
+  );
 }
