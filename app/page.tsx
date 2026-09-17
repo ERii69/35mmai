@@ -1069,24 +1069,6 @@ useEffect(() => {
             setStep(9);
           }}
         />
-        <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-          <button
-            type="button"
-            onClick={() => {
-              dismissOnboarding();
-              setStep(10);
-            }}
-            className="min-h-[44px] rounded-xl border border-[#444] bg-[#111] px-4 py-2 text-sm font-medium text-[#d1d5db] transition-colors hover:border-[#e11d48]/70 hover:text-white"
-          >
-            How it works
-          </button>
-          <Link
-            href="/pro"
-            className="min-h-[44px] inline-flex items-center rounded-xl border border-[#E30613]/35 px-4 py-2 text-sm font-medium text-[#d1d5db] transition-colors hover:border-[#E30613] hover:text-white"
-          >
-            {BRAND_NAME_PRO}
-          </Link>
-        </div>
       </div>
 
       {/* Budget Cards */}
