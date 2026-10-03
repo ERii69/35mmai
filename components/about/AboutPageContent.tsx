@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -15,6 +16,14 @@ import {
   allTools,
   SITE_CONTACT_EMAIL,
 } from "@/app/data";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
+import {
+  BUDGET_PATH_FEATURE,
+  BUDGET_PATH_MICRO,
+  BUDGET_TEMPLATES_LABEL,
+  WORKFLOWS_LABEL,
+} from "@/lib/catalog-labels";
+import { CATALOG_PATHS } from "@/lib/catalog-routes";
 
 const MAILTO = `mailto:${SITE_CONTACT_EMAIL}`;
 
@@ -55,22 +64,15 @@ export type AboutPageVariant = "embedded" | "standalone";
 
 export function AboutPageContent({
   variant = "embedded",
-  onNavigate,
 }: {
   variant?: AboutPageVariant;
-  onNavigate: (step: number) => void;
+  onNavigate?: (step: number) => void;
 }) {
-  const [activeSectionId, setActiveSectionId] = useState("about-intro");
-  const [lastUpdatedLabel, setLastUpdatedLabel] = useState("Today");
-
-  useEffect(() => {
-    const label = new Intl.DateTimeFormat("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }).format(new Date());
-    setLastUpdatedLabel(label);
-  }, []);
+  const lastUpdatedLabel = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date());
 
   const scrollMt =
     variant === "standalone"
@@ -81,6 +83,8 @@ export function AboutPageContent({
     variant === "standalone"
       ? "top-[calc(3.5rem+env(safe-area-inset-top)+4px)]"
       : "top-[calc(4.25rem+env(safe-area-inset-top)+6px)]";
+
+  const [activeSectionId, setActiveSectionId] = useState(OBSERVE_IDS[0]);
 
   const updateActive = useCallback(() => {
     const clip = variant === "standalone" ? 72 : 70;
@@ -135,16 +139,16 @@ export function AboutPageContent({
             <span className="text-[#e11d48]">amplified by AI</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#a3a3a3] md:text-lg">
-            A practical directory for indie crews, film students, and solo creators — from script
+            A practical directory for small crews, film students, and solo creators — from script
             breakdown to delivery — so you can move faster without sacrificing craft.
           </p>
-          <p className="mx-auto mt-3 max-w-2xl text-sm text-[#737373]">
+          <p className="mx-auto mt-3 max-w-2xl text-sm text-[#737373]" suppressHydrationWarning>
             <strong className="font-medium text-[#a3a3a3]">{toolCount} tools</strong>
             {" · "}
             Last updated {lastUpdatedLabel}
           </p>
           <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-[#2a2a2a] bg-[#111]/60 px-4 py-3 text-left text-sm leading-relaxed text-[#a3a3a3] md:text-center">
-            35mmAI is an <span className="text-[#e5e5e5]">independent</span> directory. Some
+            {BRAND_NAME} is an <span className="text-[#e5e5e5]">independent</span> directory. Some
             outbound links are affiliate links — we may earn a commission at no extra cost to you.
             Listings with a{" "}
             <span className="text-amber-300/90">Partner</span>
@@ -155,11 +159,13 @@ export function AboutPageContent({
           <div className="mt-6 hidden flex-row flex-wrap justify-center gap-3 md:flex">
             <Button
               type="button"
-              onClick={() => onNavigate(9)}
               className="h-11 min-h-[44px] bg-[#e11d48] hover:bg-red-600 md:px-6"
+              asChild
             >
-              Browse all tools
-              <ArrowRight className="size-4" aria-hidden />
+              <Link href={CATALOG_PATHS.tools}>
+                Browse all tools
+                <ArrowRight className="size-4" aria-hidden />
+              </Link>
             </Button>
             <Button
               type="button"
@@ -172,10 +178,10 @@ export function AboutPageContent({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onNavigate(0)}
               className="h-11 min-h-[44px] border-[#444] text-[#e5e5e5] hover:bg-[#1a1a1a] md:px-6"
+              asChild
             >
-              Back to home
+              <Link href={CATALOG_PATHS.home}>Back to home</Link>
             </Button>
           </div>
         </header>
@@ -200,10 +206,10 @@ export function AboutPageContent({
             id="about-intro"
             className={`rounded-2xl border border-[#2a2a2a] bg-[#111]/80 p-5 sm:p-8 ${scrollMt}`}
           >
-            <h2 className="text-lg font-semibold text-white md:text-xl">What 35mmAI is</h2>
+            <h2 className="text-lg font-semibold text-white md:text-xl">What {BRAND_NAME} is</h2>
             <div className="mt-4 max-w-2xl space-y-4 text-left text-base leading-relaxed md:mx-auto md:text-center">
               <p>
-                35mmAI is a curated directory — not a generic AI list — built for people who actually
+                {BRAND_NAME} is a curated directory — not a generic AI list — built for people who actually
                 shoot, edit, and ship films on tight schedules and budgets.
               </p>
               <p>
@@ -252,7 +258,7 @@ export function AboutPageContent({
                 <p className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
                   Last updated
                 </p>
-                <p className="mt-1 text-lg font-semibold text-[#e5e5e5]">
+                <p className="mt-1 text-lg font-semibold text-[#e5e5e5]" suppressHydrationWarning>
                   {lastUpdatedLabel}
                 </p>
               </div>
@@ -313,7 +319,7 @@ export function AboutPageContent({
             </p>
             <ul className="mx-auto mt-5 max-w-2xl space-y-3">
               {[
-                "Indie-first fit — free tiers, realistic pricing, and workflows that work on small crews.",
+                "Small-crew fit — free tiers, realistic pricing, and workflows that work on tight schedules.",
                 "Clarity over buzzwords — what it does, when to use it, and where it sits in the pipeline.",
                 "Honest limits — we call out rough edges, learning curves, and when a traditional tool still wins.",
               ].map((line) => (
@@ -340,7 +346,7 @@ export function AboutPageContent({
               {[
                 "Clear use case — who it is for and when to reach for it",
                 "Steps and example prompts where they help",
-                "Pricing signal and budget fit (indie vs aspirational)",
+                `Pricing signal and budget fit (${BUDGET_PATH_MICRO} vs ${BUDGET_PATH_FEATURE})`,
                 "Role tags so department heads can scan fast",
               ].map((line) => (
                 <li key={line} className="flex gap-3 text-sm leading-relaxed text-[#d1d5db] sm:text-base">
@@ -356,18 +362,18 @@ export function AboutPageContent({
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onNavigate(4)}
                 className="min-h-[44px] border-[#444] text-[#e5e5e5] hover:bg-[#1a1a1a]"
+                asChild
               >
-                Try workflow builder
+                <Link href={CATALOG_PATHS.workflows}>Try {WORKFLOWS_LABEL}</Link>
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onNavigate(5)}
                 className="min-h-[44px] border-[#444] text-[#e5e5e5] hover:bg-[#1a1a1a]"
+                asChild
               >
-                Budget templates
+                <Link href={CATALOG_PATHS.budgetTemplates}>{BUDGET_TEMPLATES_LABEL}</Link>
               </Button>
             </div>
           </section>
@@ -381,8 +387,8 @@ export function AboutPageContent({
               {(
                 [
                   {
-                    q: "Is 35mmAI free to use?",
-                    a: "Yes. Browsing the directory, filters, and planner flows on this site are free. Individual tools have their own pricing — we summarize what we can, but you should always confirm on the vendor's site.",
+                    q: `Is ${BRAND_NAME} free to use?`,
+                    a: `Yes. Browsing the directory, filters, ${WORKFLOWS_LABEL}, and ${BUDGET_TEMPLATES_LABEL} on this site are free. Individual tools have their own pricing — we summarize what we can, but you should always confirm on the vendor's site.`,
                   },
                   {
                     q: "Do you rank, endorse, or get paid by tools?",
@@ -440,7 +446,7 @@ export function AboutPageContent({
                 <span className="text-[#e11d48]">&rdquo;</span>
               </blockquote>
               <figcaption className="mt-6 text-center text-sm font-medium text-[#737373]">
-                — The 35mmAI team
+                — The {BRAND_NAME} team
               </figcaption>
             </figure>
           </section>
@@ -462,10 +468,12 @@ export function AboutPageContent({
                 <Mail className="size-5 shrink-0" aria-hidden />
                 Contact us
               </a>
-              <p className="select-all text-xs text-[#737373]">
-                <span className="sr-only">Email address (copyable): </span>
+              <a
+                href={MAILTO}
+                className="select-all text-xs text-[#737373] underline-offset-2 hover:text-white hover:underline"
+              >
                 {SITE_CONTACT_EMAIL}
-              </p>
+              </a>
             </div>
           </section>
         </div>

@@ -18,6 +18,7 @@ import {
 } from "@/lib/pro/kit-display";
 import { getRecommendedKitRanks } from "@/lib/pro/recommended-kit";
 import { getToolByRank } from "@/app/data";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
 import type { ProjectStatePayload } from "@/lib/pro/types";
 
@@ -95,7 +96,7 @@ export function KitPanel({ state, updateState }: Props) {
         <div>
           <h2 className="text-2xl font-semibold text-pro-text">My kit</h2>
           <p className="mt-2 max-w-xl text-[15px] leading-normal text-pro-text-secondary">
-            Build your project toolkit from the same catalog as 35mmAI — search, filter, and add
+            Build your project toolkit from the same catalog as {BRAND_NAME} — search, filter, and add
             without typing ranks.
           </p>
         </div>
@@ -199,7 +200,7 @@ export function KitPanel({ state, updateState }: Props) {
         <ProEmptyState
           icon={<Wrench className="size-10" aria-hidden />}
           title="No tools in this project yet"
-          description="Browse the full 35mmAI catalog to add AI apps, software, and gear — or use a kit preset above."
+          description={`Browse the full ${BRAND_NAME} catalog to add AI apps, software, and gear — or use a kit preset above.`}
           action={
             <button type="button" className={proBtn.ctaHero} onClick={() => setCatalogOpen(true)}>
               <Package className="size-5" aria-hidden />

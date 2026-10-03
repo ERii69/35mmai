@@ -1,7 +1,17 @@
-import { type NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
+import { catalogRedirectPath } from "@/lib/catalog-legacy-redirect";
 import { updateSession } from "@/lib/supabase/middleware";
 
 export async function middleware(request: NextRequest) {
+  if (request.nextUrl.pathname === "/") {
+    const dest = catalogRedirectPath(request.nextUrl.searchParams);
+    if (dest) {
+      const url = request.nextUrl.clone();
+      url.pathname = dest;
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+  }
   return await updateSession(request);
 }
 

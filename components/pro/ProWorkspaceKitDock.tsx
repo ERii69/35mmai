@@ -20,7 +20,7 @@ type Props = {
   hideMobileFab?: boolean;
 };
 
-/** Floating My Kit — same idea as free 35mmAI sidebar; persists per project. */
+/** Floating My Kit — same idea as free 35mmAi sidebar; persists per project. */
 export function ProWorkspaceKitDock({
   state,
   updateState,

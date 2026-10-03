@@ -2,10 +2,26 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { SiteFooterSwitch } from '@/components/site/SiteFooterSwitch';
 import { brandDisplayFont } from '@/lib/brand/brand-font';
+import { CATALOG_DEFAULT_DESCRIPTION, CATALOG_DEFAULT_TITLE } from '@/lib/catalog-metadata';
+import { getMetadataBase } from '@/lib/site-url';
+import { BRAND_NAME } from '@/lib/brand/brand-identity';
 
 export const metadata: Metadata = {
-  title: '35mmAi – Filmmaker\'s AI Workspace',
-  description: 'Modern cinematic workspace for film prep, look development, and production planning',
+  metadataBase: getMetadataBase(),
+  title: CATALOG_DEFAULT_TITLE,
+  description: CATALOG_DEFAULT_DESCRIPTION,
+  openGraph: {
+    title: CATALOG_DEFAULT_TITLE,
+    description: CATALOG_DEFAULT_DESCRIPTION,
+    type: 'website',
+    locale: 'en_US',
+    siteName: BRAND_NAME,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: CATALOG_DEFAULT_TITLE,
+    description: CATALOG_DEFAULT_DESCRIPTION,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

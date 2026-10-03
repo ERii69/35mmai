@@ -9,6 +9,7 @@ import { filterCatalogTools, getCatalogCategories } from "@/lib/pro/kit-catalog"
 import { isToolInKit } from "@/lib/pro/kit-display";
 import type { CatalogKind } from "@/app/data";
 import type { DirectorRulesState } from "@/lib/pro/types";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 
 type Props = {
   open: boolean;
@@ -63,7 +64,7 @@ export function KitCatalogModal({
       open={open}
       onClose={onClose}
       title="Browse tools"
-      description="Full 35mmAI catalog — same ranks and links as the free directory."
+      description={`Full ${BRAND_NAME} catalog — same ranks and links as the free directory.`}
       wide
       footer={
         <Button type="button" variant="outline" className="border-white/10" onClick={onClose}>

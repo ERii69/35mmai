@@ -1,5 +1,5 @@
 /**
- * Original playbook copy for Pro templates (35mmAI — not copied from third-party Notion/PDF packs).
+ * Original playbook copy for Pro templates (35mmAi — not copied from third-party Notion/PDF packs).
  */
 
 export const CLASSICAL_AI_SHORT_PLAYBOOK = `You are directing a classical short film — story and performance first — using AI only where it extends your vision.
@@ -8,7 +8,7 @@ export const CLASSICAL_AI_SHORT_PLAYBOOK = `You are directing a classical short 
 1. **World bible** — story truth, characters, places, tone. If it is not on the page, it will not stay consistent in generation.
 2. **Visual bible** — design sheet, palette, lens language, grain. This is your contract with every frame you make elsewhere.
 3. **Shot plan** — sequences and hero frames before you open any generator.
-4. **Kit** — pick tools from the 35mmAI catalog by rank; generate outside this app.
+4. **Kit** — pick tools from the 35mmAi catalog by rank; generate outside this app.
 5. **Workflow phase** — stay honest about pre-production vs post; do not rush to “finished” clips.
 6. **Post checklist** — edit for story, then color and sound; cohesion beats novelty.
 

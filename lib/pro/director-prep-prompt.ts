@@ -22,7 +22,7 @@ function rulesBlock(rules: DirectorRulesState): string {
   return lines.join("\n");
 }
 
-/** Markdown prompt for external Claude / ChatGPT — no API calls from 35mmAI. */
+/** Markdown prompt for external Claude / ChatGPT — no API calls from 35mmAi. */
 export function buildDirectorPrepPrompt(
   rules: DirectorRulesState,
   screenplayRawText: string,

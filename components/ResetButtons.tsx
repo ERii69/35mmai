@@ -1,5 +1,6 @@
 'use client';
 import { Trash2, Download } from 'lucide-react';
+import { BRAND_NAME } from '@/lib/brand/brand-identity';
 
 interface ResetButtonsProps {
   onReset: () => void;
@@ -11,7 +12,7 @@ export default function ResetButtons({ onReset }: ResetButtonsProps) {
     const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(kit, null, 2))}`;
     const downloadAnchor = document.createElement('a');
     downloadAnchor.setAttribute('href', dataStr);
-    downloadAnchor.setAttribute('download', '35mmAI_kit.json');
+    downloadAnchor.setAttribute('download', `${BRAND_NAME}_kit.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();

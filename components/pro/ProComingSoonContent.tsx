@@ -2,7 +2,6 @@
 
 import { useActionState, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Sparkles,
@@ -14,6 +13,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { SITE_CONTACT_EMAIL } from "@/app/data";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import { submitProWaitlist, type ProWaitlistState } from "@/app/actions/waitlist";
 
 const initialWaitlistState: ProWaitlistState = { status: "idle" };
@@ -143,21 +143,11 @@ export type ProComingSoonVariant = "embedded" | "standalone";
 
 export function ProComingSoonContent({
   variant = "embedded",
-  onNavigate,
 }: {
   variant?: ProComingSoonVariant;
   onNavigate?: (step: number) => void;
 }) {
-  const router = useRouter();
   const [waitlistKey, setWaitlistKey] = useState(0);
-
-  const go = (step: number) => {
-    if (variant === "standalone") {
-      router.push(`/?step=${step}`);
-    } else {
-      onNavigate?.(step);
-    }
-  };
 
   return (
     <div className="relative min-h-0 overflow-hidden bg-[#0f0f0f] px-4 py-12 text-[#f5f5f5] sm:px-6 md:py-20">
@@ -173,7 +163,7 @@ export function ProComingSoonContent({
 
         <div className="mb-8 text-center md:mb-14">
           <h1 className="mb-4 text-4xl font-bold tracking-tighter sm:text-5xl md:mb-6 md:text-7xl">
-            35mmAI <span className="text-[#e11d48]">Pro</span>
+            {BRAND_NAME}<span className="text-[#e11d48]">Pro</span>
           </h1>
           <p className="mx-auto max-w-3xl text-base text-[#d1d5db] sm:text-lg md:text-2xl">
             Deeper recommendations, richer budget modeling, and crew-ready exports — built on top of
@@ -210,7 +200,7 @@ export function ProComingSoonContent({
               <h2 className="mb-3 text-xl font-semibold md:text-2xl">Advanced budget view</h2>
               <p className="leading-relaxed text-[#d1d5db]">
                 Roll up tool costs, compare scenarios, and see savings vs traditional line items —
-                grounded in the same pricing signals as the free planner.
+                grounded in the same pricing signals as the free catalog.
               </p>
             </div>
 
@@ -267,13 +257,12 @@ export function ProComingSoonContent({
               />
 
               <div className="mt-8 flex flex-col gap-2 border-t border-white/[0.08] pt-6 text-center text-sm text-pro-text-secondary sm:flex-row sm:justify-center sm:gap-4">
-                <button
-                  type="button"
-                  onClick={() => go(9)}
+                <Link
+                  href="/tools"
                   className="text-[#d1d5db] underline-offset-2 hover:text-white hover:underline"
                 >
                   Browse free tools
-                </button>
+                </Link>
                 {variant === "standalone" ? (
                   <>
                     <Link
@@ -290,13 +279,12 @@ export function ProComingSoonContent({
                     </Link>
                   </>
                 ) : (
-                  <button
-                    type="button"
-                    onClick={() => go(0)}
+                  <Link
+                    href="/"
                     className="text-[#d1d5db] underline-offset-2 hover:text-white hover:underline"
                   >
                     Home
-                  </button>
+                  </Link>
                 )}
               </div>
             </div>

@@ -21,6 +21,7 @@ import {
 } from "@/lib/pro/budget-from-shot-plan";
 import { PRO_CURRENCY_OPTIONS, currencySymbol } from "@/lib/pro/currency-options";
 import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import type { DirectorBudgetTier, ProjectStatePayload } from "@/lib/pro/types";
 
 const BUDGET_BAND_OPTIONS: { value: DirectorBudgetTier; label: string }[] = [
@@ -111,7 +112,7 @@ export function BudgetPanel({ state, updateState }: Props) {
           <p className="mt-2 max-w-xl text-[15px] leading-normal text-pro-text-secondary">
             {scriptToPrompt
               ? "Optional monthly tool estimate from your scenes and kit — not required for the prompt pack."
-              : "Role, currency, and line-item presets synced with the 35mmAI catalog."}
+              : `Role, currency, and line-item presets synced with the ${BRAND_NAME} catalog.`}
           </p>
         </div>
         <div className="shrink-0">

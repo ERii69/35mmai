@@ -2,6 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import { CheckCircle2, ClipboardCheck, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
+import { BUDGET_PATH_FEATURE, BUDGET_PATH_MICRO, WORKFLOWS_LABEL } from "@/lib/catalog-labels";
+import { CATALOG_PATHS } from "@/lib/catalog-routes";
 
 export type HowItWorksVariant = "embedded" | "standalone";
 
@@ -9,12 +13,12 @@ const QUICK_FLOW = [
   {
     title: "Start from your actual shoot reality",
     description:
-      "From Home, pick the budget path that matches your production, then choose your role so recommendations feel like a real crew workflow.",
+      `From Home, pick ${BUDGET_PATH_MICRO} or ${BUDGET_PATH_FEATURE}, then choose your role so recommendations feel like a real crew workflow.`,
   },
   {
     title: "Move stage by stage, not app by app",
     description:
-      "Use Workflow Builder to go pre to post in order. Open details for each tool to see when it helps, how to set it up, and what prompt to start with.",
+      `Use ${WORKFLOWS_LABEL} to go pre to post in order. Open details for each tool to see when it helps, how to set it up, and what prompt to start with.`,
   },
   {
     title: "Build a lean kit you can actually run",
@@ -39,10 +43,9 @@ const QA_CHECKLIST = [
 
 export function HowItWorksContent({
   variant = "embedded",
-  onNavigate,
 }: {
   variant?: HowItWorksVariant;
-  onNavigate: (step: number) => void;
+  onNavigate?: (step: number) => void;
 }) {
   return (
     <section className="relative overflow-hidden bg-[#0f0f0f] text-[#f5f5f5]">
@@ -54,7 +57,7 @@ export function HowItWorksContent({
             How It Works
           </p>
           <h1 className="text-3xl font-bold leading-tight tracking-tight md:text-5xl">
-            Your first pass through <span className="text-[#e11d48]">35mmAI</span>
+            Your first pass through <span className="text-[#e11d48]">{BRAND_NAME}</span>
           </h1>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#a3a3a3] md:text-lg">
             This guide helps you go from blank page to working tool stack fast, with a process that
@@ -63,18 +66,18 @@ export function HowItWorksContent({
           <div className="mt-6 flex flex-wrap gap-3 md:justify-center">
             <Button
               type="button"
-              onClick={() => onNavigate(0)}
               className="min-h-[44px] bg-[#e11d48] hover:bg-red-600"
+              asChild
             >
-              Start Planner
+              <Link href={CATALOG_PATHS.home}>Get started</Link>
             </Button>
             <Button
               type="button"
               variant="outline"
-              onClick={() => onNavigate(9)}
               className="min-h-[44px] border-[#444] text-[#e5e5e5] hover:bg-[#1a1a1a]"
+              asChild
             >
-              Browse All Tools
+              <Link href={CATALOG_PATHS.tools}>Browse All Tools</Link>
             </Button>
           </div>
           {variant === "standalone" && (
