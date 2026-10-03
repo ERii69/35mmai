@@ -8,7 +8,7 @@ export type KitCatalogFilters = {
   catalogKind?: CatalogKind | null;
 };
 
-/** Sorted unique categories from the main 35mmAI catalog. */
+/** Sorted unique categories from the main 35mmAi catalog. */
 export function getCatalogCategories(): string[] {
   const cats = new Set(allTools.map((t) => t.category));
   return Array.from(cats).sort((a, b) => a.localeCompare(b));

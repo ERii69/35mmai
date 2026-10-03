@@ -224,7 +224,7 @@ const DIRECTOR_PREP_NARRATIVE_PLAYBOOK: StructuredPlaybook = {
   name: "Director's Prep — narrative short",
   intro: {
     lead: "Script-to-Pre-Production Agent: paste script → copy agent prompt → import JSON → export Markdown report.",
-    footer: "Nothing generates inside 35mmAI — external Claude/ChatGPT is copy/paste only.",
+    footer: "Nothing generates inside 35mmAi — external Claude/ChatGPT is copy/paste only.",
   },
   steps: [
     {

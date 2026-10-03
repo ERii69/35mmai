@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PRO_DATA_RETENTION_DAYS } from "@/lib/pro/membership-policy";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 
 export function ProPrivacyContent() {
   return (
@@ -52,7 +53,7 @@ export function ProPrivacyContent() {
             their or our models under our configuration.
           </li>
           <li>
-            <strong>We do not expose</strong> your projects on the public 35mmAI catalog or in
+            <strong>We do not expose</strong> your projects on the public {BRAND_NAME} catalog or in
             search engines.
           </li>
         </ul>

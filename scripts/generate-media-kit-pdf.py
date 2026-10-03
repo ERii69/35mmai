@@ -246,12 +246,12 @@ def main() -> None:
     pdf.set_margins(16, 14, 16)
     pdf.set_auto_page_break(auto=True, margin=18)
     pdf.add_page()
-    pdf.set_title("35mmAI Media Kit")
-    pdf.set_author("35mmAI")
+    pdf.set_title("35mmAi Media Kit")
+    pdf.set_author("35mmAi")
 
     pdf.set_font("Helvetica", "B", 16)
     pdf.set_text_color(20, 20, 20)
-    pdf.cell(pdf.epw, 8, "35mmAI - Partner media kit", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
+    pdf.cell(pdf.epw, 8, "35mmAi - Partner media kit", new_x=XPos.LMARGIN, new_y=YPos.NEXT)
     pdf.set_font("Helvetica", "", 9)
     pdf.set_text_color(90, 90, 90)
     pdf.cell(
@@ -272,7 +272,7 @@ def main() -> None:
     section_title(pdf, "About")
     body_text(
         pdf,
-        "35mmAI is a curated AI tools directory and workflow planner for independent filmmakers, "
+        "35mmAi is a curated AI tools directory and Workflows guide for independent filmmakers, "
         "editors, and small production teams. We surface practical software for pre-production, "
         "production, and post - organized by role and stage so crews can compare options quickly.",
     )
@@ -309,7 +309,7 @@ def main() -> None:
         "We do not run coupon farms, misleading discounts, or paid search on partner trademarks.",
     )
 
-    section_title(pdf, "Why partner with 35mmAI")
+    section_title(pdf, "Why partner with 35mmAi")
     bullets = [
         "Niche audience actively choosing software for film and video production.",
         "Editorial positioning: practical stacks, budgets, and crew roles.",
@@ -330,7 +330,7 @@ def main() -> None:
 
     section_title(pdf, "Contact")
     pdf.set_font("Helvetica", "", 10.5)
-    pdf.multi_cell(pdf.epw, 5.5, "35mmAI | https://www.35mmai.com")
+    pdf.multi_cell(pdf.epw, 5.5, "35mmAi | https://www.35mmai.com")
     pdf.ln(1)
 
     OUT.parent.mkdir(parents=True, exist_ok=True)

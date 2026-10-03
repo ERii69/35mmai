@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { catalogPageTitle } from "@/lib/catalog-metadata";
 
 export const metadata: Metadata = {
-  title: "About — 35mmAI",
+  title: catalogPageTitle("About"),
   description:
     "Independent AI tool directory for indie filmmakers — how we curate listings, common questions, and contact.",
 };

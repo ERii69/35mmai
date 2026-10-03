@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
+import { PRO_PRIVACY_PATH, PRO_TERMS_PATH } from "@/lib/pro/membership-policy";
 
 type Props = {
   className?: string;
@@ -10,6 +11,7 @@ export function SiteFooter({ className = "" }: Props) {
   return (
     <footer
       className={`mt-auto shrink-0 border-t border-[#333] py-6 text-center text-sm text-[#666] md:py-8 ${className}`}
+      suppressHydrationWarning
     >
       <div className="mx-auto max-w-5xl px-6">
         <p>
@@ -37,6 +39,24 @@ export function SiteFooter({ className = "" }: Props) {
             className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
           >
             Pro
+          </Link>
+          <span className="text-[#444]" aria-hidden>
+            ·
+          </span>
+          <Link
+            href={PRO_PRIVACY_PATH}
+            className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
+          >
+            Privacy
+          </Link>
+          <span className="text-[#444]" aria-hidden>
+            ·
+          </span>
+          <Link
+            href={PRO_TERMS_PATH}
+            className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
+          >
+            Terms
           </Link>
         </p>
         <p className="mt-6 text-xs text-[#555]">Made with ❤️ for the film community</p>

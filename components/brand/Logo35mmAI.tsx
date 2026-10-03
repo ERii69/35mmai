@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 import { Wordmark35mmai } from "@/components/brand/Wordmark35mmai";
 import { BRAND_NAME } from "@/lib/brand/brand-identity";
 
@@ -19,21 +18,9 @@ export function Logo35mmAI({
   onClick,
   "aria-label": ariaLabel = `${BRAND_NAME} home`,
 }: Props) {
-  const mark = (
-    <Wordmark35mmai className={className} mmClassName={mmClassName} title={ariaLabel} />
-  );
-
-  if (onClick) {
-    return (
-      <button type="button" onClick={onClick} className="shrink-0 cursor-pointer" aria-label={ariaLabel}>
-        {mark}
-      </button>
-    );
-  }
-
   return (
-    <Link href={href} className="shrink-0" aria-label={ariaLabel}>
-      {mark}
+    <Link href={href} className="shrink-0" aria-label={ariaLabel} onClick={onClick}>
+      <Wordmark35mmai className={className} mmClassName={mmClassName} title={ariaLabel} />
     </Link>
   );
 }

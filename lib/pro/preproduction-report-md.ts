@@ -219,7 +219,7 @@ export function buildPreProductionReportMd(
     ""
   );
 
-  lines.push("---", "", "_Nothing in this report was generated on 35mmAI servers — external AI is copy/paste only._");
+  lines.push("---", "", "_Nothing in this report was generated on 35mmAi servers — external AI is copy/paste only._");
 
   return lines.join("\n");
 }

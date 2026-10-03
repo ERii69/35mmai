@@ -5,12 +5,14 @@ import {
   BUDGET_TEMPLATE_SHEETS,
   googleSpreadsheetExportUrl,
 } from "@/app/data";
+import { BUDGET_PATH_FEATURE, BUDGET_PATH_MICRO } from "@/lib/catalog-labels";
 
 const linkBase =
   "inline-flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl px-4 text-center text-sm font-medium transition-colors";
 
 export function BudgetSheetLinks({ variant }: { variant: "micro" | "low" }) {
   const sheet = BUDGET_TEMPLATE_SHEETS[variant];
+  const pathName = variant === "micro" ? BUDGET_PATH_MICRO : BUDGET_PATH_FEATURE;
   const exportUrl = googleSpreadsheetExportUrl(sheet.id, "xlsx");
   const primary =
     variant === "micro"
@@ -26,7 +28,7 @@ export function BudgetSheetLinks({ variant }: { variant: "micro" | "low" }) {
         className={`${linkBase} ${primary}`}
       >
         <ExternalLink className="size-4 shrink-0" aria-hidden />
-        Open in Google Sheets
+        Open {pathName} in Google Sheets
       </a>
       <a
         href={exportUrl}
@@ -35,7 +37,7 @@ export function BudgetSheetLinks({ variant }: { variant: "micro" | "low" }) {
         className={`${linkBase} border border-[#444] bg-[#1a1a1a] text-[#e5e5e5] hover:border-[#555] hover:bg-[#222]`}
       >
         <Download className="size-4 shrink-0" aria-hidden />
-        Download .xlsx
+        Download {pathName} .xlsx
       </a>
       <p className="text-center text-[11px] leading-snug text-[#666]">
         On phones: <strong className="font-medium text-[#888]">Download</strong> saves a copy.

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { PRO_DATA_RETENTION_DAYS } from "@/lib/pro/membership-policy";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 
 export function ProTermsContent() {
   return (
@@ -10,7 +11,7 @@ export function ProTermsContent() {
         <h2 className="text-lg font-semibold text-white">The service</h2>
         <p>
           35mmAiPro is a paid membership that gives you a private cloud workspace for production prep
-          (projects, templates, exports). The free 35mmAI catalog at{" "}
+          (projects, templates, exports). The free {BRAND_NAME} catalog at{" "}
           <Link href="/" className="text-pro-primary underline-offset-2 hover:underline">
             home
           </Link>{" "}
