@@ -325,6 +325,11 @@ function CatalogAppBody({ initialPath = "/" }: { initialPath?: string }) {
     if (qQuery !== null) setSearchTerm(qQuery);
   }, [qQuery]);
 
+  /** Filter tools by catalog kind (legend on All Tools). */
+  const [catalogKindFilter, setCatalogKindFilter] = useState<CatalogKind | null>(
+    () => parseCatalogKind(kindQuery)
+  );
+
   useEffect(() => {
     setCatalogKindFilter(parseCatalogKind(kindQuery));
   }, [kindQuery]);
@@ -352,10 +357,6 @@ function CatalogAppBody({ initialPath = "/" }: { initialPath?: string }) {
   const [myKit, setMyKit] = useState<any[]>([]);
   const [kitDrawerOpen, setKitDrawerOpen] = useState(false);
   const [currency, setCurrency] = useState("USD");
-  /** Filter tools by catalog kind (legend on All Tools). */
-  const [catalogKindFilter, setCatalogKindFilter] = useState<CatalogKind | null>(
-    () => parseCatalogKind(kindQuery)
-  );
 
   const CURRENCY_OPTIONS = [
   { value: "USD", label: "USD ($)" },
