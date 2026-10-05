@@ -1,11 +1,8 @@
 import { getToolByRank } from "@/app/data";
-import { buildShotToolPrompt } from "@/lib/pro/build-shot-tool-prompt";
+import { composeDirectedPrompt, draftFrameSentence, visualPromptToolOptions } from "@/lib/pro/directed-prompt";
 import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
-import { suggestToolForBeat } from "@/lib/pro/prompt-engine/suggest-prompt-tool";
-import {
-  PHASE4_PROMPT_TOOL_RANKS,
-  isPhase4PromptToolRank,
-} from "@/lib/pro/prompt-engine/types";
+import { suggestToolForBeat, toolRankForPromptPack } from "@/lib/pro/prompt-engine/suggest-prompt-tool";
+import { PHASE4_PROMPT_TOOL_RANKS } from "@/lib/pro/prompt-engine/types";
 import { kitEntriesFromState } from "@/lib/pro/kit-display";
 import {
   SCRIPT_TO_PROMPT_DEFAULT_TOOL_RANKS,
@@ -16,6 +13,7 @@ import type { PlannedShot, ProjectStatePayload } from "@/lib/pro/types";
 export type PromptToolOption = {
   rank: number;
   name: string;
+  suggested?: boolean;
 };
 
 function orderedToolRanks(state: ProjectStatePayload): number[] {
@@ -31,8 +29,11 @@ function orderedToolRanks(state: ProjectStatePayload): number[] {
   ];
 }
 
-/** Tools available for per-shot prompt formatting. */
+/** Tools the filmmaker can paste a visual prompt into. */
 export function promptToolOptions(state: ProjectStatePayload): PromptToolOption[] {
+  if (isScriptToPromptTemplate(state.directorPrep.appliedTemplateId)) {
+    return visualPromptToolOptions();
+  }
   const seen = new Set<number>();
   const out: PromptToolOption[] = [];
   for (const rank of orderedToolRanks(state)) {
@@ -72,11 +73,27 @@ function patchShotPrompt(
   sequence: (typeof state.shotPlan.sequences)[number],
   toolRank: number
 ): PlannedShot {
-  const rank = isPhase4PromptToolRank(toolRank) ? toolRank : 6;
-  const built = buildShotToolPrompt({ state, shot, sequence, toolRank: rank });
+  const scene = state.directorPrep.scenes.find((row) => row.number === sequence.sceneNumber);
+  const sentence =
+    shot.frameSentence == null
+      ? draftFrameSentence(scene, shot.shotType)
+      : shot.frameSentence.trim();
+  if (!sentence) {
+    return {
+      ...shot,
+      frameSentence: "",
+      promptEdited: false,
+      recommendedToolRank: toolRank,
+      aiGenerationPrompt: "",
+      aiNegativePrompt: "",
+    };
+  }
+  const built = composeDirectedPrompt({ state, shot, sequence, toolRank, sentence });
   return {
     ...shot,
-    recommendedToolRank: rank,
+    frameSentence: sentence,
+    promptEdited: false,
+    recommendedToolRank: toolRank,
     aiGenerationPrompt: built.prompt,
     aiNegativePrompt: built.negativePrompt,
   };
@@ -93,16 +110,23 @@ export function syncShotPromptsInState(
     isScriptToPromptTemplate(state.directorPrep.appliedTemplateId);
   const fallback = opts?.toolRank ?? defaultPromptToolRank(state);
 
-  const sequences = state.shotPlan.sequences.map((seq) => ({
-    ...seq,
-    shots: seq.shots.map((shot) => {
-      if (onlyEmpty && shot.aiGenerationPrompt?.trim()) return shot;
-      const rank = useRouting
-        ? resolvePromptToolRank(shot, { forceRouting: opts?.forceRouting, fallback })
-        : (shot.recommendedToolRank ?? fallback);
-      return patchShotPrompt(state, shot, seq, rank);
-    }),
-  }));
+  const sequences = state.shotPlan.sequences.map((seq) => {
+    const scene = state.directorPrep.scenes.find((s) => s.number === seq.sceneNumber);
+    return {
+      ...seq,
+      shots: seq.shots.map((shot) => {
+        if (onlyEmpty && shot.aiGenerationPrompt?.trim()) return shot;
+        const rank = useRouting
+          ? opts?.forceRouting
+            ? resolvePromptToolRank(shot, { forceRouting: true, fallback })
+            : shot.recommendedToolRank && !opts?.forceRouting
+              ? shot.recommendedToolRank
+              : toolRankForPromptPack(shot.shotType, scene)
+          : (shot.recommendedToolRank ?? fallback);
+        return patchShotPrompt(state, shot, seq, rank);
+      }),
+    };
+  });
 
   return { ...state, shotPlan: { sequences } };
 }
@@ -125,6 +149,21 @@ export function rebuildShotPromptInState(
     };
   });
   return { ...state, shotPlan: { sequences } };
+}
+
+/** What the Prompts page shows. Fills only empty prompts; leaves hand edits and tool picks. */
+export function promptViewState(state: ProjectStatePayload): ProjectStatePayload {
+  const existingTotal = state.shotPlan.sequences.reduce((n, seq) => n + seq.shots.length, 0);
+  if (existingTotal === 0) return state;
+  const { withPrompt, total } = countShotsWithPrompts(state);
+  if (withPrompt < total) {
+    return syncShotPromptsInState(state, {
+      onlyEmpty: true,
+      applyRouting: true,
+      forceRouting: false,
+    });
+  }
+  return state;
 }
 
 export function countShotsWithPrompts(state: ProjectStatePayload): {

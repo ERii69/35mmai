@@ -8,6 +8,7 @@ import {
   type ProExportKind,
 } from "@/lib/pro/export-csv";
 import { loadExportSnapshot } from "@/lib/pro/load-export-snapshot";
+import { continuityWarnings } from "@/lib/pro/prompt-locks";
 import { createClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
@@ -29,6 +30,7 @@ const EXPORT_KINDS: ProExportKind[] = [
   "location-research-md",
   "prompt-pack-csv",
   "prompt-pack-md",
+  "shot-list-md",
 ];
 
 function isExportKind(value: string): value is ProExportKind {
@@ -67,6 +69,13 @@ export async function GET(
   const snapshot = await loadExportSnapshot(projectId, user.id);
   if (!snapshot) {
     return NextResponse.json({ error: "Project not found." }, { status: 404 });
+  }
+
+  if (kindParam === "prompt-pack-md" || kindParam === "prompt-pack-csv") {
+    const warning = continuityWarnings(snapshot.state)[0];
+    if (warning) {
+      return NextResponse.json({ error: warning }, { status: 409 });
+    }
   }
 
   const body = buildExportCsv(kindParam, snapshot.state, snapshot.projectName, {

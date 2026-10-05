@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { PromptLocksEditor } from "@/components/pro/PromptLocksEditor";
 import { PromptSceneSection } from "@/components/pro/PromptSceneSection";
 import { PromptStickyActions } from "@/components/pro/PromptStickyActions";
 import { PromptsHowToTip } from "@/components/pro/PromptsHowToTip";
@@ -16,11 +17,18 @@ import {
 import {
   countShotsWithPrompts,
   promptToolOptions,
+  promptViewState,
   rebuildShotPromptInState,
   syncShotPromptsInState,
 } from "@/lib/pro/sync-shot-prompts";
+import { promptJobIsKnown } from "@/lib/pro/directed-prompt";
+import {
+  continuityWarnings,
+  derivePromptLocks,
+  staleSceneNumbers,
+} from "@/lib/pro/prompt-locks";
 import type { ProductionTabId } from "@/lib/pro/workspace-modes";
-import type { ProjectStatePayload } from "@/lib/pro/types";
+import type { ProjectStatePayload, PromptJob, PromptLocksState } from "@/lib/pro/types";
 
 type Props = {
   projectId: string;
@@ -48,19 +56,22 @@ export function PromptsPanel({
   // Regenerating on every render was resetting manual tool picks (e.g. LTX) back to Midjourney.
   const displayState = useMemo(() => {
     const existingTotal = state.shotPlan.sequences.reduce((n, seq) => n + seq.shots.length, 0);
-    if (existingTotal > 0) {
-      const { withPrompt, total } = countShotsWithPrompts(state);
-      if (withPrompt < total) {
-        return syncShotPromptsInState(state, {
-          onlyEmpty: true,
-          applyRouting: true,
-          forceRouting: false,
-        });
-      }
-      return state;
-    }
+    if (existingTotal > 0) return promptViewState(state);
     return buildScriptToPromptPackState(state);
   }, [state]);
+
+  useEffect(() => {
+    if (displayState === state) return;
+    updateState(() => displayState);
+  }, [displayState, state, updateState]);
+
+  const locks = useMemo<PromptLocksState>(() => {
+    const saved = displayState.directorPrep.promptLocks;
+    if (saved && (saved.characters.length > 0 || saved.places.length > 0)) return saved;
+    return derivePromptLocks(displayState);
+  }, [displayState]);
+  const warnings = useMemo(() => continuityWarnings(displayState), [displayState]);
+  const stale = useMemo(() => new Set(staleSceneNumbers(displayState)), [displayState]);
 
   const toolOptions = useMemo(() => promptToolOptions(displayState), [displayState]);
   const { total, withPrompt } = useMemo(() => countShotsWithPrompts(displayState), [displayState]);
@@ -84,7 +95,7 @@ export function PromptsPanel({
   function buildAll() {
     updateState((p) => rebuildAllPromptsInState(p));
     showToast({
-      message: "Rebuilt every prompt from script + look (cleared look-bible clutter).",
+      message: "Prompts now follow your sentences.",
       variant: "success",
     });
   }
@@ -94,6 +105,73 @@ export function PromptsPanel({
     showToast({
       message: "Spread tools by beat: Midjourney · LTX · Nano · Kling (motion).",
       variant: "success",
+    });
+  }
+
+  function promptsFollowingLocks(next: ProjectStatePayload): ProjectStatePayload {
+    return syncShotPromptsInState(next, { onlyEmpty: false, applyRouting: true });
+  }
+
+  function patchKeptStill(id: string, text: string) {
+    updateState((p) => {
+      const saved = p.directorPrep.promptLocks;
+      const current =
+        saved && (saved.characters.length > 0 || saved.places.length > 0)
+          ? saved
+          : derivePromptLocks(p);
+      return promptsFollowingLocks({
+        ...p,
+        directorPrep: {
+          ...p.directorPrep,
+          promptLocks: {
+            ...current,
+            characters: current.characters.map((row) =>
+              row.id === id ? { ...row, keptStillPrompt: text } : row
+            ),
+          },
+        },
+      });
+    });
+  }
+
+  function setToolShape(rank: number, job: PromptJob) {
+    updateState((p) => {
+      const saved = p.directorPrep.promptLocks ?? derivePromptLocks(p);
+      return {
+        ...p,
+        directorPrep: {
+          ...p.directorPrep,
+          promptLocks: {
+            ...saved,
+            toolShapes: { ...saved.toolShapes, [String(rank)]: job },
+          },
+        },
+      };
+    });
+  }
+
+  function patchLock(kind: "character" | "place", id: string, look: string) {
+    updateState((p) => {
+      const saved = p.directorPrep.promptLocks;
+      const current =
+        saved && (saved.characters.length > 0 || saved.places.length > 0)
+          ? saved
+          : derivePromptLocks(p);
+      const next: PromptLocksState = {
+        ...current,
+        characters:
+          kind === "character"
+            ? current.characters.map((row) => (row.id === id ? { ...row, look } : row))
+            : current.characters,
+        places:
+          kind === "place"
+            ? current.places.map((row) => (row.id === id ? { ...row, look } : row))
+            : current.places,
+      };
+      return promptsFollowingLocks({
+        ...p,
+        directorPrep: { ...p.directorPrep, promptLocks: next },
+      });
     });
   }
 
@@ -154,8 +232,7 @@ export function PromptsPanel({
       <header>
         <h2 className="text-xl font-semibold tracking-tight text-pro-text">Prompts</h2>
         <p className="mt-1 max-w-2xl text-sm text-pro-text-secondary">
-          Tool-native prompts from your approved script and look bible — copy into Midjourney, Nano,
-          Kling, LTX, or Higgsfield. Nothing generates inside 35mmPRO.
+          Write the frame. Pick the tool. Copy the prompt and paste it there. Nothing is generated here.
         </p>
       </header>
 
@@ -169,20 +246,54 @@ export function PromptsPanel({
         onGoToExport={() => onGoToTab("export")}
       />
 
+      <PromptLocksEditor
+        locks={locks}
+        warnings={warnings}
+        copiedKey={copiedKey}
+        onLookChange={patchLock}
+        onKeptStillChange={patchKeptStill}
+        onCopy={copyText}
+      />
+
       <div className="space-y-5">
         {displayState.shotPlan.sequences.map((seq, seqIndex) => (
           <PromptSceneSection
             key={seq.id}
             seq={seq}
             seqIndex={seqIndex}
+            stale={seq.sceneNumber != null && stale.has(seq.sceneNumber)}
             toolOptions={toolOptions}
             copiedKey={copiedKey}
             onToolChange={(shotIndex, rank) =>
               updateState((p) => rebuildShotPromptInState(p, seqIndex, shotIndex, rank))
             }
-            onPromptChange={(shotIndex, text) =>
-              patchShot(seqIndex, shotIndex, { aiGenerationPrompt: text })
+            onSentenceChange={(shotIndex, text) =>
+              updateState((p) => {
+                const withSentence = {
+                  ...p,
+                  shotPlan: {
+                    sequences: p.shotPlan.sequences.map((seq, si) => {
+                      if (si !== seqIndex) return seq;
+                      return {
+                        ...seq,
+                        shots: seq.shots.map((shot, shi) =>
+                          shi === shotIndex ? { ...shot, frameSentence: text, promptEdited: false } : shot
+                        ),
+                      };
+                    }),
+                  },
+                };
+                const rank =
+                  withSentence.shotPlan.sequences[seqIndex]?.shots[shotIndex]?.recommendedToolRank ??
+                  6;
+                return rebuildShotPromptInState(withSentence, seqIndex, shotIndex, rank);
+              })
             }
+            onPromptChange={(shotIndex, text) =>
+              patchShot(seqIndex, shotIndex, { aiGenerationPrompt: text, promptEdited: true })
+            }
+            toolShapeKnown={(rank) => promptJobIsKnown(displayState, rank)}
+            onToolShape={(rank, job) => setToolShape(rank, job)}
             onNegativeChange={(shotIndex, text) =>
               patchShot(seqIndex, shotIndex, { aiNegativePrompt: text })
             }
@@ -192,7 +303,7 @@ export function PromptsPanel({
       </div>
 
       <footer className="rounded-xl bg-pro-muted/30 px-4 py-3 text-xs leading-relaxed text-pro-text-secondary ring-1 ring-white/[0.06]">
-        ~3–4 prompts per scene from approved script + look. Copy each line into the linked external tool.
+        Copy the prompt into the tool. The picture is made there, not here.
       </footer>
     </div>
   );

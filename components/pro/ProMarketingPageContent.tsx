@@ -2,10 +2,10 @@ import Link from "next/link";
 import { Logo35mmAI } from "@/components/brand/Logo35mmAI";
 import { ProBadge } from "@/components/brand/ProBadge";
 import { ProMarketingInfoBottomStrip } from "@/components/pro/ProMarketingInfoBottomStrip";
+import { ProMarketingPlanCards } from "@/components/pro/ProMarketingPlanCards";
 import { ProMarketingStepsSection } from "@/components/pro/ProMarketingStepsSection";
 import { ProMarketingSubscribeCard } from "@/components/pro/ProMarketingSubscribeCard";
 import { proBtn, proWebShell } from "@/components/pro/ux/pro-surfaces";
-import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import {
   PRO_INVITE_ONLY_EYEBROW,
   PRO_MARKETING_HEADLINE,
@@ -22,6 +22,8 @@ type Props = {
   inviteUnlocked?: boolean;
   checkoutEnabled?: boolean;
   invalidInvite?: boolean;
+  /** Home is the two-plan page. Pro is the studio card plus How Pro works. */
+  surface?: "home" | "pro";
 };
 
 /** Product visual — screenplay slug → prompt line (not a card grid). */
@@ -141,9 +143,9 @@ function ProMarketingEntitledLanding() {
       <div className="mx-auto max-w-lg space-y-6 text-center">
         <div className="flex flex-wrap items-center justify-center gap-2.5">
           <Logo35mmAI
-            href="/pro/app"
-            className="pointer-events-none text-[2.5rem] leading-none"
-            aria-label={BRAND_NAME_PRO}
+            href="/"
+            className="text-[2.5rem] leading-none"
+            aria-label="35mmAi home"
           />
           <ProBadge variant="header" className="shrink-0" title="Pro" />
         </div>
@@ -167,6 +169,7 @@ function ProMarketingProspectLanding({
   inviteUnlocked = true,
   checkoutEnabled = true,
   invalidInvite = false,
+  surface = "pro",
 }: Props) {
   const subscribeProps = {
     stackReady,
@@ -180,24 +183,38 @@ function ProMarketingProspectLanding({
     sectionId: "pro-subscribe",
   };
 
+  const liveOffer = checkoutEnabled && !inviteOnly;
+
   return (
     <>
-      <ProMarketingHero
-        signedIn={signedIn}
-        inviteUnlocked={inviteUnlocked}
-        inviteOnly={inviteOnly}
-      />
+      {liveOffer ? null : (
+        <ProMarketingHero
+          signedIn={signedIn}
+          inviteUnlocked={inviteUnlocked}
+          inviteOnly={inviteOnly}
+        />
+      )}
 
       <div
-        className={`relative z-10 mx-auto space-y-8 pb-8 pt-8 md:pb-14 md:pt-12 ${proWebShell.main}`}
+        className={`relative z-10 mx-auto pb-8 pt-8 md:pb-14 md:pt-12 ${
+          surface === "pro" ? "space-y-6 md:space-y-8" : "space-y-8 md:space-y-12"
+        } ${proWebShell.main}`}
       >
-        <div className="mx-auto max-w-5xl">
-          <ProMarketingStepsSection />
-        </div>
+        {liveOffer ? (
+          <ProMarketingPlanCards signedIn={signedIn} layout={surface === "home" ? "both" : "pro"} />
+        ) : null}
 
-        <div className="mx-auto max-w-3xl">
-          <ProMarketingSubscribeCard {...subscribeProps} />
-        </div>
+        {surface === "pro" ? (
+          <div className="mx-auto max-w-5xl">
+            <ProMarketingStepsSection />
+          </div>
+        ) : null}
+
+        {liveOffer ? null : (
+          <div className="mx-auto max-w-3xl">
+            <ProMarketingSubscribeCard {...subscribeProps} />
+          </div>
+        )}
       </div>
     </>
   );

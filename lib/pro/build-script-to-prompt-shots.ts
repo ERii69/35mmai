@@ -26,10 +26,22 @@ function timePhrase(scene: SceneRow): string {
   return "with cinematic motivated lighting";
 }
 
+/** Shot notes for this template are already-written prompts. They must not be pasted back into the action. */
+function isGeneratedPromptDump(text: string): boolean {
+  return /\[(establishing|wide|medium|close_up|dolly)\]|cinematic (establishing|wide master|medium|close-up)|2\.39:1 film still|fast primes|modular ai|look bible/i.test(
+    text
+  );
+}
+
 function actionVisual(scene: SceneRow): string {
-  const raw = [scene.oneLine, scene.shotNotes].filter(Boolean).join(" ").trim();
-  if (!raw) return `${locationLabel(scene)} environment`;
-  return truncateAtWord(raw.replace(/\s+/g, " "), 480);
+  const one = scene.oneLine.replace(/\s+/g, " ").trim();
+  if (one && !isGeneratedPromptDump(one)) return truncateAtWord(one, 480);
+  const notes = scene.shotNotes.replace(/\s+/g, " ").trim();
+  if (notes && !isGeneratedPromptDump(notes) && !isInstructionalLookText(notes)) {
+    return truncateAtWord(notes, 480);
+  }
+  if (one) return truncateAtWord(one, 480);
+  return `${locationLabel(scene)} environment`;
 }
 
 function isInstructionalLookText(text: string): boolean {
@@ -138,11 +150,11 @@ export function beatSpecificVisual(scene: SceneRow, shotType: ShotType): string 
   const time = timePhrase(scene);
   switch (shotType) {
     case "establishing":
-      return `exterior ${loc} ${time}, ${action}, geography and scale of the space`;
+      return `exterior ${loc} ${time}, geography and scale of the space, the place itself`;
     case "wide":
       return scene.intExt === "EXT" || scene.intExt === "INT/EXT"
-        ? `wide view of ${loc} ${time}, ${action}, full environment readable`
-        : `interior ${loc} ${time}, ${action}, full room geography and blocking`;
+        ? `wide view of ${loc} ${time}, full environment readable, geography of the place`
+        : `interior ${loc} ${time}, full room geography and blocking, the space itself`;
     case "medium":
       return `${loc} ${time}, ${action}, waist-up character presence in the environment`;
     case "close_up":
@@ -176,17 +188,23 @@ function inferDetailSubject(action: string, scene: SceneRow): string {
     return `stone wall with climbing green vines, organic texture, ${locationLabel(scene)}`;
   }
   if (/\b(hands|phone|letter|object|key)\b/.test(lower)) {
-    return `story-critical object or hands mid-action, ${action.slice(0, 100)}`;
+    return `hands and the letter, ${truncateAtWord(action, 140)}`;
+  }
+  if (/\bcoffee\b/.test(lower)) {
+    return `untouched coffee cup, ${truncateAtWord(action, 140)}`;
+  }
+  if (/\b(neon|brick|coat|rain)\b/.test(lower)) {
+    return `wet surface, neon, and cloth in motion, ${truncateAtWord(action, 140)}`;
   }
   if (scene.intExt === "EXT" || scene.intExt === "INT/EXT") {
-    return `environmental story detail in ${locationLabel(scene)}, ${action.slice(0, 100)}`;
+    return `environmental story detail in ${locationLabel(scene)}, ${truncateAtWord(action, 140)}`;
   }
-  return `expressive story detail in ${locationLabel(scene)}, ${action.slice(0, 100)}`;
+  return `expressive story detail in ${locationLabel(scene)}, ${truncateAtWord(action, 140)}`;
 }
 
 function optionalMovement(scene: SceneRow, rules: DirectorRulesState, visual?: VisualHints): string | null {
   const action = actionVisual(scene).toLowerCase();
-  if (!/\b(run|chase|approach|walk|move|camera|tracking|dolly)\b/.test(action)) return null;
+  if (!/\b(runs?|chases?|approaches|walks?|moves?|camera|tracking|dolly)\b/.test(action)) return null;
   return formatPromptLine(
     "dolly",
     `Slow dolly or tracking shot, ${locationLabel(scene)} ${timePhrase(scene)}, ${actionVisual(scene)}, motivated camera movement, ${styleTail(rules, visual)}`

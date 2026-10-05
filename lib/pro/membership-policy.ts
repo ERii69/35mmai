@@ -20,7 +20,7 @@ export const PRO_PRIVATE_STUDIO_TAGLINE =
   "Your projects stay on your account. Only you can open them when signed in.";
 
 export const PRO_SCRIPT_PASTE_PRIVACY_CALLOUT =
-  "Saved to your account only — we don’t send this script to our servers for AI or model training.";
+  "Saved to your account. We do not use your script to train AI models.";
 
 export function isEntitledSubscriptionStatus(status: string | null | undefined): boolean {
   return status === "active" || status === "trialing";

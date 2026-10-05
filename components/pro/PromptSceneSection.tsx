@@ -3,7 +3,7 @@
 import { formatDisplayHeading } from "@/lib/pro/format-display-heading";
 import { PromptBeatCard } from "@/components/pro/PromptBeatCard";
 import { PromptBeatRow } from "@/components/pro/PromptBeatRow";
-import type { ShotSequence } from "@/lib/pro/types";
+import type { PromptJob, ShotSequence } from "@/lib/pro/types";
 import type { PromptToolOption } from "@/lib/pro/sync-shot-prompts";
 
 type Props = {
@@ -12,9 +12,13 @@ type Props = {
   toolOptions: PromptToolOption[];
   copiedKey: string | null;
   onToolChange: (shotIndex: number, rank: number) => void;
+  onSentenceChange: (shotIndex: number, text: string) => void;
   onPromptChange: (shotIndex: number, text: string) => void;
+  toolShapeKnown: (rank: number) => boolean;
+  onToolShape: (rank: number, job: PromptJob) => void;
   onNegativeChange: (shotIndex: number, text: string) => void;
   onCopy: (key: string, text: string, label: string) => void;
+  stale?: boolean;
 };
 
 export function PromptSceneSection({
@@ -23,9 +27,13 @@ export function PromptSceneSection({
   toolOptions,
   copiedKey,
   onToolChange,
+  onSentenceChange,
   onPromptChange,
+  toolShapeKnown,
+  onToolShape,
   onNegativeChange,
   onCopy,
+  stale = false,
 }: Props) {
   if (seq.shots.length === 0) return null;
 
@@ -37,7 +45,10 @@ export function PromptSceneSection({
     toolOptions,
     copiedKey,
     onToolChange: (rank: number) => onToolChange(shotIndex, rank),
+    onSentenceChange: (text: string) => onSentenceChange(shotIndex, text),
     onPromptChange: (text: string) => onPromptChange(shotIndex, text),
+    toolShapeKnown,
+    onToolShape,
     onNegativeChange: (text: string) => onNegativeChange(shotIndex, text),
     onCopy,
   });
@@ -51,9 +62,16 @@ export function PromptSceneSection({
             <p className="text-xs text-pro-text-secondary">Scene {seq.sceneNumber}</p>
           ) : null}
         </div>
-        <span className="rounded-full bg-pro-muted px-2.5 py-0.5 text-[10px] font-medium text-pro-text-secondary">
-          {seq.shots.length} prompt{seq.shots.length === 1 ? "" : "s"}
-        </span>
+        <div className="flex items-center gap-2">
+          {stale ? (
+            <span className="rounded-full bg-amber-950/70 px-2.5 py-0.5 text-[10px] font-medium text-amber-100">
+              Out of date
+            </span>
+          ) : null}
+          <span className="rounded-full bg-pro-muted px-2.5 py-0.5 text-[10px] font-medium text-pro-text-secondary">
+            {seq.shots.length} prompt{seq.shots.length === 1 ? "" : "s"}
+          </span>
+        </div>
       </header>
 
       <div className="md:hidden">

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { safeNextPath } from "@/lib/auth/safe-next-path";
 import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { createClient } from "@/lib/supabase/client";
+import { PasswordField } from "@/components/auth/PasswordField";
 import { proAuth, proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
 
 function signUpHref(next: string) {
@@ -78,25 +79,23 @@ export default function LoginPage() {
             className={proSurface.field}
           />
         </div>
-        <div>
-          <label htmlFor="login-password" className={proAuth.label}>
-            Password
-          </label>
-          <input
-            id="login-password"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={proSurface.field}
-          />
-        </div>
+        <PasswordField
+          id="login-password"
+          label="Password"
+          autoComplete="current-password"
+          value={password}
+          onChange={setPassword}
+        />
         {error ? (
           <p className="text-sm text-pro-warning" role="alert">
             {error}
           </p>
         ) : null}
+        <p className="text-right text-sm">
+          <Link href="/auth/forgot-password" className={proAuth.link}>
+            Forgot password?
+          </Link>
+        </p>
         <Button type="submit" className={proBtn.primaryFull} disabled={submitDisabled}>
           {!hydrated ? "Preparing…" : loading ? "Signing in…" : "Sign in"}
         </Button>

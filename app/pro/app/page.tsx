@@ -67,9 +67,6 @@ export default async function ProAppHomePage() {
 
       {hasProjects ? (
         <>
-          <div className="hidden md:block">
-            <ProDashboardNewProjectSection compact />
-          </div>
           <ProDashboardProjects projects={mapped} />
           <ProDashboardNewProjectFab variant="fab" />
         </>

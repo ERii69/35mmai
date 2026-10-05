@@ -47,7 +47,9 @@ export function ProMarketingAboutCompareMobile({
           <p className="mt-1 text-xs font-semibold leading-snug text-pro-text">{FREE_VS_PRO.proTitle}</p>
           <p className="mt-1 flex-1 text-[11px] leading-relaxed text-pro-text-secondary">
             {checkoutEnabled
-              ? `Then ${PRO_MARKETING_PRICE.fullLabel}`
+              ? PRO_MARKETING_PRICE.trialDays > 0
+                ? `Then ${PRO_MARKETING_PRICE.fullLabel}`
+                : PRO_MARKETING_PRICE.currencyNote
               : PRO_MARKETING_PRICE.valueProp}
           </p>
           {checkoutEnabled ? (

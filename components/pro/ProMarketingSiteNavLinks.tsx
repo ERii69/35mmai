@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { PRO_MARKETING_HEADLINE, PRO_MARKETING_HERO } from "@/lib/pro/marketing-copy";
 import { PRO_SUBSCRIBE_PAGE_SECTIONS } from "@/lib/pro/marketing-sections";
 import { BRAND_NAME } from "@/lib/brand/brand-identity";
+import { CATALOG_PATHS } from "@/lib/catalog-routes";
 import {
   ProMarketingLegalMenu,
   marketingNavLink,
@@ -66,7 +67,7 @@ export function ProMarketingSiteNavLinks({
         ) : null}
         {showFreeCatalog ? (
           <Link
-            href="/"
+            href={CATALOG_PATHS.home}
             className="block rounded-xl px-4 py-3 text-base font-medium text-pro-text transition hover:bg-white/[0.06]"
             onClick={onNavigate}
           >
@@ -97,7 +98,7 @@ export function ProMarketingSiteNavLinks({
         </Link>
       ) : null}
       {showFreeCatalog ? (
-        <Link href="/" className={marketingNavLink}>
+        <Link href={CATALOG_PATHS.home} className={marketingNavLink}>
           Free {BRAND_NAME}
         </Link>
       ) : null}

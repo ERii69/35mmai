@@ -25,6 +25,16 @@ export function isProPublicCheckoutEnabled(): boolean {
   return true;
 }
 
+/** Soft launch: PRO_INVITE_ONLY=1. Live release: 0 or unset. */
+export function isProInviteOnly(): boolean {
+  return envFlagTrue("PRO_INVITE_ONLY");
+}
+
+/** Public release: checkout on, invite gate off. */
+export function isProLiveRelease(): boolean {
+  return isProPublicCheckoutEnabled() && !isProInviteOnly();
+}
+
 /** True when Anthropic API key is present (does not enable agents alone). */
 export function isAnthropicKeyConfigured(): boolean {
   return Boolean(process.env.ANTHROPIC_API_KEY?.trim());

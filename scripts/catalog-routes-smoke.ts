@@ -30,7 +30,7 @@ assert.equal(parseCatalogPathname("/kit")?.step, 7);
 assert.equal(parseCatalogPathname("/workflows")?.step, 4);
 
 assert.equal(catalogRedirectPath(new URLSearchParams("step=9")), "/tools");
-assert.equal(catalogRedirectPath(new URLSearchParams("view=guide")), "/how-it-works");
+assert.equal(catalogRedirectPath(new URLSearchParams("view=guide")), "/about");
 assert.equal(catalogRedirectPath(new URLSearchParams("step=1")), null);
 assert.equal(catalogRedirectPath(new URLSearchParams("step=1&budget=micro")), null);
 assert.equal(catalogBudgetPathHref("micro"), "/?step=1&budget=micro");

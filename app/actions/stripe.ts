@@ -1,12 +1,36 @@
 "use server";
 
 import type Stripe from "stripe";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { canStartProCheckout } from "@/lib/pro/invite-gate";
 import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
 import { getAppUrl, getProMonthlyPriceId, getStripe } from "@/lib/stripe";
 import { getProSubscriptionTrialDays } from "@/lib/pro/subscription-trial";
+
+const CHECKOUT_RETURN_ORIGINS = new Set([
+  "http://127.0.0.1:3000",
+  "http://localhost:3000",
+  "https://www.35mmai.com",
+  "https://35mmai.com",
+]);
+
+/** Send Stripe back to the host the user is actually on, so the login cookie still matches. */
+async function checkoutReturnBase(): Promise<string> {
+  const configured = getAppUrl();
+  const h = await headers();
+  const origin = h.get("origin")?.trim() ?? "";
+  if (CHECKOUT_RETURN_ORIGINS.has(origin)) return origin;
+  const referer = h.get("referer")?.trim() ?? "";
+  try {
+    const url = new URL(referer);
+    if (CHECKOUT_RETURN_ORIGINS.has(url.origin)) return url.origin;
+  } catch {
+    /* fall back to the configured app URL */
+  }
+  return configured;
+}
 
 export async function startProCheckout() {
   const supabase = await createClient();
@@ -41,7 +65,7 @@ export async function startProCheckout() {
 
   let base: string;
   try {
-    base = getAppUrl();
+    base = await checkoutReturnBase();
   } catch {
     redirect("/account?stripe=missing_app_url");
   }
@@ -115,7 +139,7 @@ async function createCustomerPortalUrl(): Promise<string | null> {
     return null;
   }
   try {
-    base = getAppUrl();
+    base = await checkoutReturnBase();
   } catch {
     return null;
   }

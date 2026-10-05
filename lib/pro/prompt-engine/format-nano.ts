@@ -12,8 +12,8 @@ export function formatNanoPrompt(ctx: PromptBeatContext): {
     ctx.shotType === "extreme_close_up";
 
   const lead = isDetail
-    ? `Nano composite insert · ${ctx.action || ctx.subject}`
-    : `Nano photoreal still · ${ctx.subject}`;
+    ? `photorealistic composite insert, ${ctx.action || ctx.subject}`
+    : `photorealistic still, ${ctx.subject}`;
 
   const parts = [
     lead,

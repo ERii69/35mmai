@@ -16,7 +16,7 @@ import {
   allTools,
   SITE_CONTACT_EMAIL,
 } from "@/app/data";
-import { BRAND_NAME } from "@/lib/brand/brand-identity";
+import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import {
   BUDGET_PATH_FEATURE,
   BUDGET_PATH_MICRO,
@@ -24,6 +24,9 @@ import {
   WORKFLOWS_LABEL,
 } from "@/lib/catalog-labels";
 import { CATALOG_PATHS } from "@/lib/catalog-routes";
+import { HowItWorksContent } from "@/components/how-it-works/HowItWorksContent";
+import { CATALOG_AS_OF_LABEL } from "@/components/catalog/CatalogFreshnessNotice";
+import { PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 
 const MAILTO = `mailto:${SITE_CONTACT_EMAIL}`;
 
@@ -37,21 +40,6 @@ const MOBILE_SECTION_NAV = [
   ["#about-faq", "FAQ"],
   ["#about-quote", "Values"],
   ["#about-contact", "Contact"],
-] as const;
-
-const HOW_IT_WORKS_STEPS = [
-  {
-    title: "Choose your stage",
-    body: "Start with the part of production you’re working on now.",
-  },
-  {
-    title: "Compare the fit",
-    body: "Check workflow, price, strengths, and trade-offs before opening a tool.",
-  },
-  {
-    title: "Keep a lean kit",
-    body: "Save only the tools that earn a place in your real production workflow.",
-  },
 ] as const;
 
 const OBSERVE_IDS = MOBILE_SECTION_NAV.map(([href]) => href.slice(1));
@@ -68,20 +56,14 @@ export function AboutPageContent({
   variant?: AboutPageVariant;
   onNavigate?: (step: number) => void;
 }) {
-  const lastUpdatedLabel = new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date());
-
   const scrollMt =
     variant === "standalone"
-      ? "scroll-mt-[calc(4rem+env(safe-area-inset-top))]"
+      ? "scroll-mt-[calc(8rem+env(safe-area-inset-top))]"
       : "scroll-mt-[calc(4.25rem+env(safe-area-inset-top))] md:scroll-mt-[calc(5.25rem+env(safe-area-inset-top))]";
 
   const chipTop =
     variant === "standalone"
-      ? "top-[calc(3.5rem+env(safe-area-inset-top)+4px)]"
+      ? "top-[calc(7.25rem+env(safe-area-inset-top)+4px)]"
       : "top-[calc(4.25rem+env(safe-area-inset-top)+6px)]";
 
   const [activeSectionId, setActiveSectionId] = useState(OBSERVE_IDS[0]);
@@ -113,7 +95,7 @@ export function AboutPageContent({
 
   return (
     <article
-      className="relative overflow-hidden bg-[#0f0f0f] text-[#f5f5f5]"
+      className={`relative overflow-hidden text-[#f5f5f5] ${variant === "standalone" ? "" : "bg-[#0f0f0f]"}`}
       aria-labelledby="about-heading"
     >
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(225,29,72,0.06)_0%,transparent_45%),radial-gradient(circle_at_center,rgba(234,179,8,0.04)_0%,transparent_65%)]" />
@@ -145,7 +127,7 @@ export function AboutPageContent({
           <p className="mx-auto mt-3 max-w-2xl text-sm text-[#737373]" suppressHydrationWarning>
             <strong className="font-medium text-[#a3a3a3]">{toolCount} tools</strong>
             {" · "}
-            Last updated {lastUpdatedLabel}
+            Catalog note {CATALOG_AS_OF_LABEL}
           </p>
           <div className="mx-auto mt-4 max-w-2xl rounded-2xl border border-[#2a2a2a] bg-[#111]/60 px-4 py-3 text-left text-sm leading-relaxed text-[#a3a3a3] md:text-center">
             {BRAND_NAME} is an <span className="text-[#e5e5e5]">independent</span> directory. Some
@@ -210,7 +192,11 @@ export function AboutPageContent({
             <div className="mt-4 max-w-2xl space-y-4 text-left text-base leading-relaxed md:mx-auto md:text-center">
               <p>
                 {BRAND_NAME} is a curated directory — not a generic AI list — built for people who actually
-                shoot, edit, and ship films on tight schedules and budgets.
+                shoot, edit, and ship films on tight schedules and budgets. The directory is free.
+              </p>
+              <p>
+                {BRAND_NAME_PRO} is separate: {PRO_MARKETING_PRICE.fullLabel}, cancel anytime. Paste a
+                screenplay, lock the look, and leave with a prompt for every shot.
               </p>
               <p>
                 In 2026, AI is a practical part of the pipeline: storyboards, breakdowns, sound,
@@ -230,18 +216,12 @@ export function AboutPageContent({
                 Find the right tool without app hunting
               </h2>
             </div>
-            <ol className="mt-5 grid gap-3 md:grid-cols-3">
-              {HOW_IT_WORKS_STEPS.map((item, index) => (
-                <li
-                  key={item.title}
-                  className="rounded-2xl border border-[#2a2a2a] bg-[#111]/80 p-5"
-                >
-                  <p className="text-xs font-semibold text-[#e11d48]">0{index + 1}</p>
-                  <h3 className="mt-2 text-sm font-semibold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#a3a3a3]">{item.body}</p>
-                </li>
-              ))}
-            </ol>
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-[#a3a3a3] md:text-base">
+              Go from a blank page to a working tool stack, closer to real production than random app hunting.
+            </p>
+            <div className="mt-5">
+              <HowItWorksContent asSection />
+            </div>
           </section>
 
           <section id="about-stats" className={scrollMt}>
@@ -258,8 +238,8 @@ export function AboutPageContent({
                 <p className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
                   Last updated
                 </p>
-                <p className="mt-1 text-lg font-semibold text-[#e5e5e5]" suppressHydrationWarning>
-                  {lastUpdatedLabel}
+                <p className="mt-1 text-lg font-semibold text-[#e5e5e5]">
+                  {CATALOG_AS_OF_LABEL}
                 </p>
               </div>
             </div>
@@ -388,7 +368,7 @@ export function AboutPageContent({
                 [
                   {
                     q: `Is ${BRAND_NAME} free to use?`,
-                    a: `Yes. Browsing the directory, filters, ${WORKFLOWS_LABEL}, and ${BUDGET_TEMPLATES_LABEL} on this site are free. Individual tools have their own pricing — we summarize what we can, but you should always confirm on the vendor's site.`,
+                    a: `The catalog is free: browsing, filters, ${WORKFLOWS_LABEL}, and ${BUDGET_TEMPLATES_LABEL}. ${BRAND_NAME_PRO} is ${PRO_MARKETING_PRICE.fullLabel} — paste a screenplay, lock the look, and leave with a prompt for every shot. Individual tools have their own pricing. Confirm that on the vendor's site.`,
                   },
                   {
                     q: "Do you rank, endorse, or get paid by tools?",

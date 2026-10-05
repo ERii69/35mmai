@@ -11,6 +11,7 @@ type Project = {
 const EXPORTS = [
   { kind: "prompt-pack-md" as const, label: "Prompt pack (Markdown)" },
   { kind: "prompt-pack-csv" as const, label: "Prompt pack (CSV)" },
+  { kind: "shot-list-md" as const, label: "Shot list" },
   { kind: "directors-prep-md" as const, label: "Prep summary" },
 ];
 

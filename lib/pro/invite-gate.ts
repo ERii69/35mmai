@@ -1,16 +1,12 @@
 import { cookies } from "next/headers";
-import { isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
+import { isProInviteOnly, isProPublicCheckoutEnabled } from "@/lib/pro/launch-flags";
+
+export { isProInviteOnly };
 
 /** httpOnly cookie set after a valid /pro/invite/[code] visit. */
 export const PRO_INVITE_COOKIE = "pro_invite_code";
 
 const COOKIE_MAX_AGE_SEC = 60 * 60 * 24 * 60; // 60 days
-
-/** Soft launch: public CTAs require a valid invite cookie. */
-export function isProInviteOnly(): boolean {
-  const raw = process.env.PRO_INVITE_ONLY?.trim().toLowerCase();
-  return raw === "1" || raw === "true" || raw === "yes";
-}
 
 /** Comma/whitespace-separated codes from PRO_INVITE_CODES. */
 export function getProInviteCodes(): string[] {

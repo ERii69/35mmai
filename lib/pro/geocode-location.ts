@@ -19,7 +19,7 @@ export async function geocodeMapQuery(query: string): Promise<GeocodeResult | nu
 
   const res = await fetch(url.toString(), {
     headers: {
-      "User-Agent": "35mmAiPro/1.0 (location research; contact: support@35mmai.com)",
+      "User-Agent": "35mmAiPro/1.0 (location research; contact: info@35mmai.com)",
       Accept: "application/json",
     },
     next: { revalidate: 86400 },

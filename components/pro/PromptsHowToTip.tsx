@@ -7,7 +7,7 @@ type Props = {
   projectId: string;
 };
 
-const TIP_ID = "prompts-howto-v1";
+const TIP_ID = "prompts-howto-v2";
 
 /** First-visit how-to on Finish → Prompts — dismissible per project. */
 export function PromptsHowToTip({ projectId }: Props) {
@@ -29,22 +29,21 @@ export function PromptsHowToTip({ projectId }: Props) {
           </p>
           <ol className="mt-2 space-y-1.5 text-sm leading-snug text-pro-text">
             <li>
-              <span className="font-medium text-pro-text">1.</span> Pick a tool on the beat
-              (Midjourney, Kling, LTX…).
+              <span className="font-medium text-pro-text">1.</span> Read the sentence. Change it and
+              the paste follows.
             </li>
             <li>
-              <span className="font-medium text-pro-text">2.</span> Tap <span className="font-medium">Copy</span>{" "}
-              (and <span className="font-medium">Copy neg</span> if the tool uses negatives).
+              <span className="font-medium text-pro-text">2.</span> Pick the tool. The paste is written
+              for that tool.
             </li>
             <li>
-              <span className="font-medium text-pro-text">3.</span> Tap{" "}
-              <span className="font-medium">Open tool</span> → paste → generate. Nothing runs inside
-              35mmAiPro.
+              <span className="font-medium text-pro-text">3.</span> Copy. Open the tool. Paste there.
+              Nothing is generated here.
             </li>
           </ol>
           <p className="mt-2 text-xs text-pro-text-secondary">
-            Prefer a file? Use <span className="font-medium text-pro-text">Export</span> for the full
-            Markdown / CSV pack.
+            People and places keeps the face and the room the same. Editing those words updates the
+            pastes. Use <span className="font-medium text-pro-text">Export</span> for the pack.
           </p>
         </div>
         <button

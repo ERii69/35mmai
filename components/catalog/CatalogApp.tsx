@@ -20,6 +20,7 @@ import {
   resolvePartnerLogoForTool,
 } from "@/components/catalog/PartnerBadge";
 import { CatalogFreshnessNotice } from "@/components/catalog/CatalogFreshnessNotice";
+import { HomeSubscriptionOffer } from "@/components/catalog/HomeSubscriptionOffer";
 import { Logo35mmAI } from "@/components/brand/Logo35mmAI";
 import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import {
@@ -935,12 +936,7 @@ useEffect(() => {
       </Link>
     </Button>
     <Button variant="ghost" size="sm" asChild className={catalogNavBtnClass}>
-      <Link
-        href={CATALOG_PATHS.howItWorks}
-        aria-current={step === 10 ? "page" : undefined}
-      >
-        How it works
-      </Link>
+      <Link href={`${CATALOG_PATHS.about}#how-it-works`}>How it works</Link>
     </Button>
     <Button variant="ghost" size="sm" asChild className={catalogNavBtnClass}>
       <Link href={CATALOG_PATHS.tools} aria-current={step === 9 || step === 2 ? "page" : undefined}>
@@ -1061,7 +1057,8 @@ useEffect(() => {
   <div className="min-h-0 bg-[#0f0f0f] text-[#f5f5f5] relative overflow-hidden flex flex-col">
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.03)_0%,transparent_70%)] pointer-events-none" />
 
-    <div className="flex-1 flex flex-col justify-between pt-3 md:pt-12 px-4 md:px-6">
+    <div className="flex-1 flex flex-col justify-between pt-3 md:pt-8 px-4 md:px-6">
+      <HomeSubscriptionOffer />
 
       {/* Headline - ABOVE on Desktop, BELOW on Mobile */}
       <div className="text-center mb-4 md:mb-16 order-1 md:order-1 max-w-4xl mx-auto">
@@ -1074,7 +1071,7 @@ useEffect(() => {
         <CatalogFreshnessNotice className="mx-auto mt-4 max-w-2xl" />
         <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
           <Link
-            href={CATALOG_PATHS.howItWorks}
+            href={`${CATALOG_PATHS.about}#how-it-works`}
             className="min-h-[44px] inline-flex items-center rounded-xl border border-[#444] bg-[#111] px-4 py-2 text-sm font-medium text-[#d1d5db] transition-colors hover:border-[#e11d48]/70 hover:text-white"
           >
             How it works
@@ -2619,12 +2616,12 @@ useEffect(() => {
           Home
         </Link>
 
-        <Link href={CATALOG_PATHS.tools} onClick={closeMobileMenu} className={catalogMobileMenuLinkClass}>
-          All Tools
+        <Link href={`${CATALOG_PATHS.about}#how-it-works`} onClick={closeMobileMenu} className={catalogMobileMenuLinkClass}>
+          How it works
         </Link>
 
-        <Link href={CATALOG_PATHS.howItWorks} onClick={closeMobileMenu} className={catalogMobileMenuLinkClass}>
-          How it works
+        <Link href={CATALOG_PATHS.tools} onClick={closeMobileMenu} className={catalogMobileMenuLinkClass}>
+          All Tools
         </Link>
 
         <Link href={CATALOG_PATHS.workflows} onClick={closeMobileMenu} className={catalogMobileMenuLinkClass}>

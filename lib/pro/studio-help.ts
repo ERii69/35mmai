@@ -9,32 +9,33 @@ export type StudioHelpSection = {
   steps: string[];
 };
 
-export const STUDIO_HELP_INTRO = `${BRAND_NAME_PRO} does not generate images or video. You paste a screenplay, lock a look, and leave with copy-ready prompts for tools you already use — Midjourney, Kling, LTX, and the rest of your kit.`;
+export const STUDIO_HELP_INTRO = `${BRAND_NAME_PRO} does not generate images or video. Paste a script. Each shot has a sentence. Pick the tool. Copy the prompt and paste it there.`;
 
 export const STUDIO_HELP_SECTIONS: StudioHelpSection[] = [
   {
     id: "start",
     label: "15-minute path",
-    why: "This is the job: script + look → a prompt pack you can paste. You do not need Beats, Budget, or Phases to finish.",
+    why: "This is the job: one sentence per shot, the tool you picked, and a prompt you can paste. Beats, Kit, Phases, World, and Budget are not part of that path.",
     steps: [
       "Open your project. Template should be Script to prompt (default).",
-      "Script: paste pages with INT./EXT. headings, or Try 3-scene demo (that loads a sample, not your other projects). Run prep.",
-      "Look: add one palette swatch or a short mood line. Wait for Saved.",
-      "Finish → Prompts. If you changed the script, tap Build all. Each beat is a different shot (wide / medium / close-up).",
-      "Copy a prompt. Open tool. Paste into that app. Midjourney: shot text first, --ar flags at the end — if flags come first, Midjourney says the prompt is empty.",
-      "Then download the pack — tap Export next to Prompts (same Finish row, not More). Green box: Download prompt pack (.md). Open the Export tab in this guide if you cannot find it.",
+      "Script: paste pages with INT./EXT. headings, or Try 3-scene demo (that loads a sample, not your other projects). Run prep. That drafts a sentence for each shot, plus the people and places.",
+      "Finish → Prompts. Edit a sentence and that shot’s paste follows. Pick the tool under the sentence. Suggested: Grok Imagine, Midjourney, Nano Banana 2, Kling, LTX Studio, Higgsfield. The paste is rewritten for that tool. The sentence stays.",
+      "People and places is on the same page. Change a face, a place, or the kept-still words and every paste that uses them updates as you type. The kept still is the face prompt in words. Nothing is uploaded.",
+      "Copy the prompt. Open the tool. Paste it there. The picture is made there, not here.",
+      "Export is the tab next to Prompts. Download prompt pack (.md) or CSV. If a yellow line says a detail is in some scenes and missing in another, the pack stays until the sentences match. Shot list still downloads.",
     ],
   },
   {
     id: "export",
     label: "Export",
-    why: "The file is not on the Prompts screen. Export is a tab next to Prompts, under Finish. The green box is the deliverable.",
+    why: "The file is not on the Prompts screen. Export is the tab next to Prompts. The pack is what you paste. The shot list is the one-page handoff.",
     steps: [
-      "Tap Finish at the top (after Script and Look). Under it you should see Prompts · Export · Sign-off. Export is not inside More.",
-      "Tap Export. Still on Prompts? Use the Export button at the bottom of the prompt list (arrow). Sign-off's Download prompt pack button jumps here too.",
-      "Wait until the nav says Saved. If the green buttons are locked, tap Save in the bar first, then try again.",
-      "Green box Download prompt pack: tap Download prompt pack (.md). That is the file you take away. CSV (prompt pack) is the same prompts as a spreadsheet. Copy all prompts puts them on the clipboard.",
-      "Optional extras are collapsed under the green box. Open Kit & planning for Budget CSV, Kit CSV, and Workflow CSV. Also export… has Fountain, Final Draft, and storyboard. Look & locations has the visual bible.",
+      "Tap Finish at the top. Under it: Prompts, Export, Sign-off. Export is not inside More.",
+      "Tap Export. From Prompts, the Export button at the top of the list jumps here too.",
+      "Wait until the bar says Saved.",
+      "Download prompt pack (.md) is the file you take away. CSV (prompt pack) is the same prompts as a spreadsheet. Copy all prompts puts them on the clipboard. Shot list is the sentences, one page.",
+      "A yellow line means a detail (such as a coat) is in the sentences for some scenes and missing in another. The pack buttons stay off until that matches. Shot list still downloads.",
+      "Optional extras sit under the pack: Kit & planning, Look & locations, and other file types.",
     ],
   },
   {

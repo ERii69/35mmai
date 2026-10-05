@@ -42,7 +42,7 @@ export function ProAppHeader({
         <Logo35mmAI
           className={FREE_CATALOG_LOGO_CLASS}
           href="/"
-          aria-label={`${BRAND_NAME} free catalog`}
+          aria-label={`${BRAND_NAME} home`}
         />
       }
       mobileCenter={

@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { PRO_DATA_RETENTION_DAYS } from "@/lib/pro/membership-policy";
-import { BRAND_NAME } from "@/lib/brand/brand-identity";
+import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
+import { PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 
 export function ProTermsContent() {
   return (
     <>
-      <p className="text-sm text-[#737373]">Last updated: May 2026 · 35mmAiPro membership</p>
+      <p className="text-sm text-[#737373]">Last updated: 4 Oct 2026 · {BRAND_NAME} and {BRAND_NAME_PRO}</p>
 
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold text-white">The service</h2>
         <p>
-          35mmAiPro is a paid membership that gives you a private cloud workspace for production prep
-          (projects, templates, exports). The free {BRAND_NAME} catalog at{" "}
+          {BRAND_NAME_PRO} is a paid membership ({PRO_MARKETING_PRICE.fullLabel} USD, billed monthly,
+          no free trial) that gives you a private workspace for production prep: projects, prompts,
+          and exports. The free {BRAND_NAME} catalog at{" "}
           <Link href="/" className="text-pro-primary underline-offset-2 hover:underline">
             home
           </Link>{" "}
@@ -31,18 +33,20 @@ export function ProTermsContent() {
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold text-white">Acceptable use</h2>
         <p>
-          Do not use 35mmAiPro for illegal content, harassment, or attempts to break into other
+          Do not use {BRAND_NAME_PRO} for illegal content, harassment, or attempts to break into other
           accounts. Do not scrape or reverse-engineer the service. One membership is for one person&apos;s
-          account unless we explicitly offer team plans later.
+          account unless we explicitly offer team plans later. The service is not directed at children
+          under 13.
         </p>
       </section>
 
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold text-white">Billing &amp; cancellation</h2>
         <p>
-          Subscriptions renew monthly until you cancel in the Stripe billing portal (Account →
-          Manage billing). Prices are shown at checkout. Refunds follow Stripe and our published
-          policy at launch.
+          {PRO_MARKETING_PRICE.fullLabel} USD renews each month until you cancel in the Stripe billing
+          portal (Account → Manage billing). There is no free trial. Canceling stops the next
+          charge. You keep access until the end of the period you already paid for. We do not refund
+          that current period, except where the law requires a refund.
         </p>
         <p>
           On cancel, project data is handled as described in our{" "}

@@ -1,45 +1,22 @@
 "use client";
 
-import { Plus, Sparkles } from "lucide-react";
-import { proBtn } from "@/components/pro/ux/pro-surfaces";
+import { Sparkles } from "lucide-react";
 import { dispatchOpenNewProject } from "@/lib/pro/pro-nav-events";
 import { PRIMARY_WORKFLOW_CHOICES, type PrimaryWorkflowId } from "@/lib/pro/workflow-choices";
 
 type Props = {
   /** Tighter panel when the project list is visible below. */
   bordered?: boolean;
-  /**
-   * Compact CTA only (desktop with existing projects).
-   * Full template grid stays for empty studio / first project.
-   */
-  compact?: boolean;
   /** Empty studio — one composition: headline + templates (no second card). */
   emptyHero?: boolean;
 };
 
 export function ProDashboardNewProjectSection({
   bordered = true,
-  compact = false,
   emptyHero = false,
 }: Props) {
   function openWithTemplate(templateId?: PrimaryWorkflowId) {
     dispatchOpenNewProject(templateId ? { templateId } : undefined);
-  }
-
-  if (compact) {
-    return (
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-pro-text-secondary">Start another project from a template.</p>
-        <button
-          type="button"
-          onClick={() => openWithTemplate()}
-          className={`${proBtn.primary} inline-flex h-11 min-h-11 items-center gap-2 px-4 text-sm`}
-        >
-          <Plus className="size-4" aria-hidden />
-          New project
-        </button>
-      </div>
-    );
   }
 
   const content = (

@@ -16,6 +16,7 @@ import {
   PRO_MARKETING_SIGNUP_LEAD,
   PRO_MARKETING_SIGNUP_NEXT,
 } from "@/lib/pro/marketing-copy";
+import { PasswordField } from "@/components/auth/PasswordField";
 import { proAuth, proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
 import { createClient } from "@/lib/supabase/client";
 
@@ -103,22 +104,15 @@ export function SignUpForm({ checkoutEnabled }: Props) {
               className={proSurface.field}
             />
           </div>
-          <div>
-            <label htmlFor="signup-password" className={proAuth.label}>
-              Password
-            </label>
-            <input
-              id="signup-password"
-              type="password"
-              autoComplete="new-password"
-              required
-              minLength={8}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={proSurface.field}
-            />
-            <p className="mt-1.5 text-xs text-pro-text-secondary">At least 8 characters.</p>
-          </div>
+          <PasswordField
+            id="signup-password"
+            label="Password"
+            autoComplete="new-password"
+            minLength={8}
+            hint="At least 8 characters."
+            value={password}
+            onChange={setPassword}
+          />
         </div>
 
         <div className={proAuth.cardInner}>

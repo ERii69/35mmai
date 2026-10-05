@@ -221,11 +221,11 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             <h2 className="text-sm font-semibold text-pro-text">35mmAiPro billing</h2>
             <p className="mt-1 text-xs text-pro-text-secondary">
               {subscribed
-                ? "Studio access is on — cloud projects, save, and prompt pack export. AI assist is separate (flag + quota)."
+                ? "Studio access is on. Cancel anytime in billing. AI assist is not included."
                 : access.retention
                   ? `Your subscription ended. Export your projects for ${PRO_DATA_RETENTION_DAYS} days after access ended, then we delete them. Resubscribe to restore the studio.`
                 : checkoutEnabled
-                  ? `${PRO_MARKETING_PRICE.valueProp}. ${PRO_MARKETING_PRICE.trialThenLabel}. ${PRO_MARKETING_PRICE.checkoutNote} Use test card 4242… in Checkout when in Stripe test/sandbox.`
+                  ? `${PRO_MARKETING_PRICE.fullLabel} USD. ${PRO_MARKETING_PRICE.currencyNote}. ${PRO_MARKETING_PRICE.checkoutNote}`
                   : "Soft launch: card Checkout is off. Studio access is granted from the invite allowlist — not a Stripe trial."}
             </p>
             {row?.subscription_status ? (

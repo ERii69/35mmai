@@ -11,6 +11,7 @@ import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { PRO_INVITE_PASSWORD_LEAD } from "@/lib/pro/marketing-copy";
 import { safeNextPath } from "@/lib/auth/safe-next-path";
 import { createClient } from "@/lib/supabase/client";
+import { PasswordField } from "@/components/auth/PasswordField";
 import { proAuth, proBtn, proSurface } from "@/components/pro/ux/pro-surfaces";
 
 type Props = {
@@ -102,22 +103,15 @@ export function InvitePasswordForm({ next: nextProp }: Props) {
           />
         </div>
 
-        <div>
-          <label htmlFor="invite-password" className={proAuth.label}>
-            Password
-          </label>
-          <input
-            id="invite-password"
-            type="password"
-            autoComplete="new-password"
-            required
-            minLength={8}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={proSurface.field}
-          />
-          <p className="mt-1.5 text-xs text-pro-text-secondary">At least 8 characters.</p>
-        </div>
+        <PasswordField
+          id="invite-password"
+          label="Password"
+          autoComplete="new-password"
+          minLength={8}
+          hint="At least 8 characters."
+          value={password}
+          onChange={setPassword}
+        />
 
         <div className={proAuth.cardInner}>
           <label className="grid cursor-pointer grid-cols-[1.125rem_1fr] items-start gap-3">

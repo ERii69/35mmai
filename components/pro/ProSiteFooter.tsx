@@ -1,17 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { FOOTER_CONTACT_EMAIL } from "@/app/data";
 import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
-import { PRO_MARKETING_BETA_SLA } from "@/lib/pro/marketing-copy";
+import { PRO_MARKETING_BETA_SLA, PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 import { PRO_PRIVACY_PATH, PRO_TERMS_PATH } from "@/lib/pro/membership-policy";
 import { proFooter } from "@/components/pro/ux/pro-surfaces";
 
 type Props = {
   className?: string;
+  /** Public checkout, invite gate off. */
+  liveRelease?: boolean;
 };
 
 /** Pro footer — follows the live 35mmAi footer, with Pro legal links. */
-export function ProSiteFooter({ className = "" }: Props) {
+export function ProSiteFooter({ className = "", liveRelease = false }: Props) {
   return (
     <footer className={`${proFooter.root} ${className}`}>
       <div className={`mx-auto max-w-5xl px-6 ${proFooter.muted}`}>
@@ -21,7 +24,13 @@ export function ProSiteFooter({ className = "" }: Props) {
         <p className="mt-2 text-xs text-pro-text-secondary/80">
           Free catalog discovers tools · {BRAND_NAME_PRO} turns script + look into prompt packs
         </p>
-        <p className="mt-2 text-xs text-pro-text-secondary/70">{PRO_MARKETING_BETA_SLA}</p>
+        <p className="mt-2 text-xs text-pro-text-secondary/70">
+          {liveRelease ? PRO_MARKETING_PRICE.trialThenLabel : PRO_MARKETING_BETA_SLA}
+        </p>
+        <p className="mt-2 text-xs text-pro-text-secondary/70">
+          Some catalog links are affiliate links. We may earn a commission at no extra cost to you.
+          Picks stay editorially independent.
+        </p>
         <p className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs">
           <Link href="/about" className={proFooter.link}>
             About
@@ -43,6 +52,11 @@ export function ProSiteFooter({ className = "" }: Props) {
           <Link href={PRO_TERMS_PATH} className={proFooter.link}>
             Terms
           </Link>
+        </p>
+        <p className="mt-3 text-xs">
+          <a href={`mailto:${FOOTER_CONTACT_EMAIL}`} className={proFooter.link}>
+            {FOOTER_CONTACT_EMAIL}
+          </a>
         </p>
         <p className="mt-6 text-xs text-pro-text-secondary/60">
           Made with ❤️ for the film community

@@ -8,6 +8,7 @@ import { ProHeaderAccountMenu } from "@/components/pro/ProHeaderAccountMenu";
 import { ProMarketingAuthButtons } from "@/components/pro/ProMarketingAuthButtons";
 import { PRO_SUBSCRIBE_PATH } from "@/components/pro/ProMarketingSiteNavLinks";
 import { proBtn, proWebShell } from "@/components/pro/ux/pro-surfaces";
+import { SitePrimaryNav } from "@/components/site/SitePrimaryNav";
 import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import { loginHref } from "@/lib/auth/safe-next-path";
 import {
@@ -39,8 +40,12 @@ export function ProMarketingHeader({
 }: Props) {
   const pathname = usePathname();
   const signedIn = Boolean(email);
-  const onMarketingPage = pathname.startsWith("/pro") && !pathname.startsWith("/pro/app");
+  const onMarketingPage =
+    pathname === "/" ||
+    pathname === "/about" ||
+    (pathname.startsWith("/pro") && !pathname.startsWith("/pro/app"));
   const hideProspectAuthInHeader = !signedIn && onMarketingPage;
+  const insidePro = pathname.startsWith("/pro");
   const authReturnPath = pathname || PRO_SUBSCRIBE_PATH;
   const proHref = signedIn
     ? entitled
@@ -90,14 +95,16 @@ export function ProMarketingHeader({
         </div>
       ) : null}
 
-      <div className={`${proWebShell.headerInner} flex items-center justify-between gap-3 py-2 md:py-2.5`}>
+      <div className="mx-auto flex w-full flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2 sm:px-6 md:py-2.5">
         <Logo35mmAI
           className={proWebShell.headerLogo}
           href="/"
-          aria-label={`${BRAND_NAME} free catalog`}
+          aria-label={`${BRAND_NAME} home`}
         />
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        {insidePro ? null : <SitePrimaryNav />}
+
+        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           {authActions}
           <ProBadge variant="header" className="shrink-0" title="Pro" href={proHref} />
           {accountMenu}

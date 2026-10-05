@@ -1,4 +1,3 @@
-import { Sparkles } from "lucide-react";
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 import { moreScriptWorkflowChoices, PRIMARY_WORKFLOW_CHOICES } from "@/lib/pro/workflow-choices";
 
@@ -16,13 +15,12 @@ export function ProMarketingWorkflowsSection({
 
   return (
     <section id={sectionId} aria-labelledby={headingId} className={proMarketing.section}>
-      <div className="space-y-1 text-center md:text-left">
+      <div className="space-y-1 text-center">
         <h2 id={headingId} className="text-lg font-semibold text-pro-text md:text-xl">
-          Workflows
+          Start from a workflow
         </h2>
-        <p className="text-sm text-pro-text-secondary">
-          Script to prompt is the default — Classical AI and Blank sit alongside it. Switch anytime in
-          the studio.
+        <p className="mx-auto max-w-xl text-sm text-pro-text-secondary">
+          Script to prompt is the default. Switch anytime in the studio.
         </p>
       </div>
 
@@ -32,20 +30,13 @@ export function ProMarketingWorkflowsSection({
           return (
             <li
               key={choice.id}
-              className={`flex flex-col rounded-xl border p-4 ${
-                featured
-                  ? "border-pro-accent/30 bg-pro-accent/[0.06] ring-1 ring-pro-accent/15"
-                  : "border-white/[0.08] bg-pro-elevated/90"
-              }`}
+              className="flex flex-col rounded-xl border border-white/[0.08] bg-pro-elevated/70 p-4"
             >
-              <div className="flex flex-wrap items-center gap-1.5">
-                {featured ? (
-                  <Sparkles className={`size-3.5 shrink-0 ${proMarketing.heroIcon}`} aria-hidden />
-                ) : null}
+              <div className="flex flex-wrap items-center gap-2">
                 <h3 className="text-sm font-semibold text-pro-text">{choice.label}</h3>
                 {choice.badge ? (
-                  <span className={proMarketing.accentBadge}>
-                    {featured ? "Recommended" : choice.badge}
+                  <span className={featured ? proMarketing.accentBadge : "rounded-full border border-white/10 px-2 py-px text-[10px] font-semibold text-pro-text-secondary"}>
+                    {featured ? "Default" : choice.badge}
                   </span>
                 ) : null}
               </div>
@@ -58,8 +49,8 @@ export function ProMarketingWorkflowsSection({
       </ul>
 
       {moreCount > 0 ? (
-        <p className="mt-4 text-center text-xs text-pro-text-secondary md:text-left">
-          + {moreCount} more in the studio after you sign up.
+        <p className="mt-3 text-center text-xs text-pro-text-secondary">
+          {moreCount} more workflows open in the studio after you sign up.
         </p>
       ) : null}
     </section>

@@ -4,8 +4,9 @@ import { usePathname } from "next/navigation";
 import { Logo35mmAI } from "@/components/brand/Logo35mmAI";
 import { ProBadge, PRO_HEADER_PROFILE_SLOT } from "@/components/brand/ProBadge";
 import { ProMarketingAuthButtons } from "@/components/pro/ProMarketingAuthButtons";
+import { SitePrimaryNav } from "@/components/site/SitePrimaryNav";
 import { proWebShell } from "@/components/pro/ux/pro-surfaces";
-import { BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
+import { BRAND_NAME } from "@/lib/brand/brand-identity";
 import { loginHref } from "@/lib/auth/safe-next-path";
 
 type Props = {
@@ -25,14 +26,16 @@ export function AuthNavBar({ next, minimal = false }: Props) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-pro-base/95 pt-[env(safe-area-inset-top)] backdrop-blur-md">
-      <div className={`${proWebShell.headerInner} flex items-center justify-between gap-3 py-2 md:py-2.5`}>
+      <div className="mx-auto flex w-full flex-wrap items-center gap-x-3 gap-y-2 px-4 py-2 sm:px-6 md:py-2.5">
         <Logo35mmAI
           className={proWebShell.headerLogo}
-          href="/pro"
-          aria-label={BRAND_NAME_PRO}
+          href="/"
+          aria-label={`${BRAND_NAME} home`}
         />
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        {minimal ? null : <SitePrimaryNav />}
+
+        <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
           {showSignIn ? (
             <ProMarketingAuthButtons
               returnPath={returnPath}

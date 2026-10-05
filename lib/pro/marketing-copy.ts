@@ -36,15 +36,15 @@ const withTrial = hasProSubscriptionTrial();
  * Subscription = cloud studio + save + export (prompt packs). AI assist is separate (flag + quota).
  */
 export const PRO_MARKETING_PRICE = {
-  amountUsd: 9,
-  label: "$9",
+  amountUsd: 15,
+  label: "$15",
   suffix: "/mo",
-  fullLabel: "$9/mo",
+  fullLabel: "$15/mo",
   trialDays,
-  trialLabel: withTrial ? `${trialDays}-day free trial` : "$9/mo",
+  trialLabel: withTrial ? `${trialDays}-day free trial` : "$15/mo",
   trialThenLabel: withTrial
-    ? `${trialDays}-day free trial, then $9/mo`
-    : "$9/mo · cancel anytime",
+    ? `${trialDays}-day free trial, then $15/mo`
+    : "$15/mo · cancel anytime",
   currencyNote: "USD · cancel anytime",
   /** What you pay for — never “unlimited AI”. */
   valueProp: "Cloud projects + prompt packs",

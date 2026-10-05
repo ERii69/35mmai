@@ -6,7 +6,7 @@ import { isAudioPromptTool } from "@/lib/pro/build-shot-tool-prompt";
 import { getToolOutboundUrlByRank } from "@/lib/pro/catalog-tool-link";
 import { formatShotNumber } from "@/lib/pro/shot-plan";
 import { toolSuggestionForShot } from "@/lib/pro/sync-shot-prompts";
-import type { PlannedShot } from "@/lib/pro/types";
+import type { PlannedShot, PromptJob } from "@/lib/pro/types";
 import type { PromptToolOption } from "@/lib/pro/sync-shot-prompts";
 
 type Props = {
@@ -16,7 +16,10 @@ type Props = {
   toolOptions: PromptToolOption[];
   copiedKey: string | null;
   onToolChange: (rank: number) => void;
+  onSentenceChange: (text: string) => void;
   onPromptChange: (text: string) => void;
+  toolShapeKnown: (rank: number) => boolean;
+  onToolShape: (rank: number, job: PromptJob) => void;
   onNegativeChange: (text: string) => void;
   onCopy: (key: string, text: string, label: string) => void;
 };
@@ -29,7 +32,10 @@ export function PromptBeatCard({
   toolOptions,
   copiedKey,
   onToolChange,
+  onSentenceChange,
   onPromptChange,
+  toolShapeKnown,
+  onToolShape,
   onNegativeChange,
   onCopy,
 }: Props) {
@@ -56,19 +62,66 @@ export function PromptBeatCard({
       </div>
 
       <label className="block text-[10px] font-medium uppercase tracking-wide text-pro-text-secondary">
+        Your sentence
+        <textarea
+          rows={3}
+          className="mt-1 w-full rounded-lg border border-white/10 bg-pro-surface px-2 py-2 text-sm normal-case tracking-normal text-pro-text"
+          value={shot.frameSentence ?? ""}
+          onChange={(e) => onSentenceChange(e.target.value)}
+        />
+      </label>
+
+      <label className="block text-[10px] font-medium uppercase tracking-wide text-pro-text-secondary">
         Tool
         <select
           className="mt-1 w-full rounded-lg border border-white/10 bg-pro-surface px-2 py-2.5 text-sm text-pro-text"
           value={toolRank}
           onChange={(e) => onToolChange(Number(e.target.value))}
         >
-          {toolOptions.map((t) => (
-            <option key={t.rank} value={t.rank}>
-              {t.name}
-            </option>
-          ))}
+          <optgroup label="Suggested">
+            {toolOptions
+              .filter((t) => t.suggested)
+              .map((t) => (
+                <option key={t.rank} value={t.rank}>
+                  {t.name}
+                </option>
+              ))}
+          </optgroup>
+          <optgroup label="Other visual tools">
+            {toolOptions
+              .filter((t) => !t.suggested)
+              .map((t) => (
+                <option key={t.rank} value={t.rank}>
+                  {t.name}
+                </option>
+              ))}
+          </optgroup>
         </select>
       </label>
+      {!toolShapeKnown(toolRank) ? (
+        <label className="block text-[10px] font-medium uppercase tracking-wide text-pro-text-secondary">
+          What do you paste here?
+          <select
+            className="mt-1 w-full rounded-lg border border-white/10 bg-pro-surface px-2 py-2 text-sm normal-case tracking-normal text-pro-text"
+            defaultValue=""
+            onChange={(e) => {
+              const job = e.target.value as PromptJob;
+              if (!job) return;
+              onToolShape(toolRank, job);
+              onToolChange(toolRank);
+            }}
+          >
+            <option value="" disabled>
+              Choose
+            </option>
+            <option value="still">A still</option>
+            <option value="edit">An edit</option>
+            <option value="move">A move</option>
+            <option value="scene">A scene</option>
+            <option value="grade">Camera and grade</option>
+          </select>
+        </label>
+      ) : null}
 
       {tool ? (
         <a

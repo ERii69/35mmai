@@ -1,11 +1,13 @@
 import { generateShotPlanFromPrep } from "@/lib/pro/generate-shot-plan-from-prep";
 import { isLookInstructionPollution } from "@/lib/pro/prompt-engine/prompt-context";
+import { stampPromptLocks } from "@/lib/pro/prompt-locks";
 import { syncShotPromptsInState } from "@/lib/pro/sync-shot-prompts";
 import type { ProjectStatePayload } from "@/lib/pro/types";
 
 /** Build visual beats + copy-ready prompts from approved scenes (no Shots tab required). */
 export function buildScriptToPromptPackState(state: ProjectStatePayload): ProjectStatePayload {
-  const withBeats = generateShotPlanFromPrep(state);
+  const locked = stampPromptLocks(state);
+  const withBeats = generateShotPlanFromPrep(locked);
   return syncShotPromptsInState(withBeats, {
     onlyEmpty: false,
     applyRouting: true,
@@ -21,7 +23,7 @@ export function rebuildAllPromptsInState(
   state: ProjectStatePayload,
   opts?: { forceRouting?: boolean }
 ): ProjectStatePayload {
-  const scrubbed = scrubPromptPollutionFromState(state);
+  const scrubbed = stampPromptLocks(scrubPromptPollutionFromState(state));
   const withBeats = generateShotPlanFromPrep(scrubbed, { forceFreshNotes: true });
   return syncShotPromptsInState(withBeats, {
     onlyEmpty: false,

@@ -97,9 +97,8 @@ export function ScriptToPrepAgentPanel({ projectId, state, updateState }: Props)
           <div>
             <h2 className="text-lg font-semibold text-white">Script-to-Pre-Production Agent</h2>
             <p className="mt-1 max-w-2xl text-sm text-pro-text-secondary">
-              Reads your full script (via external AI), breaks scenes, shot lists, locations,
-              references, and a budget band — then fills your workspace and exports a Markdown
-              report. {PRO_SCRIPT_PASTE_PRIVACY_CALLOUT}
+              Builds a prep prompt from the screenplay in your project. You choose whether to paste
+              that prompt into an outside AI tool. {PRO_SCRIPT_PASTE_PRIVACY_CALLOUT}
             </p>
           </div>
         </div>

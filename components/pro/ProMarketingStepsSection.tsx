@@ -28,11 +28,11 @@ export function ProMarketingStepsSection({
         </p>
       </div>
 
-      <ol className="mt-5 grid gap-3 md:grid-cols-3">
+      <ol className="mt-5 grid overflow-hidden rounded-2xl border border-white/[0.08] bg-pro-elevated/70 md:grid-cols-3">
         {PRO_MARKETING_STEPS.map(({ step, title, body }) => (
           <li
             key={step}
-            className="relative flex gap-3 rounded-xl border border-white/[0.08] bg-pro-elevated/70 p-4 shadow-[0_12px_28px_-22px_rgba(0,0,0,0.9)]"
+            className="flex gap-3 border-b border-white/[0.06] p-4 last:border-b-0 sm:p-5 md:border-b-0 md:border-r md:last:border-r-0"
           >
             <span
               className="flex size-7 shrink-0 items-center justify-center rounded-full bg-pro-accent/15 text-xs font-bold text-pro-accent-bright ring-1 ring-pro-accent/25"

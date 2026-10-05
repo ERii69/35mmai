@@ -91,22 +91,22 @@ export function applyInstantDemoPrep(
   staging = approveAllStagingItems(staging);
 
   let next = commitAgentStaging(base, staging);
-  next = buildScriptToPromptPackState(next);
-
   next = {
     ...next,
     visualBible: {
       ...next.visualBible,
-      palette: next.visualBible.palette.length > 0 ? next.visualBible.palette : DEMO_PALETTE,
+      palette: DEMO_PALETTE,
+      lensAndFraming: "35mm and 50mm primes, framed 2.39:1",
     },
     directorPrep: {
       ...next.directorPrep,
       agentMeta: {
         ...next.directorPrep.agentMeta,
-        visualMood: next.directorPrep.agentMeta.visualMood.trim() || DEMO_MOOD,
+        visualMood: DEMO_MOOD,
       },
     },
   };
+  next = buildScriptToPromptPackState(next);
 
   const sceneCount = next.directorPrep.scenes.filter((s) => s.status === "approved").length;
   const promptCount = next.shotPlan.sequences.reduce((n, seq) => n + seq.shots.length, 0);

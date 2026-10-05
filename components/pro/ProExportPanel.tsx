@@ -6,6 +6,8 @@ import { PromptPackDeliverable } from "@/components/pro/PromptPackDeliverable";
 import { useProToast } from "@/components/pro/ux/ProToastProvider";
 import { downloadProExport } from "@/lib/pro/download-pro-export";
 import type { ProExportKind } from "@/lib/pro/export-csv";
+import { continuityWarnings } from "@/lib/pro/prompt-locks";
+import { promptViewState } from "@/lib/pro/sync-shot-prompts";
 import { isScriptToPromptTemplate } from "@/lib/pro/script-to-prompt-template";
 import type { ProjectStatePayload } from "@/lib/pro/types";
 import type { PromptPackSaveStatus } from "@/components/pro/PromptPackDeliverable";
@@ -219,6 +221,8 @@ export function ProExportPanel({ projectId, projectName, state, saveStatus, onSa
     },
   };
 
+  const continuity = continuityWarnings(promptViewState(state));
+
   return (
     <div className="space-y-6">
       <header>
@@ -229,12 +233,24 @@ export function ProExportPanel({ projectId, projectName, state, saveStatus, onSa
         </p>
       </header>
 
+      {continuity.length > 0 ? (
+        <ul
+          className="space-y-1 rounded-xl bg-amber-950/40 px-4 py-3 text-sm text-amber-100"
+          role="status"
+        >
+          {continuity.map((warning) => (
+            <li key={warning}>{warning}</li>
+          ))}
+        </ul>
+      ) : null}
+
       <PromptPackDeliverable
         projectId={projectId}
         projectName={projectName}
         saveStatus={saveStatus}
         onSaveNow={onSaveNow}
         onSuccess={(message) => showToast({ message, variant: "success" })}
+        packBlocked={continuity[0] ?? null}
         onError={(message) => {
           setExportError({ kind: "prompt-pack-md", message });
           showToast({ message, variant: "error" });

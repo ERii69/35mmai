@@ -9,7 +9,7 @@ const STEP_REDIRECT: Record<number, string> = {
   6: "/pro",
   7: "/kit",
   9: "/tools",
-  10: "/how-it-works",
+  10: "/about",
 };
 
 const VIEW_REDIRECT: Record<string, string> = {
@@ -19,7 +19,7 @@ const VIEW_REDIRECT: Record<string, string> = {
   workflows: "/workflows",
   templates: "/budget-templates",
   kit: "/kit",
-  guide: "/how-it-works",
+  guide: "/about",
   pro: "/pro",
 };
 

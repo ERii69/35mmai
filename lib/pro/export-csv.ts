@@ -12,7 +12,7 @@ import {
 } from "@/lib/pro/location-research-export";
 import { buildFdxExport } from "@/lib/pro/fdx-export";
 import { buildFountainExport } from "@/lib/pro/fountain-export";
-import { buildPromptPackCsv, buildPromptPackMd } from "@/lib/pro/prompt-pack-export";
+import { buildPromptPackCsv, buildPromptPackMd, buildShotListMd } from "@/lib/pro/prompt-pack-export";
 import { buildStoryboardHtml, buildStoryboardMd } from "@/lib/pro/storyboard-export";
 
 function escapeCsvCell(value: unknown): string {
@@ -416,7 +416,8 @@ export type ProExportKind =
   | "location-research-csv"
   | "location-research-md"
   | "prompt-pack-csv"
-  | "prompt-pack-md";
+  | "prompt-pack-md"
+  | "shot-list-md";
 
 export function buildExportCsv(
   kind: ProExportKind,
@@ -457,6 +458,8 @@ export function buildExportCsv(
       return buildPromptPackCsv(state, projectName);
     case "prompt-pack-md":
       return buildPromptPackMd(state, projectName);
+    case "shot-list-md":
+      return buildShotListMd(state, projectName);
     default:
       return "";
   }
@@ -487,6 +490,9 @@ export function proExportFilename(projectName: string, kind: ProExportKind): str
   if (kind === "location-research-csv") {
     return `${slug}-location-pack-${date}.csv`;
   }
+  if (kind === "shot-list-md") {
+    return `${slug}-shot-list-${date}.md`;
+  }
   if (kind === "preproduction-report" || kind === "storyboard-md" || kind === "prompt-pack-md") {
     return `${slug}-${kind === "storyboard-md" ? "storyboard" : kind === "prompt-pack-md" ? "prompt-pack" : "preproduction-report"}-${date}.md`;
   }
@@ -509,7 +515,7 @@ export function proExportContentType(kind: ProExportKind): string {
   if (kind === "fdx") {
     return "application/xml; charset=utf-8";
   }
-  if (kind === "directors-prep-md" || kind === "preproduction-report" || kind === "storyboard-md" || kind === "location-research-md" || kind === "prompt-pack-md") {
+  if (kind === "directors-prep-md" || kind === "preproduction-report" || kind === "storyboard-md" || kind === "location-research-md" || kind === "prompt-pack-md" || kind === "shot-list-md") {
     return "text/markdown; charset=utf-8";
   }
   return "text/csv; charset=utf-8";

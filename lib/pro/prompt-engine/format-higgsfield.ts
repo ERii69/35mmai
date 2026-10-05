@@ -10,13 +10,18 @@ export function formatHiggsfieldPrompt(ctx: PromptBeatContext): {
     ? "ARRI Alexa Mini LF with anamorphic lenses"
     : "ARRI Alexa 35 with spherical cinema primes";
 
+  const sentence = (text: string) => {
+    const trimmed = text.trim().replace(/\.+$/, "");
+    return trimmed ? `${trimmed}.` : "";
+  };
+
   const sentences = [
     `Shot on ${profile}.`,
-    ctx.subject ? `${ctx.subject}.` : "",
-    ctx.mood ? `${ctx.mood}.` : "",
+    ctx.subject ? sentence(ctx.subject) : "",
+    ctx.mood ? sentence(ctx.mood) : "",
     ctx.palette ? `Color palette: ${ctx.palette}.` : "",
-    ctx.camera ? `Camera: ${ctx.camera}.` : "Motivated key with soft fill and controlled contrast.",
-    ctx.light ? `Texture: ${ctx.light}.` : "Fine photochemical grain with gentle halation on highlights.",
+    ctx.camera ? `Camera: ${sentence(ctx.camera)}` : "Motivated key with soft fill and controlled contrast.",
+    ctx.light ? `Texture: ${sentence(ctx.light)}` : "Fine photochemical grain with gentle halation on highlights.",
     "Cinematic color grade, shallow depth of field, 2.39:1 frame.",
     ctx.hasVisualRef ? "Match lighting and grade to reference plate." : "",
   ].filter(Boolean);

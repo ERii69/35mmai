@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ConsumeAuthHash } from '@/components/auth/ConsumeAuthHash';
 import { SiteFooterSwitch } from '@/components/site/SiteFooterSwitch';
 import { brandDisplayFont } from '@/lib/brand/brand-font';
 import { CATALOG_DEFAULT_DESCRIPTION, CATALOG_DEFAULT_TITLE } from '@/lib/catalog-metadata';
 import { getMetadataBase } from '@/lib/site-url';
 import { BRAND_NAME } from '@/lib/brand/brand-identity';
+import { isProLiveRelease } from '@/lib/pro/launch-flags';
 
 export const metadata: Metadata = {
   metadataBase: getMetadataBase(),
@@ -34,8 +36,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="flex min-h-screen flex-col bg-pro-base font-sans text-pro-text">
-        <div className="flex min-h-0 flex-1 flex-col">{children}</div>
-        <SiteFooterSwitch />
+        <ConsumeAuthHash />
+        <div className="flex min-h-0 flex-col">{children}</div>
+        <SiteFooterSwitch liveRelease={isProLiveRelease()} />
       </body>
     </html>
   );

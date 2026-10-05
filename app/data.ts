@@ -1972,7 +1972,11 @@ export function rehydrateKitEntry(entry: unknown): unknown {
   };
 }
 
-export const SITE_CONTACT_EMAIL = "otherprojectsx@gmail.com" as const;
+/** Contact address everywhere except the footer. */
+export const SITE_CONTACT_EMAIL = "info@35mmai.com" as const;
+
+/** Shown only in the site footer. */
+export const FOOTER_CONTACT_EMAIL = "hello@35mmai.com" as const;
 
 /** Linked from Budget Templates — must be shared so “Anyone with the link” can view for export URLs to work without sign-in. */
 export const BUDGET_TEMPLATE_SHEETS = {

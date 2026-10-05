@@ -135,13 +135,12 @@ export function buildLocalVisualPackage(
     .filter(Boolean)
     .join("\n");
 
-  const lensAndFraming =
-    nightCount > scenes.length / 2
+  const lensAndFraming = promptPack
+    ? "35mm and 50mm primes, framed 2.39:1"
+    : nightCount > scenes.length / 2
       ? "Fast primes (35/50) for night exteriors; wider T-stop, accept grain; controlled halation on practicals."
       : extCount > scenes.length / 2
-        ? promptPack
-          ? "24–35mm for exteriors; 50–85mm for character beats; consider ND for day exteriors."
-          : "24–35mm for exteriors; 50–85mm for character coverage; consider ND for day exteriors."
+        ? "24–35mm for exteriors; 50–85mm for character coverage; consider ND for day exteriors."
         : "35mm as workhorse; 50mm for dialogue; shallow depth for intimacy unless documentary tone.";
 
   const lightingApproach =

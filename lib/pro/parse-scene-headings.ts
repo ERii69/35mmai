@@ -147,13 +147,37 @@ function parseHeadingMeta(heading: string): Pick<SceneRow, "intExt" | "dayNight"
   return { intExt, dayNight };
 }
 
+function isCharacterCue(line: string): boolean {
+  if (line.length < 2 || line.length > 40) return false;
+  if (line !== line.toUpperCase()) return false;
+  if (/[.!?]/.test(line)) return false;
+  return /[A-Z]/.test(line);
+}
+
+/** First action sentence, plus one spoken line when the scene has dialogue. */
 function oneLineFromAction(text: string): string {
   const lines = text
     .split("\n")
     .map((l) => l.trim())
-    .filter((l) => l && !l.startsWith("(") && l === l.toUpperCase() === false);
-  const line = lines.find((l) => l.length > 8) ?? lines[0] ?? "";
-  return line.slice(0, 200);
+    .filter((l) => l && !(l.startsWith("(") && l.endsWith(")")));
+  const action: string[] = [];
+  const spoken: string[] = [];
+  let expectDialogue = false;
+  for (const line of lines) {
+    if (isCharacterCue(line)) {
+      expectDialogue = true;
+      continue;
+    }
+    if (expectDialogue) {
+      spoken.push(line.replace(/^["']|["']$/g, ""));
+      expectDialogue = false;
+      continue;
+    }
+    if (line !== line.toUpperCase()) action.push(line);
+  }
+  const base = (action.find((l) => l.length > 8) ?? action[0] ?? "").slice(0, 160);
+  const quote = spoken[0] ? ` "${spoken[0].slice(0, 80)}"` : "";
+  return `${base}${quote}`.trim().slice(0, 220);
 }
 
 function parseScenesLineByLine(lines: string[]): SceneRow[] {

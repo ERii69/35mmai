@@ -11,3 +11,9 @@ export function loginHref(next: string | null | undefined, fallback = "/account"
   if (path === "/account") return "/login";
   return `/login?${new URLSearchParams({ next: path }).toString()}`;
 }
+
+export function signUpHref(next: string | null | undefined, fallback = "/account"): string {
+  const path = safeNextPath(next, fallback);
+  if (path === "/account") return "/sign-up";
+  return `/sign-up?${new URLSearchParams({ next: path }).toString()}`;
+}

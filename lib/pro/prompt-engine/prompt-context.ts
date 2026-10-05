@@ -1,4 +1,5 @@
 import { formatDisplayHeading } from "@/lib/pro/format-display-heading";
+import { lockClauseForShot } from "@/lib/pro/prompt-locks";
 import {
   beatSpecificVisual,
   parseScriptToPromptShotLine,
@@ -130,6 +131,7 @@ function cleanMoodLine(text: string): string {
 function cleanLookField(text: string, fallback = ""): string {
   const t = text.replace(/\s+/g, " ").trim();
   if (!t || isLookInstructionPollution(t)) return fallback;
+  if (/fast primes|night exteriors|workhorse|consider nd/i.test(t)) return fallback;
   return t.slice(0, 160);
 }
 
@@ -198,14 +200,26 @@ export function buildPromptBeatContext(
   const heading = formatDisplayHeading(
     scene?.heading?.trim() || sequence.title.trim() || "Scene"
   );
-  const action = actionLine(scene, shot, sequence);
+  const actionBody = actionLine(scene, shot, sequence);
+  const lock = lockClauseForShot(state, scene, shot.shotType);
+  // Establishing pictures are the place. The story sentence stays on Action so LTX still has a full beat.
+  const storyForAction =
+    shot.shotType === "establishing" ? scene?.oneLine.trim() ?? "" : "";
+  const joinSentences = (parts: string[]) =>
+    parts
+      .map((part) => part.replace(/\.+$/, "").trim())
+      .filter(Boolean)
+      .join(". ");
+  const action = joinSentences([actionBody, storyForAction, lock]);
+  const pictured =
+    shot.shotType === "establishing" ? joinSentences([actionBody, lock]) : action;
   const typePhrase = SHOT_TYPE_PHRASE[shot.shotType] ?? "cinematic shot";
   // Always short subject so tool formatters (MJ params, ARRI, LTX Scene:) stay visible.
   const subject =
-    action && heading
-      ? `${typePhrase}, ${heading}: ${action}`
-      : action
-        ? `${typePhrase}, ${action}`
+    pictured && heading
+      ? `${typePhrase}, ${heading}: ${pictured}`
+      : pictured
+        ? `${typePhrase}, ${pictured}`
         : typePhrase;
 
   const mood =

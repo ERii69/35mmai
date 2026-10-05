@@ -2,6 +2,9 @@ type Props = {
   className?: string;
 };
 
+/** Change this when the catalog note is rewritten. About uses the same date. */
+export const CATALOG_AS_OF_LABEL = "3 Oct 2026";
+
 /**
  * Thin catalog chrome for time-sensitive filmmaker news.
  * Rewrite when Kling 4.0 or a new flagship becomes the public default.
@@ -12,7 +15,7 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
       className={`rounded-2xl border border-amber-800/45 bg-amber-950/25 px-4 py-3 text-left ${className}`}
     >
       <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200/85">
-        Catalog note · 3 Oct 2026
+        Catalog note · {CATALOG_AS_OF_LABEL}
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
         Sora is closed. Kling 4.0 is announced, not the default. Gemini Omni

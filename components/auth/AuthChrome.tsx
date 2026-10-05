@@ -21,7 +21,7 @@ export function AuthChrome({
   workspaceHref,
   showTagline = true,
   showLogo = true,
-  logoHref = "/pro",
+  logoHref = "/",
 }: Props) {
   if (layout === "bar") {
     return (

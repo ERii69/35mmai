@@ -16,7 +16,7 @@ export const proWebShell = {
 } as const;
 
 export const proFooter = {
-  root: "mt-auto shrink-0 border-t border-white/[0.06] py-6 text-center text-sm text-pro-text-secondary md:py-8",
+  root: "shrink-0 border-t border-white/[0.06] py-6 text-center text-sm text-pro-text-secondary md:py-8",
   link: "text-pro-text-secondary underline-offset-2 transition hover:text-pro-text hover:underline",
   muted: "text-xs text-pro-text-secondary/80",
   dot: "text-pro-text-secondary/35",

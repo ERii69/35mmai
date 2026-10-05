@@ -16,14 +16,13 @@ function isDetailBeat(shotType: ShotType, label: string): boolean {
   );
 }
 
-function isMotionBeat(shotType: ShotType, label: string): boolean {
-  const t = `${shotType} ${label}`.toLowerCase();
+/** Motion is the shot type. A verb like "runs" in the action must not send the stills to Kling. */
+function isMotionBeat(shotType: ShotType): boolean {
   return (
     shotType === "dolly" ||
     shotType === "pan" ||
     shotType === "tilt" ||
-    shotType === "handheld" ||
-    /dolly|track|push|pan|tilt|handheld|motion|approach|walk|run|move/i.test(t)
+    shotType === "handheld"
   );
 }
 
@@ -44,7 +43,7 @@ export function suggestToolForBeat(
     };
   }
 
-  if (isMotionBeat(shotType, label)) {
+  if (isMotionBeat(shotType)) {
     return {
       rank: KLING,
       reason: "Motion beat · video",
@@ -109,6 +108,29 @@ export function suggestToolForBeat(
   }
 
   return { rank: MJ, reason: "Default still" };
+}
+
+const MOTION_TYPES = new Set<ShotType>(["dolly", "pan", "tilt", "handheld", "aerial"]);
+
+/**
+ * Script-to-prompt assignment.
+ * Midjourney locks interior plates. Higgsfield grades an exterior vista.
+ * LTX carries the character beat, Nano the detail, Kling only a camera move.
+ */
+export function toolRankForPromptPack(
+  shotType: ShotType,
+  scene?: { intExt?: string } | null
+): Phase4PromptToolRank {
+  if (MOTION_TYPES.has(shotType)) return KLING;
+  if (shotType === "close_up" || shotType === "extreme_close_up") return NANO;
+  if (shotType === "medium") return LTX;
+  if (
+    shotType === "establishing" &&
+    (scene?.intExt === "EXT" || scene?.intExt === "INT/EXT")
+  ) {
+    return HIGGS;
+  }
+  return MJ;
 }
 
 export function phase4ToolLabel(rank: Phase4PromptToolRank): string {

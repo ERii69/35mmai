@@ -1,23 +1,22 @@
 import Link from "next/link";
+import { SITE_CONTACT_EMAIL } from "@/app/data";
 import { PRO_DATA_RETENTION_DAYS } from "@/lib/pro/membership-policy";
-import { BRAND_NAME } from "@/lib/brand/brand-identity";
+import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 
 export function ProPrivacyContent() {
   return (
     <>
       <p className="text-sm text-[#737373]">
-        Last updated: May 2026 · Applies to 35mmAiPro membership and workspace (
-        <code className="text-[#a3a3a3]">/pro/app</code>).
+        Last updated: 4 Oct 2026 · Applies to the {BRAND_NAME} catalog and {BRAND_NAME_PRO}.
       </p>
 
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold text-white">Your private account</h2>
         <p>
-          35mmAiPro is a <strong>private workspace</strong> for your film prep — scripts, scene
-          breakdowns, kit, budget, and exports. It is not a social feed, gallery, or collaboration
-          network. There are <strong>no public project links</strong>, no team seats, and no
-          publish buttons. Only <strong>you</strong>, signed in to <strong>your account</strong>,
-          can open your projects.
+          {BRAND_NAME_PRO} is a <strong>private workspace</strong> for your film prep — scripts,
+          scene breakdowns, kit, budget, and exports. It is not a social feed, gallery, or
+          collaboration network. There are <strong>no public project links</strong>, no team seats,
+          and no publish buttons. Other customers cannot open your projects.
         </p>
       </section>
 
@@ -47,10 +46,10 @@ export function ProPrivacyContent() {
           </li>
           <li>
             <strong>We do not use</strong> your scripts, scene rows, or workspace content to train
-            AI models. When server AI assist is off (no provider API key), prep stays local /
-            API-free and we do not send your screenplay to an LLM. When AI assist is enabled, relevant
-            project text may be sent to that provider to run the request — still not used to train
-            their or our models under our configuration.
+            our models, and we do not sell that content. Your screenplay is saved to your account.
+            AI assist is off unless we turn it on for the product. If it is on, the text needed for
+            that request may be sent to the AI provider to run it. That provider&apos;s own terms
+            then apply to that request.
           </li>
           <li>
             <strong>We do not expose</strong> your projects on the public {BRAND_NAME} catalog or in
@@ -63,9 +62,21 @@ export function ProPrivacyContent() {
         <h2 className="text-lg font-semibold text-white">Who can access your data</h2>
         <p>
           You, when signed in with an active membership (or during the post-cancel retention window
-          below). Our infrastructure providers (hosting, database, payments) process data only to
-          run the service — under their terms and our configuration. We do not offer a shared
-          workspace or producer view.
+          below). Our hosting, database, and payment providers process data only to run the service.
+          We do not offer a shared workspace.
+        </p>
+      </section>
+
+      <section className="mt-8 space-y-3">
+        <h2 className="text-lg font-semibold text-white">Free catalog</h2>
+        <p>
+          The {BRAND_NAME} directory does not require an account. My Kit and the filters you choose
+          stay in your browser on that device. We do not upload that kit to our database.
+        </p>
+        <p>
+          Some tool links are affiliate links. If you buy or subscribe through one, the partner may
+          know the click came from {BRAND_NAME}, and we may earn a commission at no extra cost to
+          you. Those links are labeled. Rankings are editorial, not paid placement.
         </p>
       </section>
 
@@ -103,11 +114,14 @@ export function ProPrivacyContent() {
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold text-white">Questions</h2>
         <p>
-          Contact us via the email on the{" "}
-          <Link href="/about" className="text-pro-primary underline-offset-2 hover:underline">
-            About
-          </Link>{" "}
-          page. For billing, use Account → Manage billing (Stripe Customer Portal).
+          Contact us at{" "}
+          <a
+            href={`mailto:${SITE_CONTACT_EMAIL}`}
+            className="text-pro-primary underline-offset-2 hover:underline"
+          >
+            {SITE_CONTACT_EMAIL}
+          </a>
+          . For billing, use Account → Manage billing (Stripe Customer Portal).
         </p>
         <p className="text-sm text-[#737373]">
           See also{" "}

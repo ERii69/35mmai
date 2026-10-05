@@ -29,6 +29,7 @@ import { memoryWithLearnedPreferences } from "@/lib/pro/synthesize-project-memor
 import { slimProjectStateForPersistence, analyzeProjectStateSize, projectStateTooLargeMessage } from "@/lib/pro/slim-project-state";
 import { DEFAULT_DIRECTOR_PREP_TEMPLATE_ID } from "@/lib/pro/templates";
 import { normalizePrepRunSettings } from "@/lib/pro/prep-run-settings";
+import { normalizePromptLocks } from "@/lib/pro/prompt-locks";
 import {
   type LocationPin,
   type LocationResearchRecord,
@@ -474,6 +475,7 @@ function normalizeDirectorPrep(raw: unknown): DirectorPrepState {
         ? raw.appliedTemplateId.trim()
         : DEFAULT_DIRECTOR_PREP_TEMPLATE_ID,
     locationResearch,
+    promptLocks: normalizePromptLocks(raw.promptLocks),
   };
 }
 

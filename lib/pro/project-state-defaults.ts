@@ -7,6 +7,7 @@ import {
   ProjectStatePayload,
 } from "@/lib/pro/types";
 import { createDefaultPrepRunSettings } from "@/lib/pro/prep-run-settings";
+import { emptyPromptLocks } from "@/lib/pro/prompt-locks";
 
 export function createEmptyDirectorRules(): DirectorRulesState {
   return {
@@ -55,6 +56,7 @@ export function createEmptyDirectorPrep(): DirectorPrepState {
     prepRunSettings: createDefaultPrepRunSettings(),
     appliedTemplateId: null,
     locationResearch: [],
+    promptLocks: emptyPromptLocks(),
   };
 }
 

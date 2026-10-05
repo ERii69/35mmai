@@ -13,7 +13,7 @@ const QUICK_FLOW = [
   {
     title: "Start from your actual shoot reality",
     description:
-      `From Home, pick ${BUDGET_PATH_MICRO} or ${BUDGET_PATH_FEATURE}, then choose your role so recommendations feel like a real crew workflow.`,
+      `Open All Tools and filter by role and budget (${BUDGET_PATH_MICRO} or ${BUDGET_PATH_FEATURE}) so the list matches a real crew workflow.`,
   },
   {
     title: "Move stage by stage, not app by app",
@@ -43,10 +43,60 @@ const QA_CHECKLIST = [
 
 export function HowItWorksContent({
   variant = "embedded",
+  asSection = false,
+  showChecklist = !asSection,
 }: {
   variant?: HowItWorksVariant;
+  asSection?: boolean;
+  /** Internal QA list. The public About guide leaves this off. */
+  showChecklist?: boolean;
   onNavigate?: (step: number) => void;
 }) {
+  const guide = (
+    <>
+      <div className="grid gap-4 sm:grid-cols-2">
+        {QUICK_FLOW.map((item, index) => (
+          <article key={item.title} className="rounded-2xl border border-[#2a2a2a] bg-[#111]/80 p-5 sm:p-6">
+            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400">
+              Step {index + 1}
+            </p>
+            <h2 className="mt-2 text-lg font-semibold text-white">{item.title}</h2>
+            <p className="mt-2 text-sm leading-relaxed text-[#b3b3b3]">{item.description}</p>
+          </article>
+        ))}
+      </div>
+
+      {showChecklist ? (
+      <article className="mt-8 rounded-2xl border border-[#2a2a2a] bg-[#111]/85 p-6 sm:p-8">
+        <div className="mb-5 flex items-center gap-2">
+          <ClipboardCheck className="size-5 text-[#e11d48]" aria-hidden />
+          <h2 className="text-lg font-semibold text-white md:text-xl">Quick QA while you test</h2>
+        </div>
+        <ul className="space-y-3">
+          {QA_CHECKLIST.map((item) => (
+            <li key={item} className="flex gap-3 text-sm leading-relaxed text-[#d1d5db] sm:text-base">
+              <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-400" aria-hidden />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6 rounded-xl border border-[#333] bg-[#0d0d0d] p-4 text-sm text-[#a3a3a3]">
+          <p className="flex items-center gap-2 font-medium text-[#e5e5e5]">
+            <Sparkles className="size-4 text-amber-300" aria-hidden />
+            Field note for better results
+          </p>
+          <p className="mt-2">
+            Run a simple A/B at each stage: two tools, same task, same footage. Keep the faster
+            one only if quality still holds up, then refresh your kit each week.
+          </p>
+        </div>
+      </article>
+      ) : null}
+    </>
+  );
+
+  if (asSection) return guide;
+
   return (
     <section className="relative overflow-hidden bg-[#0f0f0f] text-[#f5f5f5]">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(225,29,72,0.06)_0%,transparent_45%),radial-gradient(circle_at_center,rgba(16,185,129,0.06)_0%,transparent_65%)]" />
@@ -87,42 +137,7 @@ export function HowItWorksContent({
           )}
         </header>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {QUICK_FLOW.map((item, index) => (
-            <article key={item.title} className="rounded-2xl border border-[#2a2a2a] bg-[#111]/80 p-5 sm:p-6">
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-400">
-                Step {index + 1}
-              </p>
-              <h2 className="mt-2 text-lg font-semibold text-white">{item.title}</h2>
-              <p className="mt-2 text-sm leading-relaxed text-[#b3b3b3]">{item.description}</p>
-            </article>
-          ))}
-        </div>
-
-        <article className="mt-8 rounded-2xl border border-[#2a2a2a] bg-[#111]/85 p-6 sm:p-8">
-          <div className="mb-5 flex items-center gap-2">
-            <ClipboardCheck className="size-5 text-[#e11d48]" aria-hidden />
-            <h2 className="text-lg font-semibold text-white md:text-xl">Quick QA while you test</h2>
-          </div>
-          <ul className="space-y-3">
-            {QA_CHECKLIST.map((item) => (
-              <li key={item} className="flex gap-3 text-sm leading-relaxed text-[#d1d5db] sm:text-base">
-                <CheckCircle2 className="mt-0.5 size-5 shrink-0 text-emerald-400" aria-hidden />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-6 rounded-xl border border-[#333] bg-[#0d0d0d] p-4 text-sm text-[#a3a3a3]">
-            <p className="flex items-center gap-2 font-medium text-[#e5e5e5]">
-              <Sparkles className="size-4 text-amber-300" aria-hidden />
-              Field note for better results
-            </p>
-            <p className="mt-2">
-              Run a simple A/B at each stage: two tools, same task, same footage. Keep the faster
-              one only if quality still holds up, then refresh your kit each week.
-            </p>
-          </div>
-        </article>
+        {guide}
       </div>
     </section>
   );

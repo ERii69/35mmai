@@ -17,6 +17,8 @@ type Props = {
   onSaveNow?: () => void;
   onSuccess?: (message: string) => void;
   onError?: (message: string) => void;
+  /** When set, the pack stays put. The shot list can still download. */
+  packBlocked?: string | null;
 };
 
 export function PromptPackDeliverable({
@@ -27,8 +29,9 @@ export function PromptPackDeliverable({
   onSaveNow,
   onSuccess,
   onError,
+  packBlocked = null,
 }: Props) {
-  const [loading, setLoading] = useState<"md" | "csv" | "copy" | null>(null);
+  const [loading, setLoading] = useState<"md" | "csv" | "copy" | "shots" | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   function ensureSaved(): boolean {
@@ -53,7 +56,11 @@ export function PromptPackDeliverable({
     return false;
   }
 
-  async function run(action: "md" | "csv" | "copy", fn: () => Promise<unknown>, successMessage: string) {
+  async function run(
+    action: "md" | "csv" | "copy" | "shots",
+    fn: () => Promise<unknown>,
+    successMessage: string
+  ) {
     if (!ensureSaved()) return;
     setLoading(action);
     setErrorMessage(null);
@@ -71,6 +78,7 @@ export function PromptPackDeliverable({
 
   const busy = loading != null;
   const saveBlocked = saveStatus != null && saveStatus !== "saved";
+  const packLocked = Boolean(packBlocked);
 
   if (variant === "compact") {
     return null;
@@ -80,14 +88,14 @@ export function PromptPackDeliverable({
     <section className="rounded-2xl border border-emerald-600/25 bg-gradient-to-br from-emerald-950/30 to-pro-muted p-4 sm:p-5">
       <h3 className="text-sm font-semibold text-pro-text">Download prompt pack</h3>
       <p className="mt-1 max-w-xl text-sm leading-relaxed text-pro-text-secondary">
-        Scene-ordered prompts with tool names and outbound links — Markdown or CSV. This is the
-        primary deliverable for Script to prompt.
+        Grouped by tool, with the scene number kept on each line. The shot list is the one-page
+        handoff. The pack is what you paste.
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <Button
           type="button"
           className={proBtn.secondary}
-          disabled={busy || saveBlocked}
+          disabled={busy || saveBlocked || packLocked}
           onClick={() =>
             void run(
               "md",
@@ -108,7 +116,7 @@ export function PromptPackDeliverable({
           size="sm"
           variant="outline"
           className="border-white/[0.1] text-pro-text"
-          disabled={busy || saveBlocked}
+          disabled={busy || saveBlocked || packLocked}
           onClick={() =>
             void run(
               "csv",
@@ -125,9 +133,30 @@ export function PromptPackDeliverable({
         <Button
           type="button"
           size="sm"
+          variant="outline"
+          className="border-white/[0.1] text-pro-text"
+          disabled={busy || saveBlocked}
+          onClick={() =>
+            void run(
+              "shots",
+              () => downloadProExport(projectId, "shot-list-md", projectName),
+              "Shot list downloaded."
+            )
+          }
+        >
+          {loading === "shots" ? (
+            <Loader2 className="mr-1.5 size-3.5 animate-spin" aria-hidden />
+          ) : (
+            <Download className="mr-1.5 size-3.5" aria-hidden />
+          )}
+          Shot list
+        </Button>
+        <Button
+          type="button"
+          size="sm"
           variant="ghost"
           className="text-pro-text-secondary hover:text-pro-text"
-          disabled={busy || saveBlocked}
+          disabled={busy || saveBlocked || packLocked}
           onClick={() =>
             void run("copy", () => copyProExport(projectId, "prompt-pack-md"), "Full prompt pack copied.")
           }
@@ -140,6 +169,11 @@ export function PromptPackDeliverable({
           Copy all prompts
         </Button>
       </div>
+      {packBlocked ? (
+        <p className="mt-3 text-xs font-medium text-amber-100" role="status">
+          {packBlocked} The shot list can still be shared.
+        </p>
+      ) : null}
       {errorMessage ? (
         <p className="mt-3 text-xs font-medium text-red-300/90" role="alert">
           {errorMessage}

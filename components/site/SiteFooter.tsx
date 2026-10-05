@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FOOTER_CONTACT_EMAIL } from "@/app/data";
 import { BRAND_NAME, BRAND_NAME_PRO } from "@/lib/brand/brand-identity";
 import { PRO_PRIVACY_PATH, PRO_TERMS_PATH } from "@/lib/pro/membership-policy";
 
@@ -58,6 +59,14 @@ export function SiteFooter({ className = "" }: Props) {
           >
             Terms
           </Link>
+        </p>
+        <p className="mt-3 text-xs">
+          <a
+            href={`mailto:${FOOTER_CONTACT_EMAIL}`}
+            className="text-[#888] underline-offset-2 transition-colors hover:text-[#e11d48] hover:underline"
+          >
+            {FOOTER_CONTACT_EMAIL}
+          </a>
         </p>
         <p className="mt-6 text-xs text-[#555]">Made with ❤️ for the film community</p>
       </div>

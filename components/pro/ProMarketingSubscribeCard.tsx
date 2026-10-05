@@ -27,6 +27,8 @@ type Props = {
   hideStackWarning?: boolean;
   sectionId?: string;
   loginNext?: string;
+  /** Live release: this card is the page heading. */
+  landing?: boolean;
 };
 
 export function ProMarketingSubscribeCard({
@@ -41,6 +43,7 @@ export function ProMarketingSubscribeCard({
   hideStackWarning = false,
   sectionId,
   loginNext = "/pro",
+  landing = false,
 }: Props) {
   /** Soft launch → one access-request form; sign-in links are sent manually. */
   if ((inviteOnly || !checkoutEnabled) && !entitled) {
@@ -75,11 +78,19 @@ export function ProMarketingSubscribeCard({
       ) : null}
 
       <div className="mt-5">
-        <h2 id="pro-subscribe-heading" className="text-3xl font-bold tracking-tight text-pro-text">
-          {PRO_MARKETING_PRICE.trialLabel}
-        </h2>
+        {landing ? (
+          <h1 id="pro-subscribe-heading" className="text-3xl font-bold tracking-tight text-pro-text sm:text-4xl">
+            {PRO_MARKETING_PRICE.trialLabel}
+          </h1>
+        ) : (
+          <h2 id="pro-subscribe-heading" className="text-3xl font-bold tracking-tight text-pro-text">
+            {PRO_MARKETING_PRICE.trialLabel}
+          </h2>
+        )}
         <p className="mt-1 text-sm text-pro-text-secondary">
-          Then {PRO_MARKETING_PRICE.fullLabel} · {PRO_MARKETING_PRICE.currencyNote}
+          {PRO_MARKETING_PRICE.trialDays > 0
+            ? `Then ${PRO_MARKETING_PRICE.fullLabel} · ${PRO_MARKETING_PRICE.currencyNote}`
+            : PRO_MARKETING_PRICE.currencyNote}
         </p>
         <p className="mt-1 text-xs text-pro-text-secondary">{PRO_MARKETING_PRICE.checkoutNote}</p>
       </div>
@@ -106,6 +117,7 @@ export function ProMarketingSubscribeCard({
           <ProMarketingAuthButtons
             returnPath={loginNext}
             layout="inline"
+            showCreateAccount={checkoutEnabled && !inviteOnly}
             className="justify-start sm:justify-center"
           />
         ) : (

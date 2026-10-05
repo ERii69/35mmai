@@ -108,6 +108,10 @@ export type PlannedShot = {
   aiNegativePrompt?: string;
   /** Catalog tool rank this prompt was formatted for. */
   recommendedToolRank?: number;
+  /** The frame, in the filmmaker's words. The prompt is a translation of this. */
+  frameSentence?: string;
+  /** They edited the paste prompt by hand. */
+  promptEdited?: boolean;
 };
 
 export type ShotSequence = {
@@ -352,6 +356,36 @@ export type DirectorPrepState = {
   appliedTemplateId: string | null;
   /** Structured location research committed from prep review. */
   locationResearch: LocationResearchRecord[];
+  /** Confirmed people and places pasted into every related prompt. */
+  promptLocks?: PromptLocksState;
+};
+
+export type CharacterLock = {
+  id: string;
+  name: string;
+  /** Age, clothes, one prop — the sentence pasted into every prompt of this person. */
+  look: string;
+  /** The face prompt they chose, in words. Not an image. */
+  keptStillPrompt?: string;
+};
+
+export type PromptJob = "still" | "edit" | "move" | "scene" | "grade";
+
+export type PlaceLock = {
+  id: string;
+  name: string;
+  look: string;
+  sceneNumbers: number[];
+};
+
+export type PromptLocksState = {
+  characters: CharacterLock[];
+  places: PlaceLock[];
+  /** Scene number → heading + action when prompts were last built. */
+  builtFingerprints: Record<string, string>;
+  rewriteCount: number;
+  /** Catalog rank → how that tool wants a prompt, when we asked once. */
+  toolShapes?: Partial<Record<string, PromptJob>>;
 };
 
 export type PrepRunSettings = {

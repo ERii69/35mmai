@@ -110,6 +110,8 @@ export function normalizePlannedShot(raw: unknown, index: number): PlannedShot {
       typeof o.recommendedToolRank === "number" && Number.isFinite(o.recommendedToolRank)
         ? o.recommendedToolRank
         : undefined,
+    frameSentence: typeof o.frameSentence === "string" ? o.frameSentence : undefined,
+    promptEdited: o.promptEdited === true ? true : undefined,
   };
 }
 

@@ -22,11 +22,11 @@ export function formatKlingPrompt(ctx: PromptBeatContext): {
 } {
   const motion = MOTION_BY_TYPE[ctx.shotType] ?? MOTION_BY_TYPE.other!;
   const plate = ctx.hasVisualRef
-    ? "image-to-video from reference still, preserve composition"
-    : "text-to-video";
+    ? "image-to-video from the reference still, preserve face, wardrobe, and framing"
+    : "image-to-video from the locked still of this scene, preserve face, wardrobe, and framing";
 
   const parts = [
-    `Kling video · ${motion}`,
+    motion,
     ctx.heading,
     ctx.action,
     ctx.mood,
@@ -37,7 +37,7 @@ export function formatKlingPrompt(ctx: PromptBeatContext): {
     "cinematic motion",
     "film grain",
     "2.39:1",
-    "5 second clip",
+    "10 second clip",
     "smooth temporal consistency",
   ].filter(Boolean);
 

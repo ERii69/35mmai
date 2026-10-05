@@ -9,7 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const pages: MetadataRoute.Sitemap = [
     CATALOG_PATHS.home,
     CATALOG_PATHS.tools,
-    CATALOG_PATHS.howItWorks,
     CATALOG_PATHS.workflows,
     CATALOG_PATHS.budgetTemplates,
     CATALOG_PATHS.kit,
