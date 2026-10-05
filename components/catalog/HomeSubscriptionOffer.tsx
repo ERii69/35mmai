@@ -7,7 +7,7 @@ import { CATALOG_PATHS } from "@/lib/catalog-routes";
 import { FREE_VS_PRO_HIGHLIGHTS } from "@/lib/pro/free-vs-pro";
 import { PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 
-/** $0 / $15 popup over the catalog home. Shows on each visit until closed. */
+/** $0 / $15 popup over the catalog home for visitors who are not signed in. */
 export function HomeSubscriptionOffer() {
   const [visible, setVisible] = useState(true);
 

@@ -264,15 +264,27 @@ function focusListboxOptionByOffset(
   opts[next]?.focus();
 }
 
-export function CatalogApp({ initialPath = "/" }: { initialPath?: string }) {
+export function CatalogApp({
+  initialPath = "/",
+  signedIn = false,
+}: {
+  initialPath?: string;
+  signedIn?: boolean;
+}) {
   return (
     <Suspense fallback={<div className="min-h-screen bg-[#0f0f0f]" />}>
-      <CatalogAppBody initialPath={initialPath} />
+      <CatalogAppBody initialPath={initialPath} signedIn={signedIn} />
     </Suspense>
   );
 }
 
-function CatalogAppBody({ initialPath = "/" }: { initialPath?: string }) {
+function CatalogAppBody({
+  initialPath = "/",
+  signedIn = false,
+}: {
+  initialPath?: string;
+  signedIn?: boolean;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { step, setStep, selectedTool, setSelectedTool, closeMobileMenu } =
@@ -1058,7 +1070,7 @@ useEffect(() => {
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.03)_0%,transparent_70%)] pointer-events-none" />
 
     <div className="flex-1 flex flex-col justify-between pt-3 md:pt-8 px-4 md:px-6">
-      <HomeSubscriptionOffer />
+      {signedIn ? null : <HomeSubscriptionOffer />}
 
       {/* Headline - ABOVE on Desktop, BELOW on Mobile */}
       <div className="text-center mb-4 md:mb-16 order-1 md:order-1 max-w-4xl mx-auto">
