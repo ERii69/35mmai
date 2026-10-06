@@ -33,7 +33,6 @@ const MAILTO = `mailto:${SITE_CONTACT_EMAIL}`;
 const MOBILE_SECTION_NAV = [
   ["#about-intro", "Story"],
   ["#how-it-works", "How"],
-  ["#about-stats", "Overview"],
   ["#about-pillars", "Impact"],
   ["#about-picking", "Curation"],
   ["#about-directory", "Listings"],
@@ -222,31 +221,6 @@ export function AboutPageContent({
             <div className="mt-5">
               <HowItWorksContent asSection />
             </div>
-          </section>
-
-          <section id="about-stats" className={scrollMt}>
-            <h2 className="sr-only">Directory overview</h2>
-            <div className="flex flex-col gap-4 rounded-2xl border border-[#333] bg-[#111] p-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:p-6">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
-                  Directory size
-                </p>
-                <p className="mt-1 text-2xl font-bold text-white">{toolCount} tools</p>
-              </div>
-              <div className="hidden h-10 w-px bg-[#333] sm:block" aria-hidden />
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#737373]">
-                  Last updated
-                </p>
-                <p className="mt-1 text-lg font-semibold text-[#e5e5e5]">
-                  {CATALOG_AS_OF_LABEL}
-                </p>
-              </div>
-            </div>
-            <p className="mx-auto mt-4 max-w-2xl text-center text-sm leading-relaxed text-[#737373] md:text-base">
-              We refresh listings when pricing, products, or workflows change materially. Tool count
-              reflects what is live in the catalog today.
-            </p>
           </section>
 
           <section id="about-pillars" className={scrollMt}>
