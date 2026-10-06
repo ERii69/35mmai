@@ -7,7 +7,7 @@ export function ProPrivacyContent() {
   return (
     <>
       <p className="text-sm text-[#737373]">
-        Last updated: 4 Oct 2026 · Applies to the {BRAND_NAME} catalog and {BRAND_NAME_PRO}.
+        Last updated: October 4, 2026 · Applies to the {BRAND_NAME} catalog and {BRAND_NAME_PRO}.
       </p>
 
       <section className="mt-8 space-y-3">

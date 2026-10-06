@@ -6,7 +6,7 @@ import { PRO_MARKETING_PRICE } from "@/lib/pro/marketing-copy";
 export function ProTermsContent() {
   return (
     <>
-      <p className="text-sm text-[#737373]">Last updated: 4 Oct 2026 · {BRAND_NAME} and {BRAND_NAME_PRO}</p>
+      <p className="text-sm text-[#737373]">Last updated: October 4, 2026 · {BRAND_NAME} and {BRAND_NAME_PRO}</p>
 
       <section className="mt-8 space-y-3">
         <h2 className="text-lg font-semibold text-white">The service</h2>

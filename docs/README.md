@@ -31,6 +31,7 @@
 
 | Doc | Role |
 |-----|------|
+| [`live-next-steps.md`](./live-next-steps.md) | **Current** — live site watch list and first-month marketing (October 5, 2026) |
 | [`35mmpro-local-prototype.md`](./35mmpro-local-prototype.md) | Local Pro dev (`dev:pro` localhost; **LAN on hold**) |
 | [`soft-launch-invite.md`](./soft-launch-invite.md) | **Invite-link soft launch** for ~10 filmmakers (`PRO_INVITE_ONLY`) |
 | [`soft-launch-phase1-ops.md`](./soft-launch-phase1-ops.md) | Phase 1: allowlist SQL, `PRO_PUBLIC_CHECKOUT`, kill switches, Preview |
