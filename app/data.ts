@@ -1125,7 +1125,6 @@ export const allTools: Tool[] = [
     price: "from $17/mo",
     budgetFit: "both",
     link: "soundraw.io",
-    affiliateLink: "https://soundraw.io/?ref=ildargvr",
     roles: ["Sound Designer","Editor","Producer / Line Producer"],
     shortDescription: "Dial in instrumentation when you need repeatable sonic branding across episodes or campaign cuts",
     howToUse: [
