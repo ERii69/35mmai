@@ -8,8 +8,9 @@ const live = isProLiveRelease();
 const description = live
   ? `Paste your screenplay, lock your look, and export copy-ready prompts for Midjourney, Kling, LTX, and more. ${PRO_MARKETING_PRICE.trialThenLabel}.`
   : "Paste your screenplay, lock your look, export copy-ready AI prompts for Midjourney, Kling, LTX, and more. Private beta — invite or waitlist.";
+const socialTitle = "35mmAiPro · $15/mo";
 const socialDescription = live
-  ? `Script + look → a prompt pack for the tools you already use. ${PRO_MARKETING_PRICE.fullLabel} subscription.`
+  ? "Paste a screenplay, lock the look, and copy a prompt for every shot. Cancel anytime. The studio writes the prompts. It does not make the pictures."
   : "Script + look → exportable prompt pack for classical filmmakers using external AI tools. Private beta.";
 
 export const metadata: Metadata = {
@@ -20,14 +21,14 @@ export const metadata: Metadata = {
     canonical: "/pro",
   },
   openGraph: {
-    title: "35mmAiPro — Script to prompt pack",
+    title: socialTitle,
     description: socialDescription,
     type: "website",
     url: "/pro",
   },
   twitter: {
     card: "summary_large_image",
-    title: "35mmAiPro — Script to prompt pack",
+    title: socialTitle,
     description: socialDescription,
   },
 };
