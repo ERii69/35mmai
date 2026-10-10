@@ -47,11 +47,11 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
             <span className="font-medium text-[#f5f5f5]">
               The quality board moved.
             </span>{" "}
-            Late September, text-to-video with audio ranked Gemini Omni Flash
-            first, Wan 3.0 next, then MiniMax H3. Runway Gen-4.5 no longer wins
-            a blind test. Runway’s news is finishing: on October 2, 2026, Edit Studio
-            started exporting Gen-4.5 and Aleph 2 as ProRes 4444 or a PNG
-            sequence.
+            On Artificial Analysis’s text-to-video-with-audio board, Wan 3.0
+            leads, then Utopai X, Seedance 2.5, and MiniMax H3. Gemini Omni
+            Flash 1.1 sits eighth. Runway’s finishing path opened August 10,
+            2026: Edit Studio exports Gen-4.5 and Aleph 2 as ProRes 4444 or a
+            PNG sequence.
           </p>
           <p>
             <span className="font-medium text-[#f5f5f5]">
