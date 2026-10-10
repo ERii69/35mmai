@@ -3,7 +3,7 @@ type Props = {
 };
 
 /** Change this when the catalog note is rewritten. About uses the same date. */
-export const CATALOG_AS_OF_LABEL = "October 3, 2026";
+export const CATALOG_AS_OF_LABEL = "October 10, 2026";
 
 /**
  * Thin catalog chrome for time-sensitive filmmaker news.
@@ -19,8 +19,8 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
         <span> · {CATALOG_AS_OF_LABEL}</span>
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
-        Sora is closed. Kling 4.0 is announced, not the default. Gemini Omni
-        Flash now leads the quality board.
+        Argil joins the catalog: a brief becomes a storyboard, then a short
+        film. Sora is still closed. Kling 4.0 is announced, not the default.
       </p>
       <details className="group mt-2">
         <summary className="cursor-pointer list-none text-sm font-medium text-[#e11d48] underline-offset-2 marker:content-none hover:underline [&::-webkit-details-marker]:hidden">
@@ -28,6 +28,12 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
           <span className="hidden group-open:inline">Hide the briefing</span>
         </summary>
         <div className="mt-3 space-y-3 text-sm leading-relaxed text-[#d1d5db]">
+          <p>
+            <span className="font-medium text-[#f5f5f5]">Argil is in.</span>{" "}
+            Open argil.ai with a sentence or a script. It builds a storyboard
+            you can change, then renders the short. Characters and places can
+            be reused. It does not replace a Midjourney still or a Kling move.
+          </p>
           <p>
             <span className="font-medium text-[#f5f5f5]">Sora is gone.</span>{" "}
             The app closed on April 26, 2026 and the API closed on September 24, 2026. OpenAI lists

@@ -42,7 +42,7 @@ The free catalog is the front door. Pro is the paid step: paste a script, write 
 Talk to filmmakers who already pay for those tools and are tired of rewriting the same prompt for every shot. Ads wait until a stranger has paid.
 
 1. Turn on Vercel Web Analytics.
-2. Post the catalog note as the reason to visit. Sora is closed. Kling 4.0 is announced, not the default. The list is current as of October 3, 2026. Link to [www.35mmai.com](https://www.35mmai.com).
+2. Post the catalog note as the reason to visit. Sora is closed. Kling 4.0 is announced, not the default. The list is current as of October 10, 2026. Argil is in the catalog. Link to [www.35mmai.com](https://www.35mmai.com).
 3. Leave the home popup as the only ask for people who are not signed in.
 4. Write to a few filmmakers you already know. The two free accounts are for you, not for giveaways.
 5. A visit that never reaches `/pro` is a catalog reader. A signup that never pays looked. A $15 payment is the result that matters.

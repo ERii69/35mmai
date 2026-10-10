@@ -1690,6 +1690,25 @@ export const allTools: Tool[] = [
       "Step 5: Document separated stems for music clearance if needed",
     ],
     examplePrompt: "Split café scene boom mix — isolate dialogue from espresso machine bed and distant music for ADR session",
+  },
+  {
+    rank: 87,
+    name: "Argil",
+    category: "Pre-Prod",
+    helps: "Storytelling studio — a sentence or a script becomes a storyboard, then a short film. You set characters, places, and look, and you can change a shot before it renders. Live at argil.ai as of October 10, 2026",
+    price: "monthly credits; Director is on the higher plan",
+    budgetFit: "both",
+    link: "argil.ai",
+    roles: ["Director","Production Designer","Editor"],
+    shortDescription: "Brief to storyboard to short film, with reusable characters and places. Not a stills tool and not a talking-head clone",
+    howToUse: [
+      "Step 1: Open argil.ai and start from a sentence or bring a script",
+      "Step 2: Set the characters, places, and visual style you want held",
+      "Step 3: Read the storyboard — framing, action, dialogue, and timing",
+      "Step 4: Change a shot before you spend credits on a render",
+      "Step 5: Render the sequence, then finish a longer cut in your editor",
+    ],
+    examplePrompt: "A night courier delivers one letter across two rooms and a rain-soaked street. Three shots, locked coat and face, 16:9, no narration",
   }
 ];
 
