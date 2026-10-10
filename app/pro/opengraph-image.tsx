@@ -50,10 +50,11 @@ export default function ProOpenGraphImage() {
         <div
           style={{
             display: "flex",
-            marginTop: 36,
+            flex: 1,
+            marginTop: 28,
             border: "1px solid #8a7344",
             borderRadius: 28,
-            padding: "36px 44px",
+            padding: "40px 48px",
             alignItems: "center",
           }}
         >
@@ -94,9 +95,17 @@ export default function ProOpenGraphImage() {
             {checks.map((line) => (
               <div
                 key={line}
-                style={{ display: "flex", alignItems: "flex-start", marginBottom: 16, fontSize: 28 }}
+                style={{ display: "flex", alignItems: "center", marginBottom: 18, fontSize: 28 }}
               >
-                <span style={{ color: "#d6b25e", marginRight: 14, fontWeight: 700 }}>✓</span>
+                <div
+                  style={{
+                    width: 16,
+                    height: 16,
+                    borderRadius: 4,
+                    background: "#d6b25e",
+                    marginRight: 16,
+                  }}
+                />
                 <span>{line}</span>
               </div>
             ))}
