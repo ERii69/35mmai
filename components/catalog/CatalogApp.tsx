@@ -108,13 +108,20 @@ const cleanHowToStep = (step: string): string => {
 
 function catalogKindLabel(kind: CatalogKind): string {
   if (kind === "ai") return "AI-first";
+  if (kind === "hub") return "Hub";
   if (kind === "software") return "Creative software";
   if (kind === "hardware") return "Hardware";
   return "Gear & retail";
 }
 
 function parseCatalogKind(raw: string | null): CatalogKind | null {
-  if (raw === "ai" || raw === "software" || raw === "gear" || raw === "hardware") {
+  if (
+    raw === "ai" ||
+    raw === "hub" ||
+    raw === "software" ||
+    raw === "gear" ||
+    raw === "hardware"
+  ) {
     return raw;
   }
   return null;
@@ -125,12 +132,15 @@ const toolsFilterSelectClass =
 
 
 function exampleBlockLabel(kind: CatalogKind): string {
-  return kind === "ai" ? "Prompt example" : "Use case example";
+  return kind === "ai" || kind === "hub" ? "Prompt example" : "Use case example";
 }
 
 function catalogKindSummary(kind: CatalogKind): string {
   if (kind === "ai") {
     return "Generative or AI-heavy workflow tools (video, audio, images, VFX assistants).";
+  }
+  if (kind === "hub") {
+    return "A workspace that calls other models. The badge marks the product, not a quality rank.";
   }
   if (kind === "software") {
     return "We use this label only for rare, mostly traditional listings marked explicitly in the catalog.";
@@ -146,7 +156,9 @@ function CatalogKindBadge({ tool }: { tool: Tool }) {
   const cls =
     kind === "ai"
       ? "border-emerald-500/40 bg-emerald-950/40 text-emerald-200"
-      : kind === "software"
+      : kind === "hub"
+        ? "border-rose-500/40 bg-rose-950/40 text-rose-100"
+        : kind === "software"
         ? "border-sky-500/35 bg-sky-950/35 text-sky-100"
         : kind === "hardware"
           ? "border-violet-500/45 bg-violet-950/45 text-violet-100"
@@ -1150,7 +1162,7 @@ useEffect(() => {
           picks for your production, <span className="text-white">not only AI</span>
         </p>
         <CatalogFreshnessNotice className="mx-auto mb-4 max-w-2xl" />
-        <div className="mx-auto mb-4 grid max-w-4xl grid-cols-1 gap-2 rounded-2xl border border-[#2a2a2a] bg-[#111]/90 p-3 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4 lg:gap-3 lg:p-4">
+        <div className="mx-auto mb-4 grid max-w-5xl grid-cols-2 gap-2 rounded-2xl border border-[#2a2a2a] bg-[#111]/90 p-3 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5 lg:gap-3 lg:p-4">
           {(
             [
               {
@@ -1158,6 +1170,12 @@ useEffect(() => {
                 label: "AI-first",
                 on: "border-emerald-500/55 bg-emerald-950/30 ring-2 ring-emerald-500/35",
                 text: "text-emerald-300",
+              },
+              {
+                id: "hub" as const,
+                label: "Hub",
+                on: "border-rose-500/55 bg-rose-950/30 ring-2 ring-rose-500/35",
+                text: "text-rose-200",
               },
               {
                 id: "hardware" as const,
@@ -2877,7 +2895,8 @@ useEffect(() => {
                         navigator.clipboard.writeText(prompt);
                         setToast({
                           message:
-                            getCatalogKind(selectedTool) === "ai"
+                            getCatalogKind(selectedTool) === "ai" ||
+                            getCatalogKind(selectedTool) === "hub"
                               ? "Prompt copied"
                               : "Example copied",
                           tone: "ok",

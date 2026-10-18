@@ -65,6 +65,12 @@ function buildToolSlugMaps(): {
 
 const { slugToTool: SLUG_TO_TOOL, rankToSlug: RANK_TO_SLUG } = buildToolSlugMaps();
 
+/** Previous public slugs after a rename. Resolve, then redirect to the current path. */
+const TOOL_SLUG_ALIASES: Record<string, string> = {
+  "kling-ai-3-0": "kling-ai-4-0",
+  ideogram: "ideogram-4-5",
+};
+
 export function getToolSlug(tool: Pick<Tool, "rank" | "name">): string {
   return RANK_TO_SLUG.get(tool.rank) ?? baseToolSlug(tool.name);
 }
@@ -76,7 +82,7 @@ export function getToolBySlug(slug: string): Tool | undefined {
   } catch {
     // keep the lowercase slug if it is not URI-encoded
   }
-  return SLUG_TO_TOOL.get(decoded);
+  return SLUG_TO_TOOL.get(TOOL_SLUG_ALIASES[decoded] ?? decoded);
 }
 
 export function catalogToolPath(tool: Pick<Tool, "rank" | "name">): string {

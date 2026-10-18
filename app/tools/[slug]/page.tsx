@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { CatalogApp } from "@/components/catalog/CatalogApp";
 import { catalogRouteMetadata, toolPageDescription, toolPageTitle } from "@/lib/catalog-metadata";
@@ -25,5 +25,7 @@ export default async function CatalogToolPage({ params }: Props) {
   const { slug } = await params;
   const tool = getToolBySlug(slug);
   if (!tool) notFound();
-  return <CatalogApp initialPath={catalogToolPath(tool)} />;
+  const canonical = catalogToolPath(tool);
+  if (`/tools/${slug}` !== canonical) redirect(canonical);
+  return <CatalogApp initialPath={canonical} />;
 }

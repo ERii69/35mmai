@@ -109,6 +109,7 @@ export function KitCatalogModal({
           >
             <option value="all">All types</option>
             <option value="ai">AI tools</option>
+            <option value="hub">Hubs</option>
             <option value="software">Software</option>
             <option value="gear">Gear</option>
           </select>

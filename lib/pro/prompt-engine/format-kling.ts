@@ -15,7 +15,7 @@ const MOTION_BY_TYPE: Record<string, string> = {
   other: "motivated camera movement",
 };
 
-/** Kling — motion-first video from text or plate. */
+/** Kling 4.0 — motion-first video, with references and keyframes. */
 export function formatKlingPrompt(ctx: PromptBeatContext): {
   prompt: string;
   negativePrompt: string;
@@ -34,10 +34,12 @@ export function formatKlingPrompt(ctx: PromptBeatContext): {
     ctx.camera,
     ctx.light,
     plate,
+    "Omni Reference: up to 15 assets for face, wardrobe, and location",
+    "up to 10 keyframes for action and camera changes",
     "cinematic motion",
     "film grain",
     "2.39:1",
-    "10 second clip",
+    "10 second clip, or one native 30 second take when the beat must stay continuous",
     "smooth temporal consistency",
   ].filter(Boolean);
 

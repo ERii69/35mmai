@@ -1,3 +1,4 @@
+import { PRO_MARKETING_NEIGHBORS } from "@/lib/pro/marketing-copy";
 import { PRO_MARKETING_STEPS } from "@/lib/pro/marketing-steps";
 import { proMarketing } from "@/components/pro/pro-marketing-surfaces";
 
@@ -25,6 +26,9 @@ export function ProMarketingStepsSection({
         </h2>
         <p className="text-sm text-pro-text-secondary">
           Turn a screenplay into a reusable prompt pack.
+        </p>
+        <p className="mx-auto max-w-xl text-sm leading-relaxed text-pro-text-secondary">
+          {PRO_MARKETING_NEIGHBORS}
         </p>
       </div>
 

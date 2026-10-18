@@ -40,7 +40,7 @@ export function inferPromptJob(tool: Tool): PromptJob | null {
   if (name.includes("ltx")) return "scene";
   if (name.includes("nano banana") || name.includes("topaz")) return "edit";
   if (name.includes("midjourney") || /^flux\b/.test(name)) return "still";
-  if (/grok|kling|runway|veo|luma|seedance|\bwan\b|hailuo|pika|sora|marey|pixverse|omni|google flow/.test(name)) return "move";
+  if (/grok|kling|runway|veo|luma|seedance|\bwan\b|hailuo|pika|sora|marey|pixverse|omni|google flow|utopai|vidu/.test(name)) return "move";
   const blob = `${tool.helps} ${tool.shortDescription ?? ""}`.toLowerCase();
   if (/\bimage-to-video\b|\btext-to-video\b/.test(blob)) return "move";
   if (/\btext-to-image\b|\bstills?\b/.test(blob)) return "still";

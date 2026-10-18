@@ -17,6 +17,10 @@ export const PRO_MARKETING_HEADLINE = "From screenplay to copy-ready prompts.";
 export const PRO_MARKETING_SUBHEAD =
   "Paste your screenplay, set the look, and export copy-ready prompts for Midjourney, Kling, LTX, and more.";
 
+/** One line on /pro — other apps render; Pro stays the paste-out step. */
+export const PRO_MARKETING_NEIGHBORS =
+  "Other apps, for example PAI and Argil, generate the picture inside their own apps. That is not what Pro does. Pro writes the prompt you paste into Midjourney, Kling, LTX, and the rest.";
+
 /** Compact pitch on the free catalog (All Tools / landing). */
 export const FREE_CATALOG_PRO_TEASER =
   "Have a script? Get copy-ready prompts for Midjourney, Kling, LTX, and more.";

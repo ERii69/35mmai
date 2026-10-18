@@ -1,5 +1,5 @@
 /** How the entry fits the catalog (AI apps vs hardware vs retailers). */
-export type CatalogKind = "ai" | "software" | "gear" | "hardware";
+export type CatalogKind = "ai" | "hub" | "software" | "gear" | "hardware";
 
 export type Tool = {
   rank: number;
@@ -45,12 +45,12 @@ export const allTools: Tool[] = [
     rank: 1,
     name: "Grok Imagine",
     category: "Production",
-    helps: "xAI image + video generation with native audio — text/image-to-video up to ~15s, native 1080p, image + voice references, and fast iteration on grok.com/imagine (Video 1.5; still current in September 2026)",
+    helps: "xAI image + video generation with native audio — text/image-to-video up to ~15s, native 1080p, image + voice references, and fast iteration on grok.com/imagine (Video 1.5). Grok Imagine Video 1.5 Lite (AI Gateway, October 8, 2026) is the cheaper sibling: 1–15 seconds, 480p–1080p, native audio. It does not replace full 1.5",
     price: "via SuperGrok / X Premium (subscription)",
     budgetFit: "both",
     link: "grok.com/imagine",
     roles: ["Director","DOP (Director of Photography)","Editor"],
-    shortDescription: "2026 breakout AI video + stills stack from xAI — native audio, strong image-to-video, and the catalog's top new highlight for filmmakers",
+    shortDescription: "xAI video + stills — native audio and image-to-video on Video 1.5. 1.5 Lite is the cheaper, lower-ranked sibling",
     howToUse: [
       "Step 1: Open grok.com/imagine (or the Grok app → Imagine)",
       "Step 2: Generate a locked still, or upload a Midjourney/Flux plate",
@@ -141,19 +141,19 @@ export const allTools: Tool[] = [
   },
   {
     rank: 5,
-    name: "Kling AI 3.0",
+    name: "Kling AI 4.0",
     category: "Production",
-    helps: "Kling 3.0 / Turbo / Omni / Motion Control — native 4K up to 60fps, ~15s clips, native audio + lip-sync, multi-shot storyboard. Kling 4.0 was announced September 28, 2026; Flash is Ultra yearly early access only, so 3.0 stays the public default",
+    helps: "Public model since October 15, 2026 — native takes up to 30 seconds, up to 15 reference assets, and up to 10 keyframes for action and camera. Steadier large motion than 3.0. Keep 3.0 only if a plan you already pay for has not rolled forward",
     price: "Subscription (free daily credits)",
     budgetFit: "hollywood",
     link: "kling.ai",
     roles: ["Director","Editor"],
-    shortDescription: "Public default is still 3.0 — 4K, native audio, multi-shot, and Motion Control. Kling 4.0 is announced, not the model to plan a shoot on yet",
+    shortDescription: "The shoot model — 30-second native takes, 15 references, and 10 keyframes. Plan coverage on 4.0",
     howToUse: [
       "Step 1: Go to kling.ai and create an account",
       "Step 2: Start from an approved still when character lock matters",
-      "Step 3: Write camera + action; set duration and aspect (prefer 3.0 over 2.6)",
-      "Step 4: Use multi-shot / Omni for coverage, Motion Control to match a performance, and 4K for delivery",
+      "Step 3: Attach references for face, wardrobe, and location — up to 15 assets",
+      "Step 4: Place up to 10 keyframes for action changes and camera moves; use a native 30-second take when the beat must stay continuous",
       "Step 5: Download and cut in CapCut or Resolve",
     ],
     examplePrompt: "Image-to-video: woman turns toward camera in a crowded market, handheld follow, fabric and hair physics, warm late-day light, 5s",
@@ -447,14 +447,14 @@ export const allTools: Tool[] = [
   },
   {
     rank: 19,
-    name: "Ideogram",
+    name: "Ideogram 4.5",
     category: "Pre-Prod",
-    helps: "Image generation with reliable text-in-image for title cards, posters, signage, and pitch decks",
+    helps: "Ideogram 4.5 (October 1, 2026) — image generation with reliable text-in-image for title cards, posters, signage, and pitch decks",
     price: "Free tier / paid plans",
     budgetFit: "indie",
     link: "ideogram.ai",
     roles: ["Production Designer","Director","Producer / Line Producer"],
-    shortDescription: "Poster and title-card stills when readable typography matters",
+    shortDescription: "Ideogram 4.5 — poster and title-card stills when readable typography matters",
     howToUse: [
       "Step 1: Create an Ideogram account",
       "Step 2: Prompt with exact title text in quotes",
@@ -472,6 +472,7 @@ export const allTools: Tool[] = [
     price: "Subscription (AI Assistant has a free daily-generation tier)",
     budgetFit: "both",
     link: "adobe.com/firefly",
+    catalogKind: "hub",
     roles: ["Production Designer","Editor","Sound Designer"],
     shortDescription: "Adobe-native hub: Firefly stills and audio, plus Kling/Runway/Omni/ElevenLabs under one Adobe ID — not only Generative Fill",
     howToUse: [
@@ -487,12 +488,13 @@ export const allTools: Tool[] = [
     rank: 21,
     name: "Higgsfield Cinema Studio",
     category: "Production",
-    helps: "Cinema Studio 4.0 (August 12, 2026, on Seedance 2.5) — camera, lens, and palette controls plus a hub for Veo, Omni Flash, Kling, Seedance, Wan 3.0, Hailuo, and FLUX 3 Video. Not a single model. 4.0 runs about 30s with a large reference set",
+    helps: "Cinema Studio 4.0 (August 12, 2026, on Seedance 2.5) — camera, lens, and palette controls plus a hub for Veo, Omni Flash, Kling, Seedance, Wan 3.0, Hailuo, and FLUX 3 Video. Not a single model. Studio shots run about 30s. A separate path, using GPT-6 Astra, is producing pieces over 10 minutes (OpenAI, October 13, 2026), with a stated path toward voice-to-video",
     price: "from $9/mo (Free tier available)",
     budgetFit: "both",
     link: "higgsfield.ai",
+    catalogKind: "hub",
     roles: ["DOP (Director of Photography)","Director","Gaffer (Lighting)"],
-    shortDescription: "Director-style shot builder (ARRI/RED language) and a multi-model hub — pick Veo, Omni, Kling, Wan 3.0, Hailuo, or FLUX 3 Video per shot",
+    shortDescription: "Director-style shot builder (ARRI/RED language) and a multi-model hub. Studio shots are about 30s; a longer path runs past 10 minutes",
     howToUse: [
       "Step 1: Go to higgsfield.ai and create a free account",
       "Step 2: Open Cinema Studio 4.0, or the model hub if the shot needs Veo, Omni, Kling, or Wan",
@@ -1709,6 +1711,103 @@ export const allTools: Tool[] = [
       "Step 5: Render the sequence, then finish a longer cut in your editor",
     ],
     examplePrompt: "A night courier delivers one letter across two rooms and a rain-soaked street. Three shots, locked coat and face, 16:9, no narration",
+  },
+  {
+    rank: 88,
+    name: "Utopai X",
+    category: "Production",
+    helps: "Utopai Studios video model inside PAI — a screenplay is broken into scenes and shots, then generated in the same project. No public API. On Artificial Analysis text-to-video with audio it sits second, behind Wan 3.0, with the strongest marks in audio sync and physics",
+    price: "from $15/mo (PAI; no public API)",
+    budgetFit: "hollywood",
+    link: "utopaistudios.com",
+    roles: ["Director","DOP (Director of Photography)","Editor"],
+    shortDescription: "Generate the shoot inside PAI. Utopai X is the model — second on the viewer board, no public API",
+    howToUse: [
+      "Step 1: Open PAI from utopaistudios.com and start a project from the screenplay",
+      "Step 2: Keep characters, locations, and references attached to the scene",
+      "Step 3: Generate takes with Utopai X and compare them in the same project",
+      "Step 4: Keep earlier versions as the cut changes",
+      "Step 5: Move selected footage into Premiere or DaVinci Resolve",
+    ],
+    examplePrompt: "INT. diner night, one continuous take, detective slides into the booth, practical tungsten, rain on the window, room tone, 16:9",
+  },
+  {
+    rank: 89,
+    name: "OpenArt",
+    category: "Production",
+    helps: "Multi-model workspace — Seedance 2.5, Veo 3.1, Kling, and Wan in one credit pool. Director mode plans a multi-scene piece (up to about 5 minutes) with saved characters. Starter is $14/mo. A hub, not a new model",
+    price: "from $14/mo",
+    budgetFit: "both",
+    link: "openart.ai",
+    catalogKind: "hub",
+    roles: ["Director","Editor","Production Designer"],
+    shortDescription: "One subscription for several video models, plus Director mode for a multi-scene piece with locked characters",
+    howToUse: [
+      "Step 1: Sign in at openart.ai",
+      "Step 2: Save characters from a reference still or a short brief",
+      "Step 3: Pick the engine per shot — Seedance, Veo, Kling, or Wan",
+      "Step 4: Use Director when the piece has to hold those characters across scenes",
+      "Step 5: Export and finish the cut in your editor",
+    ],
+    examplePrompt: "Three-scene night chase, same coat and face in every shot, rainy street then stairwell then doorway, 16:9, no narration",
+  },
+  {
+    rank: 90,
+    name: "FLUX 3 Image Klein",
+    category: "Pre-Prod",
+    helps: "Black Forest Labs open-weights stills model (October 15, 2026) — 5.6B parameters, up to 10 references, native 4K, and bounding-box layout. The INT8 build is documented to run on an 8 GB NVIDIA card in ComfyUI or Diffusers. Plates, not FLUX 3 Video",
+    price: "Free open weights",
+    budgetFit: "indie",
+    link: "bfl.ai",
+    roles: ["Production Designer","Director","DOP (Director of Photography)"],
+    shortDescription: "Local plate model — 4K stills, 10 references, and layout boxes, documented on an 8 GB NVIDIA card",
+    howToUse: [
+      "Step 1: Load FLUX 3 Image Klein in ComfyUI or Diffusers (INT8 if the card has 8 GB)",
+      "Step 2: Write a full scene: subject, place, light, lens, and where each element sits",
+      "Step 3: Attach up to 10 references for face, wardrobe, and location",
+      "Step 4: Use a bounding box when a sign, prop, or person must land in a set part of the frame",
+      "Step 5: Hand the hero still to Kling 4.0, Veo, Wan, or Runway for motion",
+    ],
+    examplePrompt: "Photoreal production still, INT. kitchen night, practical fridge light, 35mm, shallow DOF, same actress as the reference sheet, title-free, 2.39:1",
+  },
+  {
+    rank: 91,
+    name: "Krea",
+    category: "Pre-Prod",
+    helps: "Realtime canvas for finding a frame, plus a hub for Veo, Kling, Runway, Hailuo, Luma, and Flux. Krea 2 is their stills model: open weights, moodboard-led, about 2 seconds to 2K. The canvas is look development. The video models are other companies' engines",
+    price: "Free tier / paid plans",
+    budgetFit: "both",
+    link: "krea.ai",
+    catalogKind: "hub",
+    roles: ["Director","Production Designer","DOP (Director of Photography)"],
+    shortDescription: "Sketch the frame in realtime, then send the shot to Veo, Kling, Runway, or Krea 2 stills",
+    howToUse: [
+      "Step 1: Open krea.ai and start on the realtime canvas",
+      "Step 2: Nudge composition and light until the frame matches the shot",
+      "Step 3: Render a keeper still with Krea 2 when you need a finished plate",
+      "Step 4: If the shot needs motion, pick Veo, Kling, Runway, Hailuo, or Luma in the same workspace",
+      "Step 5: Export the still into the look bible, or the clip into your editor",
+    ],
+    examplePrompt: "Wide rainy alley, neon practicals, anamorphic bokeh, detective small in frame, cool blue and warm tungsten, no text",
+  },
+  {
+    rank: 92,
+    name: "Vidu Q3",
+    category: "Production",
+    helps: "Dialogue model — one pass with picture, dialogue or voiceover, effects, and music, up to 16 seconds, with camera control. English, Japanese, or Chinese. Built for comic drama and short series",
+    price: "Free tier / paid plans",
+    budgetFit: "indie",
+    link: "vidu.com",
+    roles: ["Director","Editor"],
+    shortDescription: "Talking scenes with native audio in one 16-second pass — comic drama and short series",
+    howToUse: [
+      "Step 1: Open vidu.com and select Vidu Q3",
+      "Step 2: Start from a locked still when the face has to hold",
+      "Step 3: Write the line, the speaker, and the camera move in the same prompt",
+      "Step 4: Keep the clip at or under 16 seconds",
+      "Step 5: Cut keepers in CapCut, DaVinci, or Premiere",
+    ],
+    examplePrompt: "Two-shot in a diner booth, she says the line without looking up, he answers, practical tungsten, light rain on the window, English dialogue, 12s, 16:9",
   }
 ];
 
@@ -1716,6 +1815,7 @@ export const allTools: Tool[] = [
  * Catalog kind for UI badges:
  * - `gear`: retailers (category "Gear")
  * - `ai`: default — most catalog entries are AI-first or AI-heavy editors, generators, libraries, and hybrid apps
+ * - `hub`: a workspace that calls other models (Higgsfield, Firefly, OpenArt, Krea)
  * - `software`: optional override (`catalogKind: "software"`) for rare, primarily traditional listings only
  */
 export function getCatalogKind(tool: Tool): CatalogKind {
@@ -1816,9 +1916,9 @@ export const workflowStages = [
       {
         step: "1.2 Storyboarding & Visualization",
         description: "Create visual references and shot lists.",
-        tools: [6, 8, 18, 27],
+        tools: [6, 8, 18, 27, 90, 91],
         proTip:
-          "Build still plates in Midjourney, Flux, Nano Banana 2, or Seedream 5.0 Pro first — 2026 video tools work best from locked images, not only text.",
+          "Build still plates in Midjourney, Flux, FLUX 3 Image Klein, Nano Banana 2, or Seedream 5.0 Pro first — 2026 video tools work best from locked images, not only text. Krea is the realtime canvas when you are still finding the frame.",
       },
       {
         step: "1.3 Casting & Talent",
@@ -1863,9 +1963,9 @@ export const workflowStages = [
       {
         step: "2.1 Shooting & Cinematic Look",
         description: "Capture or generate cinematic coverage.",
-        tools: [1, 2, 3, 5, 9, 15, 17, 38],
+        tools: [1, 2, 3, 5, 9, 15, 17, 38, 88, 89, 92],
         proTip:
-          "Start with Grok for speed; Omni 1.1 Flash to draft/extend; FLUX 3 Video or Wan 3.0 for controlled takes; Runway Gen-4.5 for craft (web or Premiere/AE panel); Veo/Kling 3.0/Seedance 2.5 for cinematic volume. When the footage has to clear, use Marey or Firefly. Sora is closed (September 24, 2026) with no OpenAI replacement.",
+          "Start with Grok for speed; Omni 1.1 Flash to draft/extend; FLUX 3 Video or Wan 3.0 for controlled takes; Runway Gen-4.5 for craft (web or Premiere/AE panel); Veo, Kling 4.0, or Seedance 2.5 for cinematic volume. Utopai X (inside PAI) when the shoot is generated in one project. When the footage has to clear, use Marey or Firefly. Sora is closed (September 24, 2026) with no OpenAI replacement.",
       },
       {
         step: "2.2 On-set Creative Support",
