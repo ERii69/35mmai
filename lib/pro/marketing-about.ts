@@ -7,4 +7,4 @@ export const PRO_TRIAL_SIGNUP_HREF = "/sign-up?next=/account";
 
 export const PRO_ABOUT_SIGNED_IN_TRIAL_TITLE = "Open billing";
 export const PRO_ABOUT_SIGNED_IN_TRIAL_BODY =
-  "Continue to Account for cloud projects + prompt packs. AI assist is separate when enabled.";
+  "Continue to Account for cloud projects + prompt packs. The studio writes the prompts in the app.";

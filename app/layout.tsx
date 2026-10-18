@@ -3,7 +3,7 @@ import './globals.css';
 import { ConsumeAuthHash } from '@/components/auth/ConsumeAuthHash';
 import { SiteFooterSwitch } from '@/components/site/SiteFooterSwitch';
 import { brandDisplayFont } from '@/lib/brand/brand-font';
-import { CATALOG_DEFAULT_DESCRIPTION, CATALOG_DEFAULT_TITLE } from '@/lib/catalog-metadata';
+import { CATALOG_DEFAULT_DESCRIPTION, CATALOG_DEFAULT_TITLE, CATALOG_OG_IMAGE } from '@/lib/catalog-metadata';
 import { getMetadataBase } from '@/lib/site-url';
 import { BRAND_NAME } from '@/lib/brand/brand-identity';
 import { isProLiveRelease } from '@/lib/pro/launch-flags';
@@ -18,11 +18,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     siteName: BRAND_NAME,
+    images: [CATALOG_OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
     title: CATALOG_DEFAULT_TITLE,
     description: CATALOG_DEFAULT_DESCRIPTION,
+    images: [CATALOG_OG_IMAGE.url],
   },
 };
 

@@ -7,7 +7,7 @@ export function ProPrivacyContent() {
   return (
     <>
       <p className="text-sm text-[#737373]">
-        Last updated: October 4, 2026 · Applies to the {BRAND_NAME} catalog and {BRAND_NAME_PRO}.
+        Last updated: October 18, 2026 · Applies to the {BRAND_NAME} catalog and {BRAND_NAME_PRO}.
       </p>
 
       <section className="mt-8 space-y-3">
@@ -46,10 +46,8 @@ export function ProPrivacyContent() {
           </li>
           <li>
             <strong>We do not use</strong> your scripts, scene rows, or workspace content to train
-            our models, and we do not sell that content. Your screenplay is saved to your account.
-            AI assist is off unless we turn it on for the product. If it is on, the text needed for
-            that request may be sent to the AI provider to run it. That provider&apos;s own terms
-            then apply to that request.
+            models, and we do not sell that content. Your screenplay is saved to your account. The
+            studio writes the prompt pack in the app. It does not send your script to an AI service.
           </li>
           <li>
             <strong>We do not expose</strong> your projects on the public {BRAND_NAME} catalog or in

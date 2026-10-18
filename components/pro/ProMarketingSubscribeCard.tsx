@@ -64,7 +64,7 @@ export function ProMarketingSubscribeCard({
     >
       <p className="text-xs font-semibold uppercase tracking-wide text-pro-accent/90">Built for directors</p>
       <p className="mt-1.5 text-base font-semibold text-pro-text">
-        {PRO_MARKETING_PRICE.valueProp} — not unlimited AI.
+        {PRO_MARKETING_PRICE.valueProp}. The studio writes the prompts in the app. It does not call an AI service.
       </p>
 
       {!stackReady && !hideStackWarning ? (

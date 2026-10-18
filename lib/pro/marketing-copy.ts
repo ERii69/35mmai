@@ -19,7 +19,7 @@ export const PRO_MARKETING_SUBHEAD =
 
 /** One line on /pro — other apps render; Pro stays the paste-out step. */
 export const PRO_MARKETING_NEIGHBORS =
-  "Other apps, for example PAI and Argil, generate the picture inside their own apps. That is not what Pro does. Pro writes the prompt you paste into Midjourney, Kling, LTX, and the rest.";
+  "Other apps, for example PAI and Argil, generate the picture inside their own apps. That is not what Pro does. Pro writes the prompt you paste into Midjourney, Kling, LTX, and the rest. It writes that prompt in the app. There is no cloud AI assistant, and the script is not sent to an AI service.";
 
 /** Compact pitch on the free catalog (All Tools / landing). */
 export const FREE_CATALOG_PRO_TEASER =
@@ -37,7 +37,7 @@ const withTrial = hasProSubscriptionTrial();
 
 /**
  * Display price — keep in sync with Stripe Price.
- * Subscription = cloud studio + save + export (prompt packs). AI assist is separate (flag + quota).
+ * Subscription = cloud studio + save + export (prompt packs). No cloud AI assistant.
  */
 export const PRO_MARKETING_PRICE = {
   amountUsd: 15,
@@ -50,11 +50,11 @@ export const PRO_MARKETING_PRICE = {
     ? `${trialDays}-day free trial, then $15/mo`
     : "$15/mo · cancel anytime",
   currencyNote: "USD · cancel anytime",
-  /** What you pay for — never “unlimited AI”. */
+  /** What you pay for. The studio writes the prompt pack in the app. */
   valueProp: "Cloud projects + prompt packs",
   checkoutNote: withTrial
-    ? "Cloud projects + prompt packs. Card required at checkout. Cancel before the trial ends to pay nothing. AI assist is separate when enabled — not unlimited AI."
-    : "Cloud projects + prompt packs. Card required at checkout. AI assist is separate when enabled — not unlimited AI.",
+    ? "Cloud projects + prompt packs. Card required at checkout. Cancel before the trial ends to pay nothing. The studio writes the prompts in the app. It does not call an AI service."
+    : "Cloud projects + prompt packs. Card required at checkout. The studio writes the prompts in the app. It does not call an AI service.",
 } as const;
 
 /** Soft-launch trust — beta SLA first; trial is not the primary promise while checkout is off. */

@@ -221,7 +221,7 @@ export default async function AccountPage({ searchParams }: { searchParams: Prom
             <h2 className="text-sm font-semibold text-pro-text">35mmAiPro billing</h2>
             <p className="mt-1 text-xs text-pro-text-secondary">
               {subscribed
-                ? "Studio access is on. Cancel anytime in billing. AI assist is not included."
+                ? "Studio access is on. Cancel anytime in billing. The studio writes the prompts in the app. It does not call an AI service."
                 : access.retention
                   ? `Your subscription ended. Export your projects for ${PRO_DATA_RETENTION_DAYS} days after access ended, then we delete them. Resubscribe to restore the studio.`
                 : checkoutEnabled
