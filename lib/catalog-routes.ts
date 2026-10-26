@@ -69,6 +69,7 @@ const { slugToTool: SLUG_TO_TOOL, rankToSlug: RANK_TO_SLUG } = buildToolSlugMaps
 const TOOL_SLUG_ALIASES: Record<string, string> = {
   "kling-ai-3-0": "kling-ai-4-0",
   ideogram: "ideogram-4-5",
+  "superscout-ai": "superscout-pro",
 };
 
 export function getToolSlug(tool: Pick<Tool, "rank" | "name">): string {
