@@ -3,7 +3,7 @@ type Props = {
 };
 
 /** Change this when the catalog note is rewritten. About uses the same date. */
-export const CATALOG_AS_OF_LABEL = "October 26, 2026";
+export const CATALOG_AS_OF_LABEL = "November 2, 2026";
 
 const lead = "font-bold text-[#f5f5f5]";
 
@@ -33,6 +33,10 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
         H3, Seedance 2.5, FLUX 3 Max, and HeyGen Video 1 come out about even.
         Kling 4.0 is not in that test yet.
       </p>
+      <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
+        This week. Kling 4.0 Flash is the short draft. Pika H3 Flex is on
+        pika.art. The Google still to use is Nano Banana 2.1.
+      </p>
 
       <details className="group mt-3 [&:not([open])>:not(summary)]:hidden">
         <summary className="cursor-pointer list-none text-sm font-medium text-[#e11d48] underline-offset-2 marker:content-none hover:underline [&::-webkit-details-marker]:hidden">
@@ -46,7 +50,18 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
         <p>
           <strong className={lead}>Kling 4.0.</strong> Open since October 15.
           Big moves hold. One take, 30 seconds, 15 refs, 10 marks for a beat or
-          a camera change. This is the one to plan on.
+          a camera change. This is the one to plan on. Flash is the draft: 20
+          seconds, 720p, no start frame, no keyframes. The API has been open
+          since October 28. About 16 cents a second at 720p, and about 24 cents
+          at 1080p. The in-app discount ended October 29. Runway&apos;s copy of
+          the same model stays about 20 percent cheaper through November 30.
+        </p>
+        <p>
+          <strong className={lead}>Pika H3 Flex.</strong> On pika.art as of
+          November 2. A faster MiniMax H3: up to 12 refs, five audio stems, and
+          a finish up to 4K on Pika&apos;s servers. The weights are open. Pika
+          2.5 is the older short clip. MiniMax is still in a copyright fight,
+          and Flex comes from H3.
         </p>
         <p>
           <strong className={lead}>Veo 3.1.</strong> The cheap test connection
@@ -82,22 +97,31 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
           Stills, sound, hubs, rights
         </p>
         <p>
-          <strong className={lead}>Stills.</strong> FLUX 3 Image Klein runs on
-          your own computer: pictures, up to 10 refs, a 4K frame, and a box to
-          place something in the shot. Ideogram 4.5 when the frame has to be
-          read: a title, a poster, a street sign, a name on a door.
+          <strong className={lead}>Stills.</strong> Nano Banana 2.1 is the
+          Google still. Nano Banana 2 is the older model. Google has not set a
+          date to turn it off. FLUX 3 Image Klein runs on your own computer:
+          pictures, up to 10 refs, a 4K frame, and a box to place something in
+          the shot. Ideogram 4.5 when the frame has to be read: a title, a
+          poster, a street sign, a name on a door.
         </p>
         <p>
           <strong className={lead}>Sound of the picture.</strong> Mirelo SFX
           2.0 takes a cut up to 10 minutes, lifts a music bed you did not ask
           for, and lays effects and room tone around the dialogue. ElevenLabs
           can do the same kind of pass and leave the layers separate for the
-          mix.
+          mix. VEED can dub a finished video. Send the cut and a language. It
+          keeps each speaker&apos;s voice and lip-syncs. About 11 cents a
+          second, or 18 cents for the tighter multi-speaker pass.
         </p>
         <p>
           <strong className={lead}>Hubs.</strong> Higgsfield, Firefly, OpenArt,
           and Krea run other companies&apos; models in one room. The Hub badge
           means that. The picture still depends on which model you pick.
+        </p>
+        <p>
+          <strong className={lead}>Runway.</strong> App Studio, on a paid plan,
+          can turn a workflow into a small app. Other people run it on their
+          own credits.
         </p>
         <p>
           <strong className={lead}>Rights.</strong> Firefly and Moonvalley Marey
