@@ -51,6 +51,7 @@ import {
   getSpotlightToolForRole,
   getToolByRank,
   hasPartnerLink,
+  parseMonthlyFromPrice,
   rehydrateKitEntry,
   rolesList,
   workflowStages,
@@ -506,12 +507,9 @@ function CatalogAppBody({
 
  // Helper to get monthly price from tool object
 const getMonthlyPrice = (tool: any): number => {
-  if (tool.monthly) return tool.monthly;
-  if (tool.price) {
-    const match = tool.price.match(/\d+/);
-    if (match) return parseFloat(match[0]);
-  }
-  return 15; // fallback
+  if (typeof tool.monthly === "number") return tool.monthly;
+  if (tool.price) return parseMonthlyFromPrice(String(tool.price));
+  return 0;
 };
 
 // Clean Add to My Kit function
@@ -618,7 +616,7 @@ useEffect(() => {
     const toolsToAdd = myKit.map((tool) => ({
       ...tool,
       qty: 1,
-      monthly: parseFloat(tool.price?.match(/\d+/)?.[0] || "15") || 15,
+      monthly: parseMonthlyFromPrice(String(tool.price ?? "")),
       category: tool.category || "General",
     }));
 
@@ -2202,12 +2200,10 @@ useEffect(() => {
       <div className="mb-12 text-center">
         <h1 className="mb-3 text-3xl font-bold md:text-5xl">{BUDGET_TEMPLATES_LABEL}</h1>
         <p className="text-base text-[#d1d5db] md:text-xl">
-          Live monthly estimates from your kit
+          Monthly estimates from the current catalog prices
         </p>
         <p className="mx-auto mt-3 max-w-2xl text-xs text-[#737373] md:text-sm">
-          Each column links to a full Google Sheet — use{" "}
-          <span className="text-[#a3a3a3]">Download .xlsx</span> on mobile for a file copy, or{" "}
-          <span className="text-[#a3a3a3]">Open in Google Sheets</span> in the browser / app.
+          A line is counted only when the card states a monthly price. Free tiers, usage, and one-time purchases stay on the line and out of the monthly total. Download saves this list.
         </p>
       </div>
 
@@ -2266,6 +2262,9 @@ useEffect(() => {
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-white">{tool.name}</div>
                       <div className="text-xs text-[#888]">{tool.category}</div>
+                      {tool.price ? (
+                        <div className="mt-1 text-xs leading-snug text-[#a3a3a3]">{tool.price}</div>
+                      ) : null}
                     </div>
                     <button
                       type="button"
@@ -2356,7 +2355,11 @@ useEffect(() => {
               Reset to Default
             </button>
             <div className="w-full min-w-0 sm:flex-1">
-              <BudgetSheetLinks variant="micro" />
+              <BudgetSheetLinks
+                variant="micro"
+                tools={microTools}
+                traditional={microTraditional}
+              />
             </div>
           </div>
         </div>
@@ -2390,6 +2393,9 @@ useEffect(() => {
                     <div className="min-w-0 flex-1">
                       <div className="font-medium text-white">{tool.name}</div>
                       <div className="text-xs text-[#888]">{tool.category}</div>
+                      {tool.price ? (
+                        <div className="mt-1 text-xs leading-snug text-[#a3a3a3]">{tool.price}</div>
+                      ) : null}
                     </div>
                     <button
                       type="button"
@@ -2480,7 +2486,11 @@ useEffect(() => {
               Reset to Default
             </button>
             <div className="w-full min-w-0 sm:flex-1">
-              <BudgetSheetLinks variant="low" />
+              <BudgetSheetLinks
+                variant="low"
+                tools={lowTools}
+                traditional={lowTraditional}
+              />
             </div>
           </div>
         </div>

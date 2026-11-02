@@ -1912,9 +1912,11 @@ export const BUDGET_DEFAULT_LOW_ROWS = [
   { rank: 10, qty: 1 },
 ] as const;
 
-function parseMonthlyFromPrice(price: string): number {
-  const m = price.match(/\d+/);
-  return m ? parseFloat(m[0]) : 15;
+/** Monthly dollars we can read from a catalog price. Usage, free, and one-time prices stay at 0. */
+export function parseMonthlyFromPrice(price: string): number {
+  const monthly = price.match(/(\d+(?:\.\d+)?)\s*\/\s*mo\b/i);
+  if (monthly) return Math.round(parseFloat(monthly[1]));
+  return 0;
 }
 
 /** Row shape used by Budget Templates state in `page.tsx` (includes `catalogRank` for kit-style sync). */
@@ -2133,25 +2135,3 @@ export const SITE_CONTACT_EMAIL = "info@35mmai.com" as const;
 
 /** Shown only in the site footer. */
 export const FOOTER_CONTACT_EMAIL = "hello@35mmai.com" as const;
-
-/** Linked from Budget Templates — must be shared so “Anyone with the link” can view for export URLs to work without sign-in. */
-export const BUDGET_TEMPLATE_SHEETS = {
-  micro: {
-    id: "1xO5LM1eHio8rS8O1SGf4WF1EXYc7YhJO5QnPSjLXxWQ",
-    editUrl:
-      "https://docs.google.com/spreadsheets/d/1xO5LM1eHio8rS8O1SGf4WF1EXYc7YhJO5QnPSjLXxWQ/edit?usp=sharing",
-  },
-  low: {
-    id: "1L9iFnldMosGjrNRwOzhVN8nYhUwg5BL7zDngWKpRpQs",
-    editUrl:
-      "https://docs.google.com/spreadsheets/d/1L9iFnldMosGjrNRwOzhVN8nYhUwg5BL7zDngWKpRpQs/edit?usp=sharing",
-  },
-} as const;
-
-/** Direct download (new tab). Works on mobile when the spreadsheet is publicly viewable. */
-export function googleSpreadsheetExportUrl(
-  spreadsheetId: string,
-  format: "xlsx" | "pdf" = "xlsx"
-): string {
-  return `https://docs.google.com/spreadsheets/d/${spreadsheetId}/export?format=${format}`;
-}
