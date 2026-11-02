@@ -68,6 +68,8 @@ const { slugToTool: SLUG_TO_TOOL, rankToSlug: RANK_TO_SLUG } = buildToolSlugMaps
 /** Previous public slugs after a rename. Resolve, then redirect to the current path. */
 const TOOL_SLUG_ALIASES: Record<string, string> = {
   "kling-ai-3-0": "kling-ai-4-0",
+  "pika-2-5": "pika-h3-flex",
+  "nano-banana-2": "nano-banana-2-1",
   ideogram: "ideogram-4-5",
   "superscout-ai": "superscout-pro",
 };

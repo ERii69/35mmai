@@ -19,7 +19,7 @@ export const STUDIO_HELP_SECTIONS: StudioHelpSection[] = [
     steps: [
       "Open your project. Template should be Script to prompt (default).",
       "Script: paste pages with INT./EXT. headings, or Try 3-scene demo (that loads a sample, not your other projects). Run prep. That drafts a sentence for each shot, plus the people and places.",
-      "Finish → Prompts. Edit a sentence and that shot’s paste follows. Pick the tool under the sentence. Suggested: Grok Imagine, Midjourney, Nano Banana 2, Kling, LTX Studio, Higgsfield. The paste is rewritten for that tool. The sentence stays.",
+      "Finish → Prompts. Edit a sentence and that shot’s paste follows. Pick the tool under the sentence. Suggested: Grok Imagine, Midjourney, Nano Banana 2.1, Kling, LTX Studio, Higgsfield. The paste is rewritten for that tool. The sentence stays.",
       "People and places is on the same page. Change a face, a place, or the kept-still words and every paste that uses them updates as you type. The kept still is the face prompt in words. Nothing is uploaded.",
       "Copy the prompt. Open the tool. Paste it there. The picture is made there, not here.",
       "Export is the tab next to Prompts. Download prompt pack (.md) or CSV. If a yellow line says a detail is in some scenes and missing in another, the pack stays until the sentences match. Shot list still downloads.",
