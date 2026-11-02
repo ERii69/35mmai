@@ -262,7 +262,7 @@ export const allTools: Tool[] = [
     budgetFit: "indie",
     link: "capcut.com",
     roles: ["Editor","Production Coordinator","Director"],
-    shortDescription: "Indie finish + gen hub — CapCut is where many filmmakers cut Seedance/Kling clips after Sora",
+    shortDescription: "Indie finish + gen hub — CapCut is where many filmmakers cut Seedance 2.5 and Kling 4.0 clips",
     howToUse: [
       "Step 1: Import generated clips and production audio",
       "Step 2: Auto-caption dialogue; fix timing",
@@ -314,14 +314,14 @@ export const allTools: Tool[] = [
     rank: 13,
     name: "DaVinci Resolve AI",
     category: "Post-Prod",
-    helps: "DaVinci Resolve 21 Neural Engine — IntelliSearch, CineFocus, Face Age, UltraSharpen, Magic Mask, Voice Isolation, plus the new Photo page for stills color",
-    price: "Free / Studio version paid",
+    helps: "DaVinci Resolve 21.1.2 (October 27, 2026) — IntelliSearch, CineFocus, Face Age, UltraSharpen, Magic Mask, Voice Isolation, the Photo page for stills color, and assistant hooks for Claude and ChatGPT in 21.1. The free app and Studio are both on 21.1.2",
+    price: "Free. Studio $236 through November 20, 2026 (list $295)",
     budgetFit: "both",
-    link: "blackmagicdesign.com",
+    link: "www.blackmagicdesign.com/products/davinciresolve",
     roles: ["Editor","Colorist"],
-    shortDescription: "Finish-lane NLE — Resolve 21 ships a new AI suite in Free and Studio; grade, isolate, search, and sharpen in one app",
+    shortDescription: "Finish-lane NLE — Resolve 21.1.2 in Free and Studio. Grade, isolate, search, and sharpen in one app",
     howToUse: [
-      "Step 1: Open DaVinci Resolve 21 (Free or Studio)",
+      "Step 1: Open DaVinci Resolve 21.1 (Free or Studio)",
       "Step 2: Import generated clips and production audio",
       "Step 3: Use IntelliSearch / Magic Mask / Voice Isolation as needed; UltraSharpen only after picture lock",
       "Step 4: Grade in scene groups on the Color page; optional Photo page for stills",
@@ -1990,7 +1990,7 @@ export const workflowStages = [
         description: "Build detailed budget, shooting schedule, and assemble crew.",
         tools: [14, 11, 12],
         proTip:
-          "Budget for Grok Imagine / Kling / Veo / Omni Flash / Runway / Seedance / Wan 3.0 (often via CapCut) — not a single video vendor.",
+          "Budget a separate line for Grok Imagine, Kling 4.0, Veo, Omni Flash, Runway, Seedance 2.5, and Wan 3.0. Seedance often runs inside CapCut.",
       },
     ],
   },
@@ -2001,16 +2001,16 @@ export const workflowStages = [
       {
         step: "2.1 Shooting & Cinematic Look",
         description: "Capture or generate cinematic coverage.",
-        tools: [1, 2, 3, 5, 9, 15, 17, 38, 88, 89, 92, 94],
+        tools: [1, 2, 3, 5, 9, 15, 17, 38, 20, 88, 89, 92, 94],
         proTip:
-          "Start with Grok for speed; Omni 1.1 Flash to draft/extend; FLUX 3 Max to try the move, then keep the shot on FLUX 3 Video, Wan 3.0, or Kling 4.0. Runway Gen-4.5 for craft (web or Premiere/AE panel). Veo in Flow, or Seedance 2.5 in Dreamina or CapCut, for cinematic volume. Utopai X (inside PAI) when the shoot is generated in one project. When the footage has to clear, use Marey or Firefly. Sora is closed (September 24, 2026) with no OpenAI replacement.",
+          "Start with Grok for speed; Omni 1.1 Flash to draft/extend; FLUX 3 Max to try the move, then keep the shot on FLUX 3 Video, Wan 3.0, or Kling 4.0. Kling 4.0 Flash is the 20-second 720p draft. Runway Gen-4.5 for craft (web or Premiere/AE panel). Veo in Flow, or Seedance 2.5 in Dreamina or CapCut, for cinematic volume. OpenArt when several of those models share one subscription. Vidu Q3 for a talking scene up to 16 seconds. Utopai X (inside PAI) when the shoot is generated in one project. When the footage has to clear, use Marey or Firefly. Sora is closed (September 24, 2026) with no OpenAI replacement.",
       },
       {
         step: "2.2 On-set Creative Support",
         description: "Generate quick VFX previews and reference clips.",
         tools: [1, 5, 7, 9, 15],
         proTip:
-          "Image-to-video from your still board beats pure text prompts for consistency on set. Omni Flash is the fast on-set iterate; Veo/Kling for the keeper.",
+          "Image-to-video from your still board holds the face on set. Omni Flash is the fast on-set iterate. Veo or Kling 4.0 is the keeper. Kling 4.0 Flash is the 20-second 720p draft.",
       },
       {
         step: "2.3 Lighting, Grip & Camera",
@@ -2043,7 +2043,7 @@ export const workflowStages = [
         description: "Rough cut → Director’s cut.",
         tools: [10, 13, 16],
         proTip:
-          "Many indie teams now assemble Kling/Seedance/Veo/Omni clips in CapCut, then finish grade in DaVinci Resolve 21.",
+          "Assemble Kling 4.0, Seedance 2.5, Veo, and Omni clips in CapCut, then finish the grade in DaVinci Resolve 21.1.",
       },
       {
         step: "3.2 Visual Effects & Enhancement",
@@ -2061,7 +2061,7 @@ export const workflowStages = [
         step: "3.4 Color Grading",
         description: "Final look and mood.",
         tools: [13, 21],
-        proTip: "Grade in scene groups (day / night / interior) for consistency over perfection.",
+        proTip: "Grade the locked cut in Resolve 21.1, in scene groups (day, night, interior). Higgsfield Cinema Studio sets camera and color while the shot is still being generated.",
       },
     ],
   },
@@ -2079,8 +2079,8 @@ export const workflowStages = [
       {
         step: "4.2 Localization & Dubbing",
         description: "Dub into other languages for global reach.",
-        tools: [16],
-        proTip: "Start with Spanish and Mandarin for festivals and streaming reach.",
+        tools: [16, 60],
+        proTip: "ElevenLabs for a cloned read. VEED dubs a finished cut and keeps each speaker’s voice: about 11 cents a second, or 18 cents for the tighter multi-speaker pass. Start with Spanish and Mandarin for festivals and streaming reach.",
       },
       {
         step: "4.3 Audience Targeting & Release",
