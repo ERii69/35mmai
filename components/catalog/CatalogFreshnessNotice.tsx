@@ -3,7 +3,7 @@ type Props = {
 };
 
 /** Change this when the catalog note is rewritten. About uses the same date. */
-export const CATALOG_AS_OF_LABEL = "November 2, 2026";
+export const CATALOG_AS_OF_LABEL = "November 5, 2026";
 
 const lead = "font-bold text-[#f5f5f5]";
 
@@ -35,7 +35,9 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
         This week. Kling 4.0 Flash is the short draft. Pika H3 Flex is on
-        pika.art. The Google still to use is Nano Banana 2.1.
+        pika.art. The Google still to use is Nano Banana 2.1. OpusClip 4.0
+        edits a raw take into a ready-to-post video. The partner link is 40%
+        off the first month of Monthly Pro.
       </p>
 
       <details className="group mt-3 [&:not([open])>:not(summary)]:hidden">
@@ -91,6 +93,15 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
           <strong className={lead}>Grok 1.5 Lite.</strong> Cheap and fast, 1 to
           15 seconds, with sound. Use Lite for alts. Use full 1.5 for the take
           you keep.
+        </p>
+        <p>
+          <strong className={lead}>OpusClip 4.0.</strong> Live November 2. It
+          no longer only pulls clips. Drop in a raw take and get a
+          ready-to-post video. Auto Edit runs captions, speech cleanup, B-roll,
+          and transitions in one pass. Viral Hook rewrites the first 3 seconds.
+          Motion Graphics animates names, numbers, and dates said on camera.
+          Recipes save that edit and rerun it in one click. The partner link is
+          40% off the first month of Monthly Pro.
         </p>
 
         <p className="pt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200/85">

@@ -2850,7 +2850,9 @@ useEffect(() => {
             </div>
             <div className="max-h-[calc(94vh-190px)] overflow-y-auto p-4 sm:max-h-[calc(90vh-220px)] sm:p-8">
               <p className="mb-4 text-base leading-relaxed text-[#d1d5db] sm:mb-6 sm:text-lg">
-                {getUseCaseText(selectedTool, 260)}
+                {(selectedTool.helps || getUseCaseText(selectedTool))
+                  .replace(/\s+/g, " ")
+                  .trim()}
               </p>
               <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
                 <CatalogKindBadge tool={selectedTool} />
