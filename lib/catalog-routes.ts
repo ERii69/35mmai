@@ -70,6 +70,9 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
   "kling-ai-3-0": "kling-ai-4-0",
   "pika-2-5": "pika-h3-flex",
   "nano-banana-2": "nano-banana-2-1",
+  "gemini-omni-1-1-flash": "gemini-omni-1-2-flash",
+  "seedream-5-0-pro": "seedream-5-5",
+  "vidu-q3": "vidu-q4-preview",
   ideogram: "ideogram-4-5",
   "superscout-ai": "superscout-pro",
 };

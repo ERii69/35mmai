@@ -3,7 +3,7 @@ type Props = {
 };
 
 /** Change this when the catalog note is rewritten. About uses the same date. */
-export const CATALOG_AS_OF_LABEL = "November 5, 2026";
+export const CATALOG_AS_OF_LABEL = "November 19, 2026";
 
 const lead = "font-bold text-[#f5f5f5]";
 
@@ -22,22 +22,32 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
         <span> · {CATALOG_AS_OF_LABEL}</span>
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
-        Plan the shot on Kling 4.0. One take can run 30 seconds. Bring up to
-        15 refs, and mark up to 10 places where the move or the action has to
-        hit.
+        Plan the shot on Kling 4.0. One take can run 30 seconds. As of today
+        the API can finish that take at 4K, and in HDR at 1080p or 4K. Bring
+        up to 15 refs, and mark up to 10 places where the move or the action
+        has to hit. Flash stays the 720p draft, up to 20 seconds.
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
         <span className="font-medium text-[#f5f5f5]">Which clip looks better: </span>
-        people watch two clips from the same prompt and are not told which
-        tool made them. They choose Wan 3.0 most often, then Utopai X. MiniMax
-        H3, Seedance 2.5, FLUX 3 Max, and HeyGen Video 1 come out about even.
-        Kling 4.0 is not in that test yet.
+        on the November 9 audio board, Seedance 2.5 and Utopai X tie at the
+        top. MiniMax H3 and HeyGen Video 1 sit just behind. Wan 3.0 is no
+        longer the clip people pick most often. A November 13 shootout still
+        put Kling 4.0 in the top two on fights, dance, and light, and found
+        Wan stronger on props than on physics.
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
-        This week. Kling 4.0 Flash is the short draft. Pika H3 Flex is on
-        pika.art. The Google still to use is Nano Banana 2.1. OpusClip 4.0
-        edits a raw take into a ready-to-post video. The partner link is 40%
-        off the first month of Monthly Pro.
+        This week. Where a newer model is in, the older one stays listed for
+        the job it still does. Start on Omni Flash 1.2. Omni 1.1, Veo 3.1 Fast,
+        and Veo 3.1 Quality stay until December 5. Veo 3.1 Lite stays as the
+        cheap 720p pass. Nano Banana 2.1 stays the Google still. Nano Banana 2
+        is the older still, with no shutdown date, and Pro is the slower hero
+        pass. Seedream 5.5 is the edit. Seedream 5.0 Pro stays for a native 4K
+        file. Vidu Q4 Preview is the performance model. Q3 stays for a
+        prompt-only shot. Pika H3 Flex is the current clip. Pika 2.5 is the
+        older short one. The public Seedance cut stays in Dreamina, CapCut, or
+        Doubao. The 4K API is the new finish. OpusClip is 40% off the first
+        month of Monthly Pro. invideo is 50% off eligible annual personal
+        plans, at the price shown for your region.
       </p>
 
       <details className="group mt-3 [&:not([open])>:not(summary)]:hidden">
@@ -52,11 +62,13 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
         <p>
           <strong className={lead}>Kling 4.0.</strong> Open since October 15.
           Big moves hold. One take, 30 seconds, 15 refs, 10 marks for a beat or
-          a camera change. This is the one to plan on. Flash is the draft: 20
-          seconds, 720p, no start frame, no keyframes. The API has been open
-          since October 28. About 16 cents a second at 720p, and about 24 cents
-          at 1080p. The in-app discount ended October 29. Runway&apos;s copy of
-          the same model stays about 20 percent cheaper through November 30.
+          a camera change. This is the one to plan on. As of November 19 the
+          API finishes at 4K, and in HDR at 1080p or 4K. HDR adds a per-second
+          fee. Flash is the draft: up to 20 seconds, 720p, one start frame, no
+          keyframe list. About 16 cents a second at 720p, and about 24 cents at
+          1080p. Kling Image 4.0, out November 17, is the still, up to native
+          8K. Runway&apos;s copy of the video model stays about 20 percent
+          cheaper through November 30. There is no Kling 5.
         </p>
         <p>
           <strong className={lead}>Pika H3 Flex.</strong> On pika.art as of
@@ -66,23 +78,39 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
           and Flex comes from H3.
         </p>
         <p>
-          <strong className={lead}>Veo 3.1.</strong> The cheap test connection
-          shut off on October 22. If a tool on your show was calling it, point
-          that call at Gemini Omni Flash. Veo is still in Google Flow for a
-          hero take.
+          <strong className={lead}>Omni Flash 1.2.</strong> Google&apos;s
+          current video model since November 5. Clips run 3 to 15 seconds, with
+          sound, and you can edit them in a follow-up turn. About 7 cents a
+          second at 720p. Call gemini-omni-1.2-flash. Omni 1.1 retires
+          December 5. Veo Extend already retired on November 5.
         </p>
         <p>
-          <strong className={lead}>Seedance 2.5.</strong> A few film and post
-          houses are testing the 4K take. Cut a cheap 480p version first, then
-          the 4K take in 10-bit color. You cannot open this 4K one yourself
-          yet. Seedance 2.5 in Dreamina or CapCut is the version you can use
-          today.
+          <strong className={lead}>Veo 3.1.</strong> Lite is the cheap 720p
+          baseline in Flow: 4, 6, or 8 seconds. Fast and Quality retire
+          December 5. The cheap test connection shut off on October 22. If a
+          tool on your show was calling it, point that call at Omni 1.2.
         </p>
         <p>
-          <strong className={lead}>FLUX 3 Max.</strong> Fast alts. A 10-second
-          720p clip is about 43 cents and can come back in the time it takes to
-          watch it. Takes run up to about 20 seconds. Use Max to try the move.
-          Keep the shot on FLUX 3 Video or Kling.
+          <strong className={lead}>Seedance 2.5.</strong> The public cut is
+          still in Dreamina, CapCut, or Doubao, about 30 seconds with sound.
+          The 4K 10-bit API opened November 17. Cut a cheap draft, then the 4K
+          take. On Volcano Engine that 4K render is about RMB 6 a second.
+          Flash, the cheaper draft API, opened November 15. Seedance is still
+          in a copyright fight. On the November 9 audio board it ties Utopai X
+          at the top.
+        </p>
+        <p>
+          <strong className={lead}>Vidu.</strong> Q4 Preview is the current
+          performance model: a still or up to 15 references, up to 16 seconds,
+          and 2K or 4K. Q3 stays in the listing for a prompt-only shot or a
+          first-and-last frame. Image and reference jobs are 30 percent off
+          through November 30.
+        </p>
+        <p>
+          <strong className={lead}>FLUX 3 Max.</strong> Fast alts. Takes run up
+          to about 20 seconds. The opening rate, about 43 cents for 10 seconds
+          at 720p, ended November 7. You now pay the current fal rate. Use Max
+          to try the move. Keep the shot on FLUX 3 Video or Kling.
         </p>
         <p>
           <strong className={lead}>Higgsfield.</strong> Cinema Studio sets the
@@ -103,17 +131,32 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
           Recipes save that edit and rerun it in one click. The partner link is
           40% off the first month of Monthly Pro.
         </p>
+        <p>
+          <strong className={lead}>invideo Editor and Adapts.</strong> Editor
+          builds a first cut from the script, then lays effects and sound on a
+          timeline you can still change by hand. ChatGPT or Claude can apply
+          notes through MCP when the plan includes it. Adapts takes one
+          approved master and makes other languages, 30-second, 15-second, and
+          6-second cuts, and the frame each platform needs. Check each version
+          on its own timeline before delivery. The partner link is 50% off
+          eligible annual personal plans. Plan names, prices, and credits
+          change by region, so use the offer on that page.
+        </p>
 
         <p className="pt-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber-200/85">
           Stills, sound, hubs, rights
         </p>
         <p>
           <strong className={lead}>Stills.</strong> Nano Banana 2.1 is the
-          Google still. Nano Banana 2 is the older model. Google has not set a
-          date to turn it off. FLUX 3 Image Klein runs on your own computer:
-          pictures, up to 10 refs, a 4K frame, and a box to place something in
-          the shot. Ideogram 4.5 when the frame has to be read: a title, a
-          poster, a street sign, a name on a door.
+          Google still to start on. Nano Banana 2 stays listed. Google has not
+          set a date to turn it off. Pro stays the slower hero pass. Seedream
+          5.5, out November 9, is the ByteDance still for edits, readable type,
+          transparent cutouts, and up to 99 layers. Seedream 5.0 Pro stays when
+          the file has to be native 4K. FLUX 3 Image Klein runs on your own
+          computer: pictures, up to 10 refs, a 4K frame, and a box to place
+          something in the shot. Ideogram 4.5 when the frame has to be read: a
+          title, a poster, a street sign, a name on a door. GPT Image 2.6, out
+          November 4, is the concept frame inside ChatGPT.
         </p>
         <p>
           <strong className={lead}>Sound of the picture.</strong> Mirelo SFX
@@ -130,9 +173,17 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
           means that. The picture still depends on which model you pick.
         </p>
         <p>
-          <strong className={lead}>Runway.</strong> App Studio, on a paid plan,
-          can turn a workflow into a small app. Other people run it on their
-          own credits.
+          <strong className={lead}>Runway.</strong> Gen-4.5 is still the
+          flagship. No Gen-5 as of November 19. App Studio, on a paid plan, can
+          turn a workflow into a small app. Other people run it on their own
+          credits.
+        </p>
+        <p>
+          <strong className={lead}>Firefly.</strong> On November 10, Creative
+          Agent opened across Firefly. Assemble short video, in beta, is a
+          single-track cut you can trim, split, and regenerate. Premiere
+          mobile Quick Cut, an editable first cut from a camera roll, is a
+          private beta.
         </p>
         <p>
           <strong className={lead}>Rights.</strong> Firefly and Moonvalley Marey
