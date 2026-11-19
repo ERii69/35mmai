@@ -22,32 +22,13 @@ export function CatalogFreshnessNotice({ className = "" }: Props) {
         <span> · {CATALOG_AS_OF_LABEL}</span>
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
-        Plan the shot on Kling 4.0. One take can run 30 seconds. As of today
-        the API can finish that take at 4K, and in HDR at 1080p or 4K. Bring
-        up to 15 refs, and mark up to 10 places where the move or the action
-        has to hit. Flash stays the 720p draft, up to 20 seconds.
+        Plan the shot on Kling 4.0. One take can run 30 seconds, and the API
+        can finish it at 4K, with HDR. Flash stays the 720p draft.
       </p>
       <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
         <span className="font-medium text-[#f5f5f5]">Which clip looks better: </span>
-        on the November 9 audio board, Seedance 2.5 and Utopai X tie at the
-        top. MiniMax H3 and HeyGen Video 1 sit just behind. Wan 3.0 is no
-        longer the clip people pick most often. A November 13 shootout still
-        put Kling 4.0 in the top two on fights, dance, and light, and found
-        Wan stronger on props than on physics.
-      </p>
-      <p className="mt-1.5 text-sm leading-relaxed text-[#d1d5db]">
-        This week. Where a newer model is in, the older one stays listed for
-        the job it still does. Start on Omni Flash 1.2. Omni 1.1, Veo 3.1 Fast,
-        and Veo 3.1 Quality stay until December 5. Veo 3.1 Lite stays as the
-        cheap 720p pass. Nano Banana 2.1 stays the Google still. Nano Banana 2
-        is the older still, with no shutdown date, and Pro is the slower hero
-        pass. Seedream 5.5 is the edit. Seedream 5.0 Pro stays for a native 4K
-        file. Vidu Q4 Preview is the performance model. Q3 stays for a
-        prompt-only shot. Pika H3 Flex is the current clip. Pika 2.5 is the
-        older short one. The public Seedance cut stays in Dreamina, CapCut, or
-        Doubao. The 4K API is the new finish. OpusClip is 40% off the first
-        month of Monthly Pro. invideo is 50% off eligible annual personal
-        plans, at the price shown for your region.
+        Seedance 2.5 and Utopai X tie at the top of the November 9 audio board.
+        Kling 4.0 still leads fights, dance, and light.
       </p>
 
       <details className="group mt-3 [&:not([open])>:not(summary)]:hidden">

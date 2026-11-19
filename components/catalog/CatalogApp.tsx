@@ -1915,7 +1915,6 @@ useEffect(() => {
               phase · Use the outline (desktop) or chips (mobile) to jump, or
               scroll through.
             </p>
-            <CatalogFreshnessNotice className="mt-4" />
             <div className="mt-4 flex flex-col sm:flex-row flex-wrap gap-3">
               <Link
                 href={catalogToolsHref({
